@@ -32,7 +32,8 @@ Imports:
     yardstick,
     tune,
     rsample,
-    leaflet.extras
+    leaflet.extras,
+    spocc
 Suggests:
     rbiodatacr
 Encoding: UTF-8
