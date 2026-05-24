@@ -33,7 +33,8 @@ Imports:
     tune,
     rsample,
     leaflet.extras,
-    spocc
+    spocc,
+    correlation
 Suggests:
     rbiodatacr
 Encoding: UTF-8

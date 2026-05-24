@@ -438,7 +438,11 @@ mod_h3sdm_ui <- function(id) {
                   "AOI activo"
                 ),
                 bslib::card_body(
-                  uiOutput(ns("resumen_aoi"))
+                  uiOutput(ns("resumen_aoi")),
+                  conditionalPanel(
+                    condition = "true",
+                    uiOutput(ns("sel_proyeccion"))
+                  )
                 )
               ),
 
@@ -656,18 +660,338 @@ mod_h3sdm_ui <- function(id) {
       bslib::nav_panel(
         title = tagList(bsicons::bs_icon("thermometer-half", class = "me-1"),
                         "Variables"),
-        div(class = "p-3",
-            p(class = "text-muted small", "En construcci\u00f3n\u2026"))
+        div(
+          class = "p-3",
+          p(class = "small text-muted mb-3",
+            "Carga variables ambientales en formato raster y extr\u00e1elas ",
+            "dentro de los hex\u00e1gonos H3. Se necesita la grilla generada ",
+            "en la pesta\u00f1a anterior."),
+
+          bslib::layout_columns(
+            col_widths = c(4, 8),
+            fill = FALSE,
+
+            # Panel izquierdo
+            div(
+              # Numéricas
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("bar-chart", class = "me-1"),
+                  "Variables num\u00e9ricas"
+                ),
+                bslib::card_body(
+                  p(class = "small text-muted mb-2",
+                    "GeoTIFF con una o m\u00e1s capas continuas ",
+                    "(temperatura, precipitaci\u00f3n, NDVI, etc.)."),
+                  fileInput(
+                    ns("raster_num"),
+                    label   = NULL,
+                    accept  = c(".tif", ".tiff"),
+                    multiple = TRUE,
+                    buttonLabel = "Buscar\u2026",
+                    placeholder = "GeoTIFF (.tif)"
+                  ),
+                  actionButton(ns("extraer_num"),
+                               "Extraer num\u00e9ricas",
+                               class = "btn-outline-primary btn-sm w-100",
+                               icon  = icon("calculator"))
+                )
+              ),
+
+              # Categóricas
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("grid-3x3-gap", class = "me-1"),
+                  "Variables categ\u00f3ricas"
+                ),
+                bslib::card_body(
+                  p(class = "small text-muted mb-2",
+                    "GeoTIFF con una capa categ\u00f3rica ",
+                    "(cobertura del suelo, uso de la tierra, etc.)."),
+                  fileInput(
+                    ns("raster_cat"),
+                    label   = NULL,
+                    accept  = c(".tif", ".tiff", ".xml"),
+                    multiple = TRUE,
+                    buttonLabel = "Buscar\u2026",
+                    placeholder = "GeoTIFF (.tif)"
+                  ),
+                  actionButton(ns("extraer_cat"),
+                               "Extraer categ\u00f3ricas",
+                               class = "btn-outline-primary btn-sm w-100",
+                               icon  = icon("th"))
+                )
+              ),
+
+              # Métricas del paisaje
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("diagram-3", class = "me-1"),
+                  "M\u00e9tricas del paisaje (IT)"
+                ),
+                bslib::card_body(
+                  p(class = "small text-muted mb-2",
+                    "Carga un raster categ\u00f3rico (cobertura del suelo) para calcular ",
+                    "m\u00e9tricas de teor\u00eda de la informaci\u00f3n por hex\u00e1gono: ",
+                    code("condent"), ", ", code("ent"), ", ", code("joinent"),
+                    ", ", code("mutinf"), ", ", code("relmutinf"), "."),
+                  fileInput(
+                    ns("raster_it"),
+                    label    = NULL,
+                    accept   = c(".tif", ".tiff", ".xml"),
+                    multiple = TRUE,
+                    buttonLabel = "Buscar\u2026",
+                    placeholder = "GeoTIFF (.tif)"
+                  ),
+                  actionButton(ns("calcular_it"),
+                               "Calcular m\u00e9tricas IT",
+                               class = "btn-outline-primary btn-sm w-100",
+                               icon  = icon("leaf"))
+                )
+              ),
+
+              # Manejo de NAs
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("exclamation-triangle", class = "me-1"),
+                  "Manejo de valores faltantes (NA)"
+                ),
+                bslib::card_body(
+                  uiOutput(ns("resumen_nas")),
+                  bslib::layout_columns(
+                    col_widths = c(6, 6),
+                    fill = FALSE,
+                    actionButton(ns("eliminar_nas"),
+                                 "Eliminar filas con NA",
+                                 class = "btn-outline-danger btn-sm w-100",
+                                 icon  = icon("trash")),
+                    actionButton(ns("imputar_nas"),
+                                 "Imputar con media",
+                                 class = "btn-outline-secondary btn-sm w-100",
+                                 icon  = icon("calculator"))
+                  )
+                )
+              ),
+
+              # Resumen
+              bslib::card(
+                class = "mb-0",
+                bslib::card_header(
+                  bsicons::bs_icon("info-circle", class = "me-1"),
+                  "Variables extraídas"
+                ),
+                bslib::card_body(
+                  uiOutput(ns("resumen_variables"))
+                )
+              )
+            ),
+
+            # Panel derecho
+            div(
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("map", class = "me-1"),
+                  "Visualizar variable"
+                ),
+                bslib::card_body(
+                  uiOutput(ns("sel_variable_mapa")),
+                  leaflet::leafletOutput(ns("mapa_variables"), height = "280px")
+                )
+              ),
+              bslib::card(
+                bslib::card_header(
+                  bsicons::bs_icon("table", class = "me-1"),
+                  "Tabla de predictores"
+                ),
+                bslib::card_body(
+                  DT::DTOutput(ns("tabla_predictores"))
+                )
+              )
+            )
+          )
+        )
       ),
 
       # ══════════════════════════════════════════════════════
-      # PESTAÑA 6: Presencias / Pseudoausencias
+      # PESTAÑA 6: Selección de variables
+      # ══════════════════════════════════════════════════════
+      bslib::nav_panel(
+        title = tagList(bsicons::bs_icon("funnel", class = "me-1"),
+                        "Selecci\u00f3n de variables"),
+        div(
+          class = "p-3",
+          p(class = "small text-muted mb-3",
+            "Elimina variables redundantes o sin sentido ecol\u00f3gico antes de modelar. ",
+            "Puedes eliminarlas manualmente o por correlaci\u00f3n."),
+
+          bslib::layout_columns(
+            col_widths = c(4, 8),
+            fill = FALSE,
+
+            # Panel izquierdo
+            div(
+              # Eliminar por correlación
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("diagram-2", class = "me-1"),
+                  "Eliminar por correlaci\u00f3n"
+                ),
+                bslib::card_body(
+                  p(class = "small text-muted mb-2",
+                    "Variables con correlaci\u00f3n mayor al umbral ser\u00e1n ",
+                    "marcadas para eliminar. Se conserva la primera del par."),
+                  sliderInput(
+                    ns("umbral_cor"),
+                    label   = "Umbral de correlaci\u00f3n:",
+                    min     = 0.5, max = 1.0,
+                    value   = 0.8, step = 0.05
+                  ),
+                  actionButton(ns("calcular_cor"),
+                               "Calcular correlaciones",
+                               class = "btn-outline-primary btn-sm w-100 mb-2",
+                               icon  = icon("chart-line")),
+                  actionButton(ns("eliminar_cor"),
+                               "Eliminar correlacionadas",
+                               class = "btn-outline-danger btn-sm w-100",
+                               icon  = icon("trash"))
+                )
+              ),
+
+              # Eliminar manualmente
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("check2-square", class = "me-1"),
+                  "Selecci\u00f3n manual"
+                ),
+                bslib::card_body(
+                  p(class = "small text-muted mb-2",
+                    "Marca las variables que quieres ", strong("conservar"),
+                    " en el modelo:"),
+                  uiOutput(ns("checkboxes_vars")),
+                  actionButton(ns("aplicar_seleccion"),
+                               "Aplicar selecci\u00f3n",
+                               class = "btn-primary btn-sm w-100 mt-2",
+                               icon  = icon("check"))
+                )
+              ),
+
+              # Resumen
+              bslib::card(
+                class = "mb-0",
+                bslib::card_header(
+                  bsicons::bs_icon("info-circle", class = "me-1"),
+                  "Variables activas"
+                ),
+                bslib::card_body(
+                  uiOutput(ns("resumen_seleccion"))
+                )
+              )
+            ),
+
+            # Panel derecho — matriz de correlación
+            bslib::card(
+              bslib::card_header(
+                bsicons::bs_icon("grid-3x3", class = "me-1"),
+                "Matriz de correlaci\u00f3n"
+              ),
+              bslib::card_body(
+                p(class = "small text-muted mb-2",
+                  "Solo variables num\u00e9ricas. ",
+                  "Azul = correlaci\u00f3n positiva | Rojo = correlaci\u00f3n negativa."),
+                plotOutput(ns("plot_correlacion"), height = "480px")
+              )
+            )
+          )
+        )
+      ),
+      # ══════════════════════════════════════════════════════
+      # PESTAÑA 7: Presencias / Pseudoausencias
       # ══════════════════════════════════════════════════════
       bslib::nav_panel(
         title = tagList(bsicons::bs_icon("toggles", class = "me-1"),
                         "Presencias/Ausencias"),
-        div(class = "p-3",
-            p(class = "text-muted small", "En construcci\u00f3n\u2026"))
+        div(
+          class = "p-3",
+          p(class = "small text-muted mb-3",
+            "Asigna los registros de ocurrencia a hex\u00e1gonos H3 y genera ",
+            "pseudoausencias para el modelo. Combina registros, grilla y ",
+            "variables en un \u00fanico dataset listo para modelar."),
+
+          bslib::layout_columns(
+            col_widths = c(4, 8),
+            fill = FALSE,
+
+            # Panel izquierdo
+            div(
+              # Resumen de inputs disponibles
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("list-check", class = "me-1"),
+                  "Insumos disponibles"
+                ),
+                bslib::card_body(
+                  uiOutput(ns("resumen_insumos"))
+                )
+              ),
+
+              # Parámetros
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("sliders", class = "me-1"),
+                  "Par\u00e1metros"
+                ),
+                bslib::card_body(
+                  numericInput(
+                    ns("n_pseudoabs"),
+                    label = "N\u00famero de pseudoausencias:",
+                    value = 500, min = 10, max = 10000, step = 50
+                  ),
+                  p(class = "small text-muted mb-0",
+                    bsicons::bs_icon("info-circle", class = "me-1"),
+                    "Se recomienda 2\u20135\u00d7 el n\u00famero de presencias.")
+                )
+              ),
+
+              actionButton(ns("generar_pa"),
+                           "Generar dataset PA",
+                           class = "btn-primary w-100 mb-2",
+                           icon  = icon("play")),
+              uiOutput(ns("resumen_pa"))
+            ),
+
+            # Panel derecho
+            div(
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("map", class = "me-1"),
+                  "Mapa presencias / pseudoausencias"
+                ),
+                bslib::card_body(class = "p-0",
+                  leaflet::leafletOutput(ns("mapa_pa"), height = "300px")
+                )
+              ),
+              bslib::card(
+                bslib::card_header(
+                  bsicons::bs_icon("table", class = "me-1"),
+                  "Dataset para modelar"
+                ),
+                bslib::card_body(
+                  DT::DTOutput(ns("tabla_pa"))
+                )
+              )
+            )
+          )
+        )
       ),
 
       # ══════════════════════════════════════════════════════
@@ -719,8 +1043,568 @@ mod_h3sdm_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    # Selector de proyección — aparece solo cuando hay AOI
+    output$sel_proyeccion <- renderUI({
+      req(aoi_sf())
+      crs_actual <- sf::st_crs(aoi_sf())$epsg
+      tagList(
+        tags$hr(),
+        p(class = "small fw-bold mb-1",
+          bsicons::bs_icon("globe2", class = "me-1"),
+          "Proyecci\u00f3n:"),
+        p(class = "small text-muted mb-2",
+          "CRS actual: ",
+          code(paste0("EPSG:", crs_actual %||% "desconocido"))),
+        numericInput(
+          ns("crs_custom"),
+          label = "C\u00f3digo EPSG:",
+          value = crs_actual %||% 4326,
+          min   = 1
+        ),
+        actionButton(ns("aplicar_proyeccion"),
+                     "Aplicar proyecci\u00f3n",
+                     class = "btn-outline-primary btn-sm w-100",
+                     icon  = icon("globe"))
+      )
+    })
+
+    observeEvent(input$aplicar_proyeccion, {
+      req(aoi_sf(), input$crs_custom)
+      tryCatch({
+        aoi_reproj <- sf::st_transform(aoi_sf(), input$crs_custom)
+        aoi_sf(aoi_reproj)
+        showNotification(
+          paste0("AOI proyectado a EPSG:", input$crs_custom),
+          type = "message", duration = 3)
+      }, error = function(e) {
+        showNotification(paste("EPSG no v\u00e1lido:", conditionMessage(e)),
+                         type = "error")
+      })
+    })
+
+    # ── Presencias / Pseudoausencias ──────────────────────
+    dataset_pa <- reactiveVal(NULL)
+
+    # Mapa base PA
+    output$mapa_pa <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    # Resumen de insumos disponibles
+    output$resumen_insumos <- renderUI({
+      items <- list(
+        list(
+          ok  = !is.null(aoi_sf()),
+          txt = "AOI definido"
+        ),
+        list(
+          ok  = !is.null(registros_sf()) && nrow(registros_sf()) > 0,
+          txt = if (!is.null(registros_sf()))
+            paste0("Registros: ", nrow(registros_sf())) else "Registros"
+        ),
+        list(
+          ok  = !is.null(grilla_sf()),
+          txt = if (!is.null(grilla_sf()))
+            paste0("Grilla H3 res-", input$resolucion_h3,
+                   " (", n_hex_real() %||% nrow(grilla_sf()), " hex)")
+          else "Grilla H3"
+        ),
+        list(
+          ok  = !is.null(grilla_con_vars()) &&
+                ncol(sf::st_drop_geometry(grilla_con_vars())) > 1,
+          txt = if (!is.null(grilla_con_vars())) {
+            n_vars <- ncol(sf::st_drop_geometry(grilla_con_vars())) - 1
+            paste0("Variables: ", n_vars)
+          } else "Variables ambientales"
+        )
+      )
+
+      tags$ul(
+        class = "small mb-0",
+        lapply(items, function(item) {
+          tags$li(
+            bsicons::bs_icon(
+              if (item$ok) "check-circle-fill" else "circle",
+              style = paste0("color:", if (item$ok) colores$exito else "#CCCCCC"),
+              class = "me-1"
+            ),
+            item$txt
+          )
+        })
+      )
+    })
+
+    # Generar dataset PA
+    observeEvent(input$generar_pa, {
+      if (is.null(aoi_sf())) {
+        showNotification("Define el AOI primero.", type = "warning"); return()
+      }
+      if (is.null(registros_sf()) || nrow(registros_sf()) == 0) {
+        showNotification("Descarga registros primero.", type = "warning"); return()
+      }
+
+      withProgress(message = "Generando dataset presencia/pseudoausencia\u2026", {
+        tryCatch({
+          # Generar PA con registros ya descargados
+          pa <- h3sdm::h3sdm_pa_from_records(
+            records     = registros_sf(),
+            aoi_sf      = aoi_sf(),
+            res         = as.integer(input$resolucion_h3),
+            n_pseudoabs = input$n_pseudoabs
+          )
+
+          # Unir con variables si están disponibles
+          if (!is.null(grilla_con_vars())) {
+            vars_df <- sf::st_drop_geometry(grilla_con_vars())
+            # Deduplicar h3_address en vars_df por si hay filas repetidas del cast
+            vars_df <- vars_df[!duplicated(vars_df$h3_address), ]
+            pa_joined <- dplyr::left_join(
+              sf::st_drop_geometry(pa),
+              vars_df,
+              by = "h3_address"
+            )
+            pa <- sf::st_sf(pa_joined,
+                            geometry = sf::st_geometry(pa),
+                            crs      = sf::st_crs(pa))
+          }
+
+          dataset_pa(pa)
+
+          n_pres <- sum(pa$presence == "1")
+          n_abs  <- sum(pa$presence == "0")
+
+          # Cast y transformar a WGS84 para leafgl
+          pa_vis  <- sf::st_cast(pa, "POLYGON") |>
+            sf::st_transform(4326)
+          bbox    <- sf::st_bbox(sf::st_transform(pa, 4326))
+          pal_pa  <- leaflet::colorFactor(
+            palette = c(colores$secundario, colores$acento),
+            levels  = c("0", "1")
+          )
+          leaflet::leafletProxy(ns("mapa_pa")) |>
+            leaflet::clearShapes() |>
+            leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data        = pa_vis,
+              fillColor   = ~pal_pa(presence),
+              fillOpacity = 0.7,
+              color       = "#ffffff",
+              weight      = 0.3
+            ) |>
+            leaflet::addLegend(
+              position = "bottomright",
+              pal      = pal_pa,
+              values   = pa$presence,
+              title    = "Presencia",
+              labels   = c("Pseudoausencia", "Presencia"),
+              opacity  = 0.8
+            ) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          showNotification(
+            paste0("Dataset generado: ", n_pres, " presencias, ",
+                   n_abs, " pseudoausencias."),
+            type = "message", duration = 5)
+
+        }, error = function(e) {
+          showNotification(paste("Error:", conditionMessage(e)),
+                           type = "error", duration = 8)
+        })
+      })
+    })
+
+    # Resumen del dataset PA
+    output$resumen_pa <- renderUI({
+      pa <- dataset_pa()
+      if (is.null(pa)) return(NULL)
+      n_pres <- sum(pa$presence == "1")
+      n_abs  <- sum(pa$presence == "0")
+      n_vars <- ncol(sf::st_drop_geometry(pa)) - 2  # menos h3_address y presence
+      div(class = "alert alert-info small py-2 px-3 mt-2 mb-0",
+          bsicons::bs_icon("check-circle-fill", class = "me-1"),
+          strong(n_pres + n_abs), " filas | ",
+          strong(n_pres), " presencias | ",
+          strong(n_abs), " pseudoausencias | ",
+          strong(n_vars), " variables")
+    })
+
+    # Tabla del dataset PA
+    output$tabla_pa <- DT::renderDT({
+      pa <- dataset_pa(); req(pa)
+      df <- sf::st_drop_geometry(pa)
+      DT::datatable(df,
+                    options = list(pageLength = 10, scrollX = TRUE),
+                    rownames = FALSE, class = "table-sm")
+    })
+
+    # ── Selección de variables ────────────────────────────
+    grilla_con_vars  <- reactiveVal(NULL)
+    vars_seleccionadas <- reactiveVal(NULL)
+
+    # Checkboxes de variables disponibles
+    output$checkboxes_vars <- renderUI({
+      grilla <- grilla_con_vars(); req(grilla)
+      df   <- sf::st_drop_geometry(grilla)
+      vars <- setdiff(names(df), "h3_address")
+      sel  <- vars_seleccionadas() %||% vars
+      checkboxGroupInput(
+        ns("vars_keep"),
+        label   = NULL,
+        choices = vars,
+        selected = sel
+      )
+    })
+
+    # Calcular y mostrar matriz de correlación
+    output$plot_correlacion <- renderPlot({
+      grilla <- grilla_con_vars(); req(grilla)
+      df   <- sf::st_drop_geometry(grilla)
+      vars <- setdiff(names(df), "h3_address")
+      nums <- vars[sapply(df[, vars, drop = FALSE], is.numeric)]
+      req(length(nums) >= 2)
+
+      mat_cor <- cor(df[, nums, drop = FALSE], use = "pairwise.complete.obs")
+
+      # Convertir a data.frame largo para ggplot2
+      df_cor <- as.data.frame(as.table(mat_cor))
+      names(df_cor) <- c("Var1", "Var2", "r")
+
+      ggplot2::ggplot(df_cor, ggplot2::aes(x = Var1, y = Var2, fill = r)) +
+        ggplot2::geom_tile(color = "white") +
+        ggplot2::geom_label(ggplot2::aes(
+          label = round(r, 2)),
+          size = 4, color = "black", fill = "white",
+          label.padding = ggplot2::unit(0.15, "lines"),
+          label.size = 0) +
+        ggplot2::scale_fill_gradient2(
+          low      = colores$peligro,
+          mid      = "white",
+          high     = colores$primario,
+          midpoint = 0,
+          limits   = c(-1, 1),
+          name     = "r"
+        ) +
+        ggplot2::labs(x = NULL, y = NULL) +
+        ggplot2::theme_minimal(base_size = 18) +
+        ggplot2::theme(
+          axis.text.x  = ggplot2::element_text(angle = 45, hjust = 1, size = 16),
+          axis.text.y  = ggplot2::element_text(size = 16),
+          panel.grid   = ggplot2::element_blank()
+        )
+    })
+
+    # Eliminar por correlación
+    observeEvent(input$eliminar_cor, {
+      grilla <- grilla_con_vars(); req(grilla)
+      df   <- sf::st_drop_geometry(grilla)
+      vars <- setdiff(names(df), "h3_address")
+      nums <- vars[sapply(df[, vars, drop = FALSE], is.numeric)]
+      req(length(nums) >= 2)
+
+      umbral  <- input$umbral_cor
+      mat_cor <- cor(df[, nums, drop = FALSE], use = "pairwise.complete.obs")
+
+      # Algoritmo greedy: eliminar variable con más correlaciones altas
+      eliminar <- c()
+      mat_abs  <- abs(mat_cor)
+      diag(mat_abs) <- 0
+      while (any(mat_abs > umbral, na.rm = TRUE)) {
+        n_altas <- colSums(mat_abs > umbral, na.rm = TRUE)
+        peor    <- names(which.max(n_altas))
+        eliminar <- c(eliminar, peor)
+        mat_abs  <- mat_abs[!rownames(mat_abs) %in% peor,
+                             !colnames(mat_abs) %in% peor,
+                             drop = FALSE]
+      }
+
+      if (length(eliminar) > 0) {
+        vars_actuales <- input$vars_keep %||% vars
+        nuevas <- vars_actuales[!vars_actuales %in% eliminar]
+        vars_seleccionadas(nuevas)
+        updateCheckboxGroupInput(session, "vars_keep", selected = nuevas)
+        showNotification(
+          paste0(length(eliminar), " variable(s) marcadas para eliminar: ",
+                 paste(eliminar, collapse = ", ")),
+          type = "message", duration = 6)
+      } else {
+        showNotification(
+          paste0("No hay variables con correlaci\u00f3n > ", umbral, "."),
+          type = "message", duration = 4)
+      }
+    })
+
+    # Aplicar selección manual
+    observeEvent(input$aplicar_seleccion, {
+      req(input$vars_keep, grilla_con_vars())
+      grilla <- grilla_con_vars()
+      df     <- sf::st_drop_geometry(grilla)
+      vars_a_mantener <- c("h3_address", input$vars_keep)
+      vars_a_mantener <- vars_a_mantener[vars_a_mantener %in% names(df)]
+      # Mantener solo las columnas seleccionadas + geometría
+      grilla_filtrada <- grilla[, vars_a_mantener]
+      grilla_con_vars(grilla_filtrada)
+      vars_seleccionadas(input$vars_keep)
+      showNotification(
+        paste0(length(input$vars_keep), " variables conservadas."),
+        type = "message", duration = 4)
+    })
+
+    # Resumen de selección
+    output$resumen_seleccion <- renderUI({
+      grilla <- grilla_con_vars()
+      if (is.null(grilla)) return(
+        p(class = "small text-muted mb-0", "Extrae variables primero.")
+      )
+      df   <- sf::st_drop_geometry(grilla)
+      vars <- setdiff(names(df), "h3_address")
+      div(
+        p(class = "small mb-1",
+          bsicons::bs_icon("check-circle-fill", class = "me-1",
+                           style = paste0("color:", colores$exito)),
+          strong(length(vars)), " variable(s) activas"),
+        tags$ul(class = "small mb-0",
+                lapply(vars, tags$li))
+      )
+    })
+
+    # ── Variables ambientales ─────────────────────────────
+
+    # Mapa de variables
+    output$mapa_variables <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    # Extraer numéricas
+    observeEvent(input$extraer_num, {
+      req(input$raster_num, grilla_sf())
+      withProgress(message = "Extrayendo variables num\u00e9ricas\u2026", {
+        tryCatch({
+          rasters <- lapply(input$raster_num$datapath, terra::rast)
+          stack   <- if (length(rasters) > 1) do.call(c, rasters) else rasters[[1]]
+          # Solo renombrar si hay nombres duplicados
+          if (any(duplicated(names(stack)))) {
+            nombres <- names(stack)
+            nombres <- make.unique(nombres, sep = "_")
+            names(stack) <- nombres
+          }
+          grilla  <- grilla_con_vars() %||% grilla_sf()
+          result  <- h3sdm::h3sdm_extract_num(stack, grilla)
+          grilla_con_vars(result)
+          showNotification(
+            paste(terra::nlyr(stack), "variable(s) num\u00e9rica(s) extra\u00eddas."),
+            type = "message", duration = 4)
+        }, error = function(e) {
+          showNotification(paste("Error:", conditionMessage(e)),
+                           type = "error", duration = 8)
+        })
+      })
+    })
+
+    # Extraer categóricas
+    observeEvent(input$extraer_cat, {
+      req(input$raster_cat, grilla_sf())
+      withProgress(message = "Extrayendo variables categ\u00f3ricas\u2026", {
+        tryCatch({
+          rcat_path <- input$raster_cat$datapath[
+            !grepl("\\.aux\\.xml$", input$raster_cat$name,
+                   ignore.case = TRUE)][1]
+          rcat <- terra::rast(rcat_path)
+
+          # Usar grilla con h3_address único — desduplicar antes de extract_cat
+          grilla_base <- grilla_con_vars() %||% grilla_sf()
+          grilla_unique <- grilla_base[
+            !duplicated(grilla_base$h3_address), ]
+
+          result <- h3sdm::h3sdm_extract_cat(
+            rcat, grilla_unique, proportion = TRUE)
+
+          # Cast a POLYGON para leafgl
+          result <- sf::st_cast(result, "POLYGON")
+          grilla_con_vars(result)
+
+          # Verificar columnas nuevas
+          cols_nuevas <- setdiff(names(sf::st_drop_geometry(result)),
+                                 names(sf::st_drop_geometry(grilla_unique)))
+          if (length(cols_nuevas) > 0) {
+            showNotification(
+              paste0(length(cols_nuevas),
+                     " variable(s) categ\u00f3rica(s) extra\u00eddas: ",
+                     paste(cols_nuevas, collapse = ", ")),
+              type = "message", duration = 6)
+          } else {
+            showNotification(
+              "Extracci\u00f3n completada pero no se agregaron columnas. ",
+              type = "warning", duration = 6)
+          }
+        }, error = function(e) {
+          showNotification(paste("Error:", conditionMessage(e)),
+                           type = "error", duration = 8)
+        })
+      })
+    })
+
+    # Calcular métricas IT
+    observeEvent(input$calcular_it, {
+      req(input$raster_it, grilla_sf())
+      withProgress(message = "Calculando m\u00e9tricas IT del paisaje\u2026", {
+        tryCatch({
+          rit_path <- input$raster_it$datapath[
+            !grepl("\\.aux\\.xml$", input$raster_it$name,
+                   ignore.case = TRUE)][1]
+          req(rit_path)
+          rcat   <- terra::rast(rit_path)
+          grilla <- grilla_con_vars() %||% grilla_sf()
+          result <- h3sdm::h3sdm_calculate_it_metrics(rcat, grilla)
+          grilla_con_vars(result)
+          showNotification("M\u00e9tricas IT calculadas.",
+                           type = "message", duration = 4)
+        }, error = function(e) {
+          showNotification(paste("Error:", conditionMessage(e)),
+                           type = "error", duration = 8)
+        })
+      })
+    })
+
+    # Selector de variable para visualizar
+    output$sel_variable_mapa <- renderUI({
+      grilla <- grilla_con_vars(); req(grilla)
+      vars_num <- names(sf::st_drop_geometry(grilla))
+      vars_num <- vars_num[vars_num != "h3_address"]
+      vars_num <- vars_num[sapply(sf::st_drop_geometry(grilla)[vars_num],
+                                  is.numeric)]
+      if (length(vars_num) == 0) return(NULL)
+      selectInput(ns("var_mapa"), "Variable a visualizar:",
+                  choices = vars_num, selected = vars_num[1])
+    })
+
+    # Actualizar mapa cuando cambia la variable seleccionada
+    observeEvent(input$var_mapa, {
+      grilla <- grilla_con_vars(); req(grilla, input$var_mapa)
+      vals   <- sf::st_drop_geometry(grilla)[[input$var_mapa]]
+      pal    <- leaflet::colorNumeric("YlOrRd", domain = vals, na.color = "#CCCCCC")
+      bbox   <- sf::st_bbox(sf::st_transform(grilla, 4326))
+      grilla_vis <- sf::st_cast(grilla, "POLYGON") |> sf::st_transform(4326)
+      leaflet::leafletProxy(ns("mapa_variables")) |>
+        leaflet::clearShapes() |>
+        leaflet::clearControls() |>
+        leafgl::addGlPolygons(
+          data        = grilla_vis,
+          group       = "vars",
+          fillColor   = ~pal(vals),
+          fillOpacity = 0.8,
+          color       = "#ffffff",
+          weight      = 0.3
+        ) |>
+        leaflet::addLegend(
+          position = "bottomright",
+          pal      = pal,
+          values   = vals,
+          title    = input$var_mapa,
+          opacity  = 0.8
+        ) |>
+        leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                           bbox[["xmax"]], bbox[["ymax"]])
+    })
+
+    # Resumen de NAs
+    output$resumen_nas <- renderUI({
+      grilla <- grilla_con_vars()
+      if (is.null(grilla)) return(
+        p(class = "small text-muted mb-2",
+          "Extrae variables primero.")
+      )
+      df   <- sf::st_drop_geometry(grilla)
+      vars <- setdiff(names(df), "h3_address")
+      nas  <- sapply(df[, vars, drop = FALSE], function(x) sum(is.na(x)))
+      nas  <- nas[nas > 0]
+
+      if (length(nas) == 0) {
+        div(class = "alert alert-success small py-2 px-3 mb-2",
+            bsicons::bs_icon("check-circle-fill", class = "me-1"),
+            "No hay valores faltantes.")
+      } else {
+        total_filas <- nrow(df)
+        tagList(
+          div(class = "alert alert-warning small py-2 px-3 mb-2",
+              bsicons::bs_icon("exclamation-triangle-fill", class = "me-1"),
+              strong(sum(apply(df[, names(nas), drop = FALSE], 1, anyNA))),
+              " filas con al menos un NA de ",
+              strong(total_filas), " totales."),
+          tags$ul(class = "small mb-2",
+                  lapply(names(nas), function(v)
+                    tags$li(code(v), ": ", strong(nas[[v]]), " NA")))
+        )
+      }
+    })
+
+    # Eliminar filas con NA
+    observeEvent(input$eliminar_nas, {
+      grilla <- grilla_con_vars(); req(grilla)
+      df_orig <- sf::st_drop_geometry(grilla)
+      vars    <- setdiff(names(df_orig), "h3_address")
+      n_antes <- nrow(grilla)
+      grilla_limpia <- grilla[complete.cases(sf::st_drop_geometry(grilla)[vars]), ]
+      n_despues <- nrow(grilla_limpia)
+      grilla_con_vars(grilla_limpia)
+      showNotification(
+        paste0(n_antes - n_despues, " filas eliminadas. Quedan ", n_despues, "."),
+        type = "message", duration = 4)
+    })
+
+    # Imputar NAs con la media
+    observeEvent(input$imputar_nas, {
+      grilla <- grilla_con_vars(); req(grilla)
+      df   <- sf::st_drop_geometry(grilla)
+      vars <- setdiff(names(df), "h3_address")
+      for (v in vars) {
+        if (any(is.na(df[[v]])) && is.numeric(df[[v]])) {
+          media <- mean(df[[v]], na.rm = TRUE)
+          grilla[[v]][is.na(grilla[[v]])] <- media
+        }
+      }
+      grilla_con_vars(grilla)
+      showNotification("NA imputados con la media de cada variable.",
+                       type = "message", duration = 4)
+    })
+
+    # Tabla de predictores
+    output$tabla_predictores <- DT::renderDT({
+      grilla <- grilla_con_vars(); req(grilla)
+      df <- sf::st_drop_geometry(grilla)
+      DT::datatable(df,
+                    options = list(pageLength = 10, scrollX = TRUE),
+                    rownames = FALSE, class = "table-sm")
+    })
+
+    # Resumen de variables extraídas
+    output$resumen_variables <- renderUI({
+      grilla <- grilla_con_vars()
+      if (is.null(grilla)) {
+        p(class = "small text-muted mb-0",
+          bsicons::bs_icon("exclamation-circle", class = "me-1"),
+          "No hay variables extra\u00eddas todav\u00eda.")
+      } else {
+        df   <- sf::st_drop_geometry(grilla)
+        vars <- setdiff(names(df), "h3_address")
+        div(
+          p(class = "small mb-1",
+            bsicons::bs_icon("check-circle-fill", class = "me-1",
+                             style = paste0("color:", colores$exito)),
+            strong(length(vars)), " variable(s) disponibles:"),
+          tags$ul(class = "small mb-0",
+                  lapply(vars, tags$li))
+        )
+      }
+    })
+
     # ── Grilla H3 ─────────────────────────────────────────
-    grilla_sf <- reactiveVal(NULL)
+    grilla_sf  <- reactiveVal(NULL)
+    n_hex_real <- reactiveVal(NULL)
 
     output$info_resolucion <- renderUI({
       res   <- as.character(input$resolucion_h3)
@@ -755,15 +1639,18 @@ mod_h3sdm_server <- function(id) {
           grilla <- h3sdm::h3sdm_get_grid(
             aoi_sf(),
             res = as.integer(input$resolucion_h3)
-          ) |>
-            sf::st_cast("POLYGON")
+          )
+          n_hex  <- nrow(grilla)  # conteo real antes del cast
+          grilla <- sf::st_cast(grilla, "POLYGON")
           grilla_sf(grilla)
-          bbox <- sf::st_bbox(grilla)
+          n_hex_real(n_hex)
+          bbox <- sf::st_bbox(sf::st_transform(grilla, 4326))
+          grilla_vis <- sf::st_transform(grilla, 4326)
           leaflet::leafletProxy(ns("mapa_grilla")) |>
             leaflet::clearGroup("grilla") |>
             leaflet::clearGroup("aoi_grilla") |>
             leafgl::addGlPolygons(
-              data        = grilla,
+              data        = grilla_vis,
               group       = "grilla",
               color       = colores$primario,
               fillColor   = colores$secundario,
@@ -800,7 +1687,7 @@ mod_h3sdm_server <- function(id) {
                              style = paste0("color:", colores$exito)),
             strong("Grilla generada")),
           tags$ul(class = "small mb-0",
-            tags$li(paste0("Hex\u00e1gonos: ", nrow(grilla))),
+            tags$li(paste0("Hex\u00e1gonos H3: ", n_hex_real() %||% nrow(grilla))),
             tags$li(paste0("Resoluci\u00f3n H3: ", input$resolucion_h3)),
             tags$li(paste0("\u00c1rea total: ", area_total, " km\u00b2"))
           )
