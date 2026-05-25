@@ -34,7 +34,11 @@ Imports:
     rsample,
     leaflet.extras,
     spocc,
-    correlation
+    correlation,
+    ranger,
+    xgboost,
+    spatialsample,
+    mgcv
 Suggests:
     rbiodatacr
 Encoding: UTF-8

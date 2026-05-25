@@ -527,8 +527,12 @@ mod_h3sdm_ui <- function(id) {
                             accept  = c(".csv", ".xlsx", ".gpkg", ".geojson"),
                             buttonLabel = "Buscar\u2026",
                             placeholder = "CSV, Excel o espacial"),
-                  p(class = "small text-muted mb-0",
-                    "El archivo debe tener columnas de latitud y longitud.")
+                  div(class = "alert alert-light small py-2 px-3 mb-0",
+                      tags$b("CSV/Excel:"), " columnas ", code("latitude"),
+                      " y ", code("longitude"), " (o ", code("lat"), "/", code("lon"), ").",
+                      tags$br(),
+                      tags$b("GeoPackage/GeoJSON:"), " geometr\u00eda de puntos en cualquier CRS."
+                  )
                 )
               ),
 
@@ -995,13 +999,190 @@ mod_h3sdm_ui <- function(id) {
       ),
 
       # ══════════════════════════════════════════════════════
-      # PESTAÑA 7: Ajustar modelo
+      # PESTAÑA 8: Ajustar modelo
       # ══════════════════════════════════════════════════════
       bslib::nav_panel(
         title = tagList(bsicons::bs_icon("gear", class = "me-1"),
                         "Ajustar modelo"),
-        div(class = "p-3",
-            p(class = "text-muted small", "En construcci\u00f3n\u2026"))
+        div(
+          class = "p-3",
+          p(class = "small text-muted mb-3",
+            "Selecciona el algoritmo, configura la validaci\u00f3n cruzada espacial ",
+            "y ajusta el modelo de distribuci\u00f3n de especies."),
+
+          bslib::layout_columns(
+            col_widths = c(4, 8),
+            fill = FALSE,
+
+            # Panel izquierdo
+            div(
+              # Selector de algoritmo
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("cpu", class = "me-1"),
+                  "Algoritmo"
+                ),
+                bslib::card_body(
+                  p(class = "small text-muted mb-2",
+                    "\u00bfQu\u00e9 tipo de modelo quieres ajustar?"),
+                  tags$div(
+                    style = "display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;",
+
+                    # Regresión logística
+                    tags$div(
+                      id = ns("card_logreg"),
+                      style = "background:#E6F1FB; border:2px solid #1170AA; border-radius:8px; padding:8px; cursor:pointer;",
+                      onclick = paste0("Shiny.setInputValue('", ns("algoritmo"), "', 'logreg', {priority:'event'})"),
+                      tags$p(style="font-size:12px; font-weight:600; margin:0;",
+                             bsicons::bs_icon("bar-chart-line", class="me-1"), "Reg. Log\u00edstica"),
+                      tags$p(style="font-size:10px; color:#555; margin:0;", "R\u00e1pido, interpretable")
+                    ),
+
+                    # Random Forest
+                    tags$div(
+                      id = ns("card_rf"),
+                      style = "background:var(--color-background-secondary); border:1.5px solid var(--color-border-tertiary); border-radius:8px; padding:8px; cursor:pointer;",
+                      onclick = paste0("Shiny.setInputValue('", ns("algoritmo"), "', 'rf', {priority:'event'})"),
+                      tags$p(style="font-size:12px; font-weight:600; margin:0;",
+                             bsicons::bs_icon("tree", class="me-1"), "Random Forest"),
+                      tags$p(style="font-size:10px; color:#555; margin:0;", "Robusto, no lineal")
+                    ),
+
+                    # XGBoost
+                    tags$div(
+                      id = ns("card_xgb"),
+                      style = "background:var(--color-background-secondary); border:1.5px solid var(--color-border-tertiary); border-radius:8px; padding:8px; cursor:pointer;",
+                      onclick = paste0("Shiny.setInputValue('", ns("algoritmo"), "', 'xgb', {priority:'event'})"),
+                      tags$p(style="font-size:12px; font-weight:600; margin:0;",
+                             bsicons::bs_icon("lightning", class="me-1"), "XGBoost"),
+                      tags$p(style="font-size:10px; color:#555; margin:0;", "Alto rendimiento")
+                    ),
+
+                    # GAM
+                    tags$div(
+                      id = ns("card_gam"),
+                      style = "background:var(--color-background-secondary); border:1.5px solid var(--color-border-tertiary); border-radius:8px; padding:8px; cursor:pointer;",
+                      onclick = paste0("Shiny.setInputValue('", ns("algoritmo"), "', 'gam', {priority:'event'})"),
+                      tags$p(style="font-size:12px; font-weight:600; margin:0;",
+                             bsicons::bs_icon("bezier2", class="me-1"), "GAM"),
+                      tags$p(style="font-size:10px; color:#555; margin:0;", "Splines, interpretable")
+                    )
+                  ),
+                  shinyjs::hidden(
+                    textInput(ns("algoritmo"), label = NULL, value = "logreg")
+                  )
+                )
+              ),
+
+              # Opciones del algoritmo
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("sliders", class = "me-1"),
+                  "Opciones"
+                ),
+                bslib::card_body(
+                  # GAM formula
+                  conditionalPanel(
+                    condition = paste0("input['", ns("algoritmo"), "'] == 'gam'"),
+                    p(class = "small fw-bold mb-1", "F\u00f3rmula GAM:"),
+                    p(class = "small text-muted mb-1",
+                      "Generada autom\u00e1ticamente con splines para cada predictor."),
+                    uiOutput(ns("formula_gam_ui")),
+                    checkboxInput(ns("editar_formula"),
+                                  "Editar f\u00f3rmula manualmente", value = FALSE),
+                    conditionalPanel(
+                      condition = paste0("input['", ns("editar_formula"), "']"),
+                      textAreaInput(ns("formula_gam_manual"),
+                                    label = NULL, rows = 3,
+                                    placeholder = "presence ~ s(bio1) + s(bio2) + s(x, y)")
+                    )
+                  ),
+                  # RF opciones
+                  conditionalPanel(
+                    condition = paste0("input['", ns("algoritmo"), "'] == 'rf'"),
+                    numericInput(ns("rf_trees"), "N\u00famero de \u00e1rboles:",
+                                 value = 500, min = 100, max = 2000, step = 100),
+                    numericInput(ns("rf_mtry"),
+                                 label = tagList("Variables por split (mtry)",
+                                                 tags$small(class = "text-muted ms-1",
+                                                            "vac\u00edo = \u221a(variables)")),
+                                 value = NA, min = 1),
+                  ),
+                  # XGBoost opciones
+                  conditionalPanel(
+                    condition = paste0("input['", ns("algoritmo"), "'] == 'xgb'"),
+                    numericInput(ns("xgb_trees"), "\u00c1rboles:",
+                                 value = 200, min = 50, max = 1000, step = 50),
+                    numericInput(ns("xgb_lr"), "Tasa de aprendizaje:",
+                                 value = 0.1, min = 0.01, max = 0.5, step = 0.01)
+                  ),
+                  tags$hr(),
+                  checkboxInput(ns("estandarizar"),
+                                "Estandarizar variables (mean=0, sd=1)",
+                                value = TRUE)
+                )
+              ),
+
+              # CV espacial
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("grid-3x3", class = "me-1"),
+                  "Validaci\u00f3n cruzada espacial"
+                ),
+                bslib::card_body(
+                  selectInput(ns("cv_method"),
+                              "M\u00e9todo:",
+                              choices = c("Block" = "block",
+                                          "Cluster" = "cluster"),
+                              selected = "block"),
+                  conditionalPanel(
+                    condition = paste0("input['", ns("cv_method"), "'] == 'block'"),
+                    selectInput(ns("block_shape"),
+                                "Forma del bloque:",
+                                choices = c("Cuadrado" = "square",
+                                            "Hex\u00e1gono" = "hexagon"),
+                                selected = "square"),
+                    uiOutput(ns("cellsize_ui"))
+                  ),
+                  numericInput(ns("cv_folds"), "N\u00famero de folds:",
+                               value = 5, min = 2, max = 10)
+                )
+              ),
+
+              actionButton(ns("ajustar_modelo"),
+                           "Ajustar modelo",
+                           class = "btn-primary w-100",
+                           icon  = icon("play")),
+              uiOutput(ns("estado_ajuste"))
+            ),
+
+            # Panel derecho — métricas
+            div(
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("bar-chart", class = "me-1"),
+                  "M\u00e9tricas de validaci\u00f3n cruzada"
+                ),
+                bslib::card_body(
+                  uiOutput(ns("tabla_metricas"))
+                )
+              ),
+              bslib::card(
+                bslib::card_header(
+                  bsicons::bs_icon("graph-up", class = "me-1"),
+                  "M\u00e9tricas por fold"
+                ),
+                bslib::card_body(
+                  plotOutput(ns("plot_metricas"), height = "300px")
+                )
+              )
+            )
+          )
+        )
       ),
 
       # ══════════════════════════════════════════════════════
@@ -1080,6 +1261,243 @@ mod_h3sdm_server <- function(id) {
         showNotification(paste("EPSG no v\u00e1lido:", conditionMessage(e)),
                          type = "error")
       })
+    })
+
+    # Cellsize dinámico según CRS del dataset PA
+    output$cellsize_ui <- renderUI({
+      tagList(
+        numericInput(ns("block_size"),
+                     label = tagList("Tama\u00f1o del bloque (grados)",
+                                     tags$small(class = "text-muted ms-1",
+                                                "0.5\u00b0 \u2248 55 km")),
+                     value = 0.5, min = 0.01, step = 0.1)
+      )
+    })
+
+    # ── Ajustar modelo ────────────────────────────────────
+    modelo_ajustado <- reactiveVal(NULL)
+    algoritmo_activo <- reactiveVal("logreg")
+
+    # Sincronizar tarjeta activa
+    observeEvent(input$algoritmo, {
+      req(nchar(input$algoritmo) > 0)
+      algoritmo_activo(input$algoritmo)
+      colores_alg <- list(
+        logreg = "background:#E6F1FB; border:2px solid #1170AA;",
+        rf     = "background:#E1F5EE; border:2px solid #0F6E56;",
+        xgb    = "background:#FFF3E0; border:2px solid #FC7D0B;",
+        gam    = "background:#F3E9FD; border:2px solid #6B3FA0;"
+      )
+      base_style <- "border-radius:8px; padding:8px; cursor:pointer;"
+      default    <- paste0("background:var(--color-background-secondary);",
+                           "border:1.5px solid var(--color-border-tertiary);",
+                           base_style)
+      for (alg in c("logreg", "rf", "xgb", "gam")) {
+        card_id <- paste0("#", ns(paste0("card_", alg)))
+        estilo  <- if (alg == input$algoritmo)
+          paste0(colores_alg[[alg]], base_style)
+        else default
+        shinyjs::runjs(paste0(
+          'document.querySelector("', card_id,
+          '").setAttribute("style", "', estilo, '");'
+        ))
+      }
+    })
+
+    # Fórmula GAM automática
+    output$formula_gam_ui <- renderUI({
+      pa <- dataset_pa(); req(pa)
+      df   <- sf::st_drop_geometry(pa)
+      vars <- setdiff(names(df), c("h3_address", "presence"))
+      vars_num <- vars[sapply(df[, vars, drop = FALSE], is.numeric)]
+      formula_str <- paste0(
+        "presence ~ ",
+        paste(paste0("s(", vars_num, ")"), collapse = " + "),
+        " + s(x, y, bs = \"tp\")"
+      )
+      div(
+        code(class = "small d-block p-2 mb-1",
+             style = "background:#f8f9fa; border-radius:4px; white-space:pre-wrap;",
+             formula_str)
+      )
+    })
+
+    # Ajustar modelo
+    observeEvent(input$ajustar_modelo, {
+      req(dataset_pa())
+      pa  <- dataset_pa()
+      alg <- algoritmo_activo()
+
+      # Validar que haya variables extraídas
+      if (is.null(grilla_con_vars())) {
+        showNotification("Extrae variables ambientales primero.",
+                         type = "warning"); return()
+      }
+
+      withProgress(message = paste("Ajustando", alg, "\u2026"), {
+        tryCatch({
+
+          # 1. Preparar predictores con h3sdm_predictors
+          predictors_sf <- h3sdm::h3sdm_predictors(grilla_con_vars())
+
+          # 2. Combinar PA + predictores con h3sdm_data (agrega x e y)
+          dat <- h3sdm::h3sdm_data(pa, predictors_sf)
+
+          # 3. Presence data para evaluación
+          presence_data <- dat |>
+            dplyr::filter(presence == "1")
+
+          # 2. Recipe
+          if (alg == "gam") {
+            rec <- h3sdm::h3sdm_recipe_gam(dat, response_col = "presence")
+          } else {
+            rec <- h3sdm::h3sdm_recipe(dat, response_col = "presence")
+          }
+
+          # Estandarizar si el usuario lo pide
+          if (input$estandarizar) {
+            rec <- recipes::step_normalize(rec, recipes::all_numeric_predictors())
+          }
+
+          # 3. Especificación del modelo
+          model_spec <- switch(alg,
+            logreg = parsnip::logistic_reg() |>
+              parsnip::set_engine("glm") |>
+              parsnip::set_mode("classification"),
+            rf = parsnip::rand_forest(
+              trees = input$rf_trees,
+              mtry  = if (is.na(input$rf_mtry) || input$rf_mtry < 1) {
+                # Default: sqrt del número de predictores
+                df_dat <- sf::st_drop_geometry(dat)
+                vars_p <- setdiff(names(df_dat), c("h3_address", "presence", "x", "y"))
+                max(1, floor(sqrt(length(vars_p))))
+              } else input$rf_mtry
+            ) |>
+              parsnip::set_engine("ranger") |>
+              parsnip::set_mode("classification"),
+            xgb = parsnip::boost_tree(
+              trees       = input$xgb_trees,
+              learn_rate  = input$xgb_lr
+            ) |>
+              parsnip::set_engine("xgboost") |>
+              parsnip::set_mode("classification"),
+            gam = parsnip::gen_additive_mod() |>
+              parsnip::set_engine("mgcv") |>
+              parsnip::set_mode("classification")
+          )
+
+          # 4. Workflow
+          if (alg == "gam") {
+            # Construir fórmula GAM desde dat
+            df_dat   <- sf::st_drop_geometry(dat)
+            vars_dat <- setdiff(names(df_dat), c("h3_address", "presence", "x", "y"))
+            vars_num <- vars_dat[sapply(df_dat[, vars_dat, drop = FALSE], is.numeric)]
+            formula_str <- if (input$editar_formula && nchar(input$formula_gam_manual) > 5)
+              input$formula_gam_manual
+            else
+              paste0("presence ~ ",
+                     paste(paste0("s(", vars_num, ")"), collapse = " + "),
+                     " + s(x, y, bs = \"tp\")")
+            wf <- h3sdm::h3sdm_workflow_gam(
+              gam_spec = model_spec,
+              recipe   = rec,
+              formula  = as.formula(formula_str)
+            )
+          } else {
+            wf <- h3sdm::h3sdm_workflow(model_spec = model_spec, recipe = rec)
+          }
+
+          # 5. CV espacial — validar geometrías antes
+          pa_valid <- sf::st_make_valid(dat)
+          cv_args  <- list(
+            data   = pa_valid,
+            method = input$cv_method,
+            v      = input$cv_folds
+          )
+          if (input$cv_method == "block") {
+            cv_args$square   <- input$block_shape == "square"
+            cv_args$cellsize <- input$block_size
+          }
+          cv_split <- do.call(h3sdm::h3sdm_spatial_cv, cv_args)
+
+          # 6. Ajustar
+          fitted <- h3sdm::h3sdm_fit_model(
+            workflow      = wf,
+            data_split    = cv_split,
+            presence_data = presence_data
+          )
+
+          modelo_ajustado(fitted)
+          showNotification("Modelo ajustado correctamente.",
+                           type = "message", duration = 4)
+
+        }, error = function(e) {
+          showNotification(paste("Error:", conditionMessage(e)),
+                           type = "error", duration = 10)
+        })
+      })
+    })
+
+    # Estado del ajuste
+    output$estado_ajuste <- renderUI({
+      m <- modelo_ajustado()
+      if (is.null(m)) return(NULL)
+      div(class = "alert alert-success small py-2 px-3 mt-2 mb-0",
+          bsicons::bs_icon("check-circle-fill", class = "me-1"),
+          "Modelo listo para predecir.")
+    })
+
+    # Tabla de métricas
+    output$tabla_metricas <- renderUI({
+      m <- modelo_ajustado(); req(m)
+      metrics <- m$metrics
+      if (is.null(metrics)) {
+        metrics <- tune::collect_metrics(m$cv_model)
+      }
+      df <- as.data.frame(metrics)
+      df <- df[, intersect(names(df), c(".metric", "mean", "std_err",
+                                         "conf_low", "conf_high"))]
+      df$mean    <- round(df$mean, 4)
+      if ("std_err"   %in% names(df)) df$std_err   <- round(df$std_err, 4)
+      if ("conf_low"  %in% names(df)) df$conf_low  <- round(df$conf_low, 4)
+      if ("conf_high" %in% names(df)) df$conf_high <- round(df$conf_high, 4)
+      names(df)[names(df) == ".metric"] <- "M\u00e9trica"
+      names(df)[names(df) == "mean"]    <- "Media"
+
+      tags$table(
+        class = "table table-sm small mb-0",
+        tags$thead(
+          style = paste0("background:", colores$primario, "; color:#fff;"),
+          tags$tr(lapply(names(df), tags$th))
+        ),
+        tags$tbody(
+          apply(df, 1, function(row) {
+            tags$tr(lapply(row, tags$td))
+          })
+        )
+      )
+    })
+
+    # Plot métricas por fold
+    output$plot_metricas <- renderPlot({
+      m <- modelo_ajustado(); req(m)
+      cv_res <- m$cv_model
+      preds  <- tune::collect_metrics(cv_res, summarize = FALSE)
+      req(nrow(preds) > 0)
+
+      ggplot2::ggplot(preds,
+        ggplot2::aes(x = id, y = .estimate, color = .metric, group = .metric)) +
+        ggplot2::geom_line(linewidth = 0.8) +
+        ggplot2::geom_point(size = 2.5) +
+        ggplot2::facet_wrap(~.metric, scales = "free_y") +
+        ggplot2::scale_color_manual(values = colores$tableau, guide = "none") +
+        ggplot2::labs(x = "Fold", y = "Valor", title = NULL) +
+        ggplot2::theme_minimal(base_size = 11) +
+        ggplot2::theme(
+          axis.text.x     = ggplot2::element_text(angle = 45, hjust = 1),
+          panel.grid.minor = ggplot2::element_blank(),
+          strip.text       = ggplot2::element_text(face = "bold")
+        )
     })
 
     # ── Presencias / Pseudoausencias ──────────────────────
