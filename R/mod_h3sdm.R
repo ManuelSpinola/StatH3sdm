@@ -562,9 +562,9 @@ mod_h3sdm_ui <- function(id) {
               ),
 
               actionButton(ns("descargar_registros"),
-                           "Descargar registros",
+                           "Buscar registros",
                            class = "btn-primary w-100 mb-2",
-                           icon  = icon("download")),
+                           icon  = icon("search")),
               uiOutput(ns("resumen_registros"))
             ),
 
@@ -1173,11 +1173,11 @@ mod_h3sdm_ui <- function(id) {
               ),
               bslib::card(
                 bslib::card_header(
-                  bsicons::bs_icon("graph-up", class = "me-1"),
-                  "M\u00e9tricas por fold"
+                  bsicons::bs_icon("map", class = "me-1"),
+                  "Bloques espaciales de CV"
                 ),
                 bslib::card_body(
-                  plotOutput(ns("plot_metricas"), height = "300px")
+                  plotOutput(ns("plot_bloques"), height = "300px")
                 )
               )
             )
@@ -1186,23 +1186,143 @@ mod_h3sdm_ui <- function(id) {
       ),
 
       # ══════════════════════════════════════════════════════
-      # PESTAÑA 8: Diagnóstico
+      # PESTAÑA 9: Interpretación
       # ══════════════════════════════════════════════════════
       bslib::nav_panel(
         title = tagList(bsicons::bs_icon("clipboard-check", class = "me-1"),
-                        "Diagn\u00f3stico"),
-        div(class = "p-3",
-            p(class = "text-muted small", "En construcci\u00f3n\u2026"))
+                        "Interpretaci\u00f3n"),
+        div(
+          class = "p-3",
+          p(class = "small text-muted mb-3",
+            "Importancia de variables y efectos parciales del modelo ajustado. ",
+            "Requiere que el modelo haya sido ajustado en la pesta\u00f1a anterior."),
+
+          bslib::layout_columns(
+            col_widths = c(6, 6),
+            fill = FALSE,
+
+            # Importancia de variables
+            bslib::card(
+              class = "mb-3",
+              bslib::card_header(
+                bsicons::bs_icon("bar-chart-steps", class = "me-1"),
+                "Importancia de variables"
+              ),
+              bslib::card_body(
+                p(class = "small text-muted mb-2",
+                  "Basada en permutaci\u00f3n de variables (DALEX). ",
+                  "Mayor valor = mayor importancia."),
+                actionButton(ns("calcular_importancia"),
+                             "Calcular importancia",
+                             class = "btn-outline-primary btn-sm mb-3",
+                             icon  = icon("calculator")),
+                plotOutput(ns("plot_importancia"), height = "350px")
+              )
+            ),
+
+            # Curva ROC
+            bslib::card(
+              class = "mb-3",
+              bslib::card_header(
+                bsicons::bs_icon("graph-up", class = "me-1"),
+                "Curva ROC"
+              ),
+              bslib::card_body(
+                plotOutput(ns("plot_roc"), height = "350px")
+              )
+            )
+          ),
+
+          # PDP
+          bslib::card(
+            class = "mb-0",
+            bslib::card_header(
+              bsicons::bs_icon("bezier2", class = "me-1"),
+              "Gr\u00e1ficos de dependencia parcial (PDP)"
+            ),
+            bslib::card_body(
+              bslib::layout_columns(
+                col_widths = c(3, 9),
+                fill = FALSE,
+                div(
+                  uiOutput(ns("sel_vars_pdp")),
+                  actionButton(ns("calcular_pdp"),
+                               "Calcular PDP",
+                               class = "btn-outline-primary btn-sm w-100 mt-2",
+                               icon  = icon("play"))
+                ),
+                plotOutput(ns("plot_pdp"), height = "300px")
+              )
+            )
+          )
+        )
       ),
 
       # ══════════════════════════════════════════════════════
-      # PESTAÑA 9: Predicción
+      # PESTAÑA 10: Predicción
       # ══════════════════════════════════════════════════════
       bslib::nav_panel(
         title = tagList(bsicons::bs_icon("map-fill", class = "me-1"),
                         "Predicci\u00f3n"),
-        div(class = "p-3",
-            p(class = "text-muted small", "En construcci\u00f3n\u2026"))
+        div(
+          class = "p-3",
+          p(class = "small text-muted mb-3",
+            "Genera el mapa de idoneidad de h\u00e1bitat usando el modelo ajustado. ",
+            "Requiere que el modelo haya sido ajustado previamente."),
+
+          bslib::layout_columns(
+            col_widths = c(3, 9),
+            fill = FALSE,
+
+            # Panel izquierdo
+            div(
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("gear", class = "me-1"),
+                  "Opciones"
+                ),
+                bslib::card_body(
+                  p(class = "small text-muted mb-2",
+                    "La predicci\u00f3n usa la grilla con variables extraídas."),
+                  actionButton(ns("predecir"),
+                               "Generar predicci\u00f3n",
+                               class = "btn-primary w-100 mb-2",
+                               icon  = icon("play")),
+                  uiOutput(ns("resumen_prediccion"))
+                )
+              )
+            ),
+
+            # Panel derecho — dos mapas
+            div(
+              bslib::layout_columns(
+                col_widths = c(6, 6),
+                fill = FALSE,
+                bslib::card(
+                  bslib::card_header(
+                    bsicons::bs_icon("palette", class = "me-1"),
+                    "Idoneidad continua (0\u20131)"
+                  ),
+                  bslib::card_body(class = "p-0",
+                    leaflet::leafletOutput(ns("mapa_pred_continuo"),
+                                          height = "600px")
+                  )
+                ),
+                bslib::card(
+                  bslib::card_header(
+                    bsicons::bs_icon("layers", class = "me-1"),
+                    "Categor\u00edas de h\u00e1bitat (cuantiles)"
+                  ),
+                  bslib::card_body(class = "p-0",
+                    leaflet::leafletOutput(ns("mapa_pred_cat"),
+                                          height = "600px")
+                  )
+                )
+              )
+            )
+          )
+        )
       ),
 
       # ══════════════════════════════════════════════════════
@@ -1274,8 +1394,278 @@ mod_h3sdm_server <- function(id) {
       )
     })
 
+    # ── Predicción ────────────────────────────────────────
+    prediccion_sf <- reactiveVal(NULL)
+
+    output$mapa_pred_continuo <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    output$mapa_pred_cat <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    observeEvent(input$predecir, {
+      req(modelo_ajustado(), grilla_con_vars())
+
+      withProgress(message = "Generando predicci\u00f3n\u2026", {
+        tryCatch({
+          m  <- modelo_ajustado()
+          gc <- grilla_con_vars()
+          gc_dedup <- gc[!duplicated(gc$h3_address), ]
+          pred_sf  <- h3sdm::h3sdm_predictors(gc_dedup)
+
+          # Predecir
+          p <- h3sdm::h3sdm_predict(m, pred_sf)
+          prediccion_sf(p)
+
+          # Transformar a WGS84 para leaflet
+          p_vis <- sf::st_cast(p, "POLYGON") |>
+            sf::st_transform(4326)
+          bbox  <- sf::st_bbox(p_vis)
+          vals  <- p_vis$prediction
+
+          # ── Mapa continuo ─────────────────────────────
+          pal_cont <- leaflet::colorNumeric(
+            palette = "inferno",
+            domain  = c(0, 1),
+            reverse = TRUE
+          )
+          leaflet::leafletProxy(ns("mapa_pred_continuo")) |>
+            leaflet::clearShapes() |>
+            leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data        = p_vis,
+              fillColor   = ~pal_cont(prediction),
+              fillOpacity = 0.85,
+              color       = "#ffffff",
+              weight      = 0.2
+            ) |>
+            leaflet::addLegend(
+              position = "bottomright",
+              pal      = pal_cont,
+              values   = c(1, 0),
+              title    = "Idoneidad",
+              opacity  = 0.8
+            ) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          # ── Mapa categórico (cuantiles) ───────────────
+          breaks <- quantile(vals, probs = c(0, 0.2, 0.4, 0.6, 0.8, 1),
+                             na.rm = TRUE)
+          etiquetas <- c("Muy bajo", "Bajo", "Medio", "Alto", "Muy alto")
+          colores_cat <- c("#d73027", "#fc8d59", "#fee08b", "#91cf60", "#1a9850")
+
+          p_vis$categoria <- factor(
+            cut(vals, breaks = breaks, labels = etiquetas,
+                include.lowest = TRUE),
+            levels = etiquetas, ordered = TRUE
+          )
+
+          pal_cat <- leaflet::colorFactor(
+            palette = colores_cat,
+            levels  = etiquetas,
+            ordered = TRUE
+          )
+
+          leaflet::leafletProxy(ns("mapa_pred_cat")) |>
+            leaflet::clearShapes() |>
+            leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data        = p_vis,
+              fillColor   = ~pal_cat(categoria),
+              fillOpacity = 0.85,
+              color       = "#ffffff",
+              weight      = 0.2
+            ) |>
+            leaflet::addLegend(
+              position = "bottomright",
+              pal      = pal_cat,
+              values   = etiquetas,
+              title    = "H\u00e1bitat",
+              opacity  = 0.8
+            ) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          showNotification("Predicci\u00f3n generada.",
+                           type = "message", duration = 4)
+
+        }, error = function(e) {
+          showNotification(paste("Error:", conditionMessage(e)),
+                           type = "error", duration = 8)
+        })
+      })
+    })
+
+    output$resumen_prediccion <- renderUI({
+      p <- prediccion_sf()
+      if (is.null(p)) return(NULL)
+      vals <- p$prediction
+      div(class = "alert alert-info small py-2 px-3 mt-2 mb-0",
+          bsicons::bs_icon("check-circle-fill", class = "me-1"),
+          strong(nrow(p)), " hex\u00e1gonos",
+          tags$br(),
+          "Media: ", strong(round(mean(vals, na.rm = TRUE), 3)),
+          tags$br(),
+          "Rango: ", strong(round(min(vals, na.rm = TRUE), 3)),
+          " \u2013 ", strong(round(max(vals, na.rm = TRUE), 3))
+      )
+    })
+
+    # ── Interpretación ────────────────────────────────────
+    explainer_obj  <- reactiveVal(NULL)
+    importancia_df <- reactiveVal(NULL)
+
+    # Calcular importancia
+    observeEvent(input$calcular_importancia, {
+      req(modelo_ajustado())
+      withProgress(message = "Calculando importancia de variables\u2026", {
+        tryCatch({
+          m   <- modelo_ajustado()
+          req(m)
+
+          pa  <- dataset_pa(); req(pa)
+          gc  <- grilla_con_vars(); req(gc)
+          pa_base  <- pa[!duplicated(pa$h3_address), c("h3_address", "presence")]
+          gc_dedup <- gc[!duplicated(gc$h3_address), ]
+          pred_sf  <- h3sdm::h3sdm_predictors(gc_dedup)
+          dat      <- h3sdm::h3sdm_data(pa_base, pred_sf)
+
+          exp <- h3sdm::h3sdm_explain(m$final_model, data = dat)
+          explainer_obj(exp)
+
+          vars_pred <- setdiff(names(exp$data),
+                               c("h3_address", "x", "y", "presence"))
+
+          imp <- DALEX::model_parts(
+            explainer = exp,
+            variables = vars_pred,
+            type      = "difference"
+          )
+          importancia_df(imp)
+          showNotification("Importancia calculada.", type = "message", duration = 3)
+        }, error = function(e) {
+          showNotification(paste("Error:", conditionMessage(e)),
+                           type = "error", duration = 8)
+        })
+      })
+    })
+
+    # Plot importancia
+    output$plot_importancia <- renderPlot({
+      imp <- importancia_df(); req(imp)
+      df  <- as.data.frame(imp)
+      df  <- df[df$permutation == 0 & df$variable != "_baseline_" &
+                  df$variable != "_full_model_", ]
+      df  <- df[order(df$dropout_loss, decreasing = TRUE), ]
+
+      ggplot2::ggplot(df,
+        ggplot2::aes(x = dropout_loss,
+                     y = reorder(variable, dropout_loss),
+                     fill = dropout_loss)) +
+        ggplot2::geom_col(show.legend = FALSE) +
+        ggplot2::scale_fill_gradient(low = colores$secundario,
+                                     high = colores$primario) +
+        ggplot2::labs(x = "P\u00e9rdida por permutaci\u00f3n",
+                      y = NULL,
+                      title = "Importancia de variables") +
+        ggplot2::theme_minimal(base_size = 12) +
+        ggplot2::theme(panel.grid.major.y = ggplot2::element_blank())
+    })
+
+    # Curva ROC
+    output$plot_roc <- renderPlot({
+      m <- modelo_ajustado(); req(m)
+      tryCatch({
+        preds <- tune::collect_predictions(m$cv_model)
+
+        if (!".pred_1" %in% names(preds)) {
+          p <- ggplot2::ggplot() +
+            ggplot2::annotate("text", x = 0.5, y = 0.5,
+                              label = "Predicciones no disponibles",
+                              color = colores$texto) +
+            ggplot2::theme_void()
+          return(p)
+        }
+
+        roc_df <- yardstick::roc_curve(preds,
+                                        truth    = presence,
+                                        .pred_1,
+                                        event_level = "second")
+        auc_val <- yardstick::roc_auc(preds,
+                                       truth    = presence,
+                                       .pred_1,
+                                       event_level = "second")$.estimate
+
+        ggplot2::ggplot(roc_df,
+          ggplot2::aes(x = 1 - specificity, y = sensitivity)) +
+          ggplot2::geom_abline(slope = 1, intercept = 0,
+                               linetype = "dashed", color = colores$texto) +
+          ggplot2::geom_line(color = colores$primario, linewidth = 1.2) +
+          ggplot2::annotate("text", x = 0.7, y = 0.1,
+                            label = paste0("AUC = ", round(auc_val, 3)),
+                            color = colores$primario, size = 5, fontface = "bold") +
+          ggplot2::labs(x = "1 - Especificidad",
+                        y = "Sensibilidad",
+                        title = "Curva ROC") +
+          ggplot2::theme_minimal(base_size = 12)
+      }, error = function(e) {
+        ggplot2::ggplot() +
+          ggplot2::annotate("text", x = 0.5, y = 0.5,
+                            label = paste("Error:", conditionMessage(e)),
+                            color = colores$peligro, size = 4) +
+          ggplot2::theme_void()
+      })
+    })
+
+    # Selector de variables para PDP
+    output$sel_vars_pdp <- renderUI({
+      exp <- explainer_obj()
+      if (is.null(exp)) {
+        return(p(class = "small text-muted",
+                 "Calcula importancia primero."))
+      }
+      vars <- setdiff(names(exp$data), c("h3_address", "x", "y", "presence"))
+      checkboxGroupInput(
+        ns("vars_pdp"),
+        label   = "Variables (m\u00e1x. 2-3):",
+        choices = vars,
+        selected = vars[1:min(2, length(vars))]
+      )
+    })
+
+    # Calcular y mostrar PDP
+    observeEvent(input$calcular_pdp, {
+      req(explainer_obj(), input$vars_pdp)
+      withProgress(message = "Calculando PDP\u2026", {
+        tryCatch({
+          pdp <- ingredients::partial_dependence(
+            explainer_obj(),
+            variables = input$vars_pdp
+          )
+          output$plot_pdp <- renderPlot({
+            plot(pdp) +
+              ggplot2::theme_minimal(base_size = 12) +
+              ggplot2::scale_color_manual(values = colores$tableau) +
+              ggplot2::labs(title = NULL, subtitle = NULL, color = NULL) +
+              ggplot2::theme(legend.position = "none")
+          })
+        }, error = function(e) {
+          showNotification(paste("Error:", conditionMessage(e)),
+                           type = "error", duration = 8)
+        })
+      })
+    })
+
     # ── Ajustar modelo ────────────────────────────────────
-    modelo_ajustado <- reactiveVal(NULL)
+    modelo_ajustado  <- reactiveVal(NULL)
+    cv_split_rv      <- reactiveVal(NULL)
     algoritmo_activo <- reactiveVal("logreg")
 
     # Sincronizar tarjeta activa
@@ -1337,11 +1727,12 @@ mod_h3sdm_server <- function(id) {
       withProgress(message = paste("Ajustando", alg, "\u2026"), {
         tryCatch({
 
-          # 1. Preparar predictores con h3sdm_predictors
-          predictors_sf <- h3sdm::h3sdm_predictors(grilla_con_vars())
-
-          # 2. Combinar PA + predictores con h3sdm_data (agrega x e y)
-          dat <- h3sdm::h3sdm_data(pa, predictors_sf)
+          # Seguir vignette: h3sdm_data agrega x e y
+          gc       <- grilla_con_vars(); req(gc)
+          pa_base  <- pa[!duplicated(pa$h3_address), c("h3_address", "presence")]
+          gc_dedup <- gc[!duplicated(gc$h3_address), ]
+          pred_sf  <- h3sdm::h3sdm_predictors(gc_dedup)
+          dat      <- h3sdm::h3sdm_data(pa_base, pred_sf)
 
           # 3. Presence data para evaluación
           presence_data <- dat |>
@@ -1419,6 +1810,7 @@ mod_h3sdm_server <- function(id) {
             cv_args$cellsize <- input$block_size
           }
           cv_split <- do.call(h3sdm::h3sdm_spatial_cv, cv_args)
+          cv_split_rv(cv_split)
 
           # 6. Ajustar
           fitted <- h3sdm::h3sdm_fit_model(
@@ -1478,26 +1870,10 @@ mod_h3sdm_server <- function(id) {
       )
     })
 
-    # Plot métricas por fold
-    output$plot_metricas <- renderPlot({
-      m <- modelo_ajustado(); req(m)
-      cv_res <- m$cv_model
-      preds  <- tune::collect_metrics(cv_res, summarize = FALSE)
-      req(nrow(preds) > 0)
-
-      ggplot2::ggplot(preds,
-        ggplot2::aes(x = id, y = .estimate, color = .metric, group = .metric)) +
-        ggplot2::geom_line(linewidth = 0.8) +
-        ggplot2::geom_point(size = 2.5) +
-        ggplot2::facet_wrap(~.metric, scales = "free_y") +
-        ggplot2::scale_color_manual(values = colores$tableau, guide = "none") +
-        ggplot2::labs(x = "Fold", y = "Valor", title = NULL) +
-        ggplot2::theme_minimal(base_size = 11) +
-        ggplot2::theme(
-          axis.text.x     = ggplot2::element_text(angle = 45, hjust = 1),
-          panel.grid.minor = ggplot2::element_blank(),
-          strip.text       = ggplot2::element_text(face = "bold")
-        )
+    # Plot bloques espaciales CV
+    output$plot_bloques <- renderPlot({
+      cv <- cv_split_rv(); req(cv)
+      spatialsample::autoplot(cv)
     })
 
     # ── Presencias / Pseudoausencias ──────────────────────
