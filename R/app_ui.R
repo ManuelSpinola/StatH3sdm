@@ -10,6 +10,22 @@
 app_ui <- function(request) {
   tagList(
     golem_add_external_resources(),
+    tags$style(HTML("
+      body { margin-bottom: 36px; }
+      .footer-fixed {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background-color: #1170AA;
+        color: #ffffff;
+        text-align: center;
+        font-size: 0.78rem;
+        padding: 6px 0;
+        border-top: 1px solid #0d5a8a;
+      }
+    ")),
     bslib::page_navbar(
       header = shinyjs::useShinyjs(),
       title  = div(
@@ -19,11 +35,6 @@ app_ui <- function(request) {
       ),
       theme  = tema_app,
       lang   = "es",
-      footer = div(
-        class = "text-center text-muted small py-2",
-        style = paste0("border-top: 1px solid ", colores$borde, ";"),
-        "Manuel Sp\u00ednola \u00b7 ICOMVIS \u00b7 Universidad Nacional \u00b7 Costa Rica"
-      ),
 
       # ── M\u00f3dulo principal ─────────────────────────────────
       bslib::nav_panel(
@@ -43,7 +54,9 @@ app_ui <- function(request) {
       bslib::nav_item(
         tags$span(class = "text-white-50 small", "StatH3sdm v0.1")
       )
-    )
+    ),
+    div(class = "footer-fixed",
+        "Manuel Sp\u00ednola \u00b7 ICOMVIS \u00b7 Universidad Nacional \u00b7 Costa Rica")
   )
 }
 

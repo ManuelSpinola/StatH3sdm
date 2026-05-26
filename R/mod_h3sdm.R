@@ -565,7 +565,10 @@ mod_h3sdm_ui <- function(id) {
                            "Buscar registros",
                            class = "btn-primary w-100 mb-2",
                            icon  = icon("search")),
-              uiOutput(ns("resumen_registros"))
+              uiOutput(ns("resumen_registros")),
+              br(),
+              downloadButton(ns("dl_registros"), "Descargar registros",
+                             class = "btn-outline-primary btn-sm w-100")
             ),
 
             # Panel derecho — mapa + tabla
@@ -575,12 +578,12 @@ mod_h3sdm_ui <- function(id) {
                 bslib::card_header(bsicons::bs_icon("map", class = "me-1"),
                                    "Mapa de registros"),
                 bslib::card_body(class = "p-0",
-                  leaflet::leafletOutput(ns("mapa_registros"), height = "320px")
+                  leaflet::leafletOutput(ns("mapa_registros"), height = "420px")
                 )
               ),
               bslib::card(
                 bslib::card_header(bsicons::bs_icon("table", class = "me-1"),
-                                   "Registros descargados"),
+                                   "Registros encontrados"),
                 bslib::card_body(
                   DT::DTOutput(ns("tabla_registros"))
                 )
@@ -637,13 +640,15 @@ mod_h3sdm_ui <- function(id) {
               ),
 
               bslib::card(
-                class = "mb-0",
+                class = "mb-3",
                 bslib::card_header(bsicons::bs_icon("info-circle", class = "me-1"),
                                    "Resumen de la grilla"),
                 bslib::card_body(
                   uiOutput(ns("resumen_grilla"))
                 )
-              )
+              ),
+              downloadButton(ns("dl_grilla"), "Descargar grilla",
+                             class = "btn-outline-primary btn-sm w-100")
             ),
 
             # Panel derecho — mapa
@@ -651,7 +656,7 @@ mod_h3sdm_ui <- function(id) {
               bslib::card_header(bsicons::bs_icon("map", class = "me-1"),
                                  "Grilla H3"),
               bslib::card_body(class = "p-0",
-                leaflet::leafletOutput(ns("mapa_grilla"), height = "500px")
+                leaflet::leafletOutput(ns("mapa_grilla"), height = "580px")
               )
             )
           )
@@ -804,7 +809,7 @@ mod_h3sdm_ui <- function(id) {
                 ),
                 bslib::card_body(
                   uiOutput(ns("sel_variable_mapa")),
-                  leaflet::leafletOutput(ns("mapa_variables"), height = "280px")
+                  leaflet::leafletOutput(ns("mapa_variables"), height = "380px")
                 )
               ),
               bslib::card(
@@ -813,7 +818,7 @@ mod_h3sdm_ui <- function(id) {
                   "Tabla de predictores"
                 ),
                 bslib::card_body(
-                  DT::DTOutput(ns("tabla_predictores"))
+                  DT::DTOutput(ns("tabla_predictores"), height = "300px")
                 )
               )
             )
@@ -969,7 +974,10 @@ mod_h3sdm_ui <- function(id) {
                            "Generar dataset PA",
                            class = "btn-primary w-100 mb-2",
                            icon  = icon("play")),
-              uiOutput(ns("resumen_pa"))
+              uiOutput(ns("resumen_pa")),
+              br(),
+              downloadButton(ns("dl_pa"), "Descargar datos para modelar",
+                             class = "btn-outline-primary btn-sm w-100")
             ),
 
             # Panel derecho
@@ -981,16 +989,16 @@ mod_h3sdm_ui <- function(id) {
                   "Mapa presencias / pseudoausencias"
                 ),
                 bslib::card_body(class = "p-0",
-                  leaflet::leafletOutput(ns("mapa_pa"), height = "300px")
+                  leaflet::leafletOutput(ns("mapa_pa"), height = "400px")
                 )
               ),
               bslib::card(
                 bslib::card_header(
                   bsicons::bs_icon("table", class = "me-1"),
-                  "Dataset para modelar"
+                  "Datos para modelar"
                 ),
                 bslib::card_body(
-                  DT::DTOutput(ns("tabla_pa"))
+                  DT::DTOutput(ns("tabla_pa"), height = "300px")
                 )
               )
             )
@@ -1148,7 +1156,10 @@ mod_h3sdm_ui <- function(id) {
                     uiOutput(ns("cellsize_ui"))
                   ),
                   numericInput(ns("cv_folds"), "N\u00famero de folds:",
-                               value = 5, min = 2, max = 10)
+                               value = 5, min = 2, max = 10),
+                  numericInput(ns("cv_repeats"), "Repeticiones:",
+                               value = 1, min = 1, max = 10),
+                  helpText("Ej. 5 folds \u00d7 5 repeticiones = 25 modelos.")
                 )
               ),
 
@@ -1168,7 +1179,10 @@ mod_h3sdm_ui <- function(id) {
                   "M\u00e9tricas de validaci\u00f3n cruzada"
                 ),
                 bslib::card_body(
-                  uiOutput(ns("tabla_metricas"))
+                  uiOutput(ns("tabla_metricas")),
+                  br(),
+                  downloadButton(ns("dl_metricas"), "Descargar m\u00e9tricas",
+                                 class = "btn-outline-primary btn-sm w-100")
                 )
               ),
               bslib::card(
@@ -1177,7 +1191,7 @@ mod_h3sdm_ui <- function(id) {
                   "Bloques espaciales de CV"
                 ),
                 bslib::card_body(
-                  plotOutput(ns("plot_bloques"), height = "300px")
+                  plotOutput(ns("plot_bloques"), height = "400px")
                 )
               )
             )
@@ -1212,10 +1226,16 @@ mod_h3sdm_ui <- function(id) {
                 p(class = "small text-muted mb-2",
                   "Basada en permutaci\u00f3n de variables (DALEX). ",
                   "Mayor valor = mayor importancia."),
-                actionButton(ns("calcular_importancia"),
-                             "Calcular importancia",
-                             class = "btn-outline-primary btn-sm mb-3",
-                             icon  = icon("calculator")),
+                bslib::layout_columns(
+                  col_widths = c(6, 6), fill = FALSE,
+                  actionButton(ns("calcular_importancia"),
+                               "Calcular importancia",
+                               class = "btn-outline-primary btn-sm w-100",
+                               icon  = icon("calculator")),
+                  downloadButton(ns("dl_importancia"), "Descargar",
+                                 class = "btn-outline-secondary btn-sm w-100")
+                ),
+                br(),
                 plotOutput(ns("plot_importancia"), height = "350px")
               )
             ),
@@ -1249,7 +1269,10 @@ mod_h3sdm_ui <- function(id) {
                   actionButton(ns("calcular_pdp"),
                                "Calcular PDP",
                                class = "btn-outline-primary btn-sm w-100 mt-2",
-                               icon  = icon("play"))
+                               icon  = icon("play")),
+                  br(),
+                  downloadButton(ns("dl_pdp"), "Descargar PDP",
+                                 class = "btn-outline-secondary btn-sm w-100 mt-1")
                 ),
                 plotOutput(ns("plot_pdp"), height = "300px")
               )
@@ -1289,7 +1312,12 @@ mod_h3sdm_ui <- function(id) {
                                "Generar predicci\u00f3n",
                                class = "btn-primary w-100 mb-2",
                                icon  = icon("play")),
-                  uiOutput(ns("resumen_prediccion"))
+                  uiOutput(ns("resumen_prediccion")),
+                  br(),
+                  downloadButton(ns("dl_pred_cont"), "Descargar continuo (.gpkg)",
+                                 class = "btn-outline-primary btn-sm w-100 mb-1"),
+                  downloadButton(ns("dl_pred_cat"), "Descargar categórico (.gpkg)",
+                                 class = "btn-outline-primary btn-sm w-100")
                 )
               )
             ),
@@ -1326,13 +1354,127 @@ mod_h3sdm_ui <- function(id) {
       ),
 
       # ══════════════════════════════════════════════════════
-      # PESTAÑA 10: Código R
+      # PESTAÑA 11: Predicción futura
       # ══════════════════════════════════════════════════════
+      bslib::nav_panel(
+        title = tagList(bsicons::bs_icon("clock-history", class = "me-1"),
+                        "Predicci\u00f3n futura"),
+        div(
+          class = "p-3",
+          p(class = "small text-muted mb-3",
+            "Genera un mapa de idoneidad futura usando el modelo ajustado ",
+            "y rasters de variables bajo un escenario futuro. ",
+            "Los rasters deben tener los mismos nombres de capas que los actuales."),
+
+          bslib::layout_columns(
+            col_widths = c(3, 9),
+            fill = FALSE,
+
+            # Panel izquierdo
+            div(
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("info-circle", class = "me-1"),
+                  "Variables del modelo"
+                ),
+                bslib::card_body(
+                  uiOutput(ns("vars_modelo_futuro"))
+                )
+              ),
+
+              bslib::card(
+                class = "mb-3",
+                bslib::card_header(
+                  bsicons::bs_icon("upload", class = "me-1"),
+                  "Rasters futuros"
+                ),
+                bslib::card_body(
+                  p(class = "small text-muted mb-2",
+                    "Carga los rasters en el mismo CRS, recortados y ",
+                    "enmascarados al AOI."),
+                  fileInput(
+                    ns("raster_futuro"),
+                    label    = NULL,
+                    accept   = c(".tif", ".tiff"),
+                    multiple = TRUE,
+                    buttonLabel = "Buscar\u2026",
+                    placeholder = "GeoTIFF (.tif)"
+                  ),
+                  uiOutput(ns("verificacion_vars_futuro"))
+                )
+              ),
+
+              actionButton(ns("predecir_futuro"),
+                           "Generar predicci\u00f3n futura",
+                           class = "btn-primary w-100 mb-2",
+                           icon  = icon("play")),
+              uiOutput(ns("resumen_pred_futuro")),
+              br(),
+              downloadButton(ns("dl_pred_futuro_cont"),
+                             "Descargar continuo (.gpkg)",
+                             class = "btn-outline-primary btn-sm w-100 mb-1"),
+              downloadButton(ns("dl_pred_futuro_cat"),
+                             "Descargar categ\u00f3rico (.gpkg)",
+                             class = "btn-outline-primary btn-sm w-100")
+            ),
+
+            # Panel derecho
+            div(
+              bslib::layout_columns(
+                col_widths = c(6, 6),
+                fill = FALSE,
+                bslib::card(
+                  bslib::card_header(
+                    bsicons::bs_icon("palette", class = "me-1"),
+                    "Idoneidad futura continua (0\u20131)"
+                  ),
+                  bslib::card_body(class = "p-0",
+                    leaflet::leafletOutput(ns("mapa_futuro_cont"),
+                                          height = "500px")
+                  )
+                ),
+                bslib::card(
+                  bslib::card_header(
+                    bsicons::bs_icon("layers", class = "me-1"),
+                    "Categor\u00edas de h\u00e1bitat futuro"
+                  ),
+                  bslib::card_body(class = "p-0",
+                    leaflet::leafletOutput(ns("mapa_futuro_cat"),
+                                          height = "500px")
+                  )
+                )
+              )
+            )
+          )
+        )
+      ),
       bslib::nav_panel(
         title = tagList(bsicons::bs_icon("code-slash", class = "me-1"),
                         "C\u00f3digo R"),
-        div(class = "p-3",
-            p(class = "text-muted small", "En construcci\u00f3n\u2026"))
+        div(
+          class = "p-3",
+          p(class = "small text-muted mb-3",
+            "C\u00f3digo R reproducible que replica el an\u00e1lisis realizado en la app. ",
+            "Requiere que el modelo haya sido ajustado."),
+          bslib::layout_columns(
+            col_widths = c(2, 10),
+            fill = FALSE,
+            div(
+              downloadButton(ns("descargar_codigo"),
+                             "Descargar .R",
+                             class = "btn-outline-primary btn-sm w-100"),
+              br(), br(),
+              actionButton(ns("copiar_codigo"),
+                           "Copiar",
+                           class = "btn-outline-secondary btn-sm w-100",
+                           icon  = icon("copy"))
+            ),
+            div(
+              verbatimTextOutput(ns("codigo_r"))
+            )
+          )
+        )
       )
 
     ) # /navset_tab
@@ -1375,8 +1517,11 @@ mod_h3sdm_server <- function(id) {
         aoi_reproj <- sf::st_transform(aoi_sf(), input$crs_custom)
         aoi_sf(aoi_reproj)
         showNotification(
-          paste0("AOI proyectado a EPSG:", input$crs_custom),
-          type = "message", duration = 3)
+          paste0("AOI proyectado a EPSG:", input$crs_custom,
+                 ". Aseg\u00farate de que tus rasters de variables est\u00e9n en la misma ",
+                 "proyecci\u00f3n, recortados y enmascarados al AOI. ",
+                 "Puedes hacerlo en R (terra), QGIS u otro software GIS."),
+          type = "warning", duration = 10)
       }, error = function(e) {
         showNotification(paste("EPSG no v\u00e1lido:", conditionMessage(e)),
                          type = "error")
@@ -1393,6 +1538,438 @@ mod_h3sdm_server <- function(id) {
                      value = 0.5, min = 0.01, step = 0.1)
       )
     })
+
+    # ── Predicción futura ─────────────────────────────────
+    pred_futuro_sf <- reactiveVal(NULL)
+
+    output$mapa_futuro_cont <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    output$mapa_futuro_cat <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    # Variables del modelo actual
+    output$vars_modelo_futuro <- renderUI({
+      gc <- grilla_con_vars()
+      if (is.null(gc)) return(
+        p(class = "small text-muted",
+          "Extrae variables y ajusta el modelo primero.")
+      )
+      vars <- setdiff(names(sf::st_drop_geometry(gc)), "h3_address")
+      tagList(
+        p(class = "small text-muted mb-1",
+          "Los rasters futuros deben tener estas capas:"),
+        tags$ul(class = "small mb-0",
+                lapply(vars, function(v) tags$li(code(v))))
+      )
+    })
+
+    # Verificar que los rasters futuros tienen las variables correctas
+    output$verificacion_vars_futuro <- renderUI({
+      req(input$raster_futuro, grilla_con_vars())
+      gc   <- grilla_con_vars()
+      vars_modelo <- setdiff(names(sf::st_drop_geometry(gc)), "h3_address")
+
+      tryCatch({
+        rasters <- lapply(input$raster_futuro$datapath, terra::rast)
+        stack   <- if (length(rasters) > 1) do.call(c, rasters) else rasters[[1]]
+        vars_futuro <- names(stack)
+
+        faltantes <- setdiff(vars_modelo, vars_futuro)
+        extras    <- setdiff(vars_futuro, vars_modelo)
+
+        if (length(faltantes) == 0) {
+          div(class = "alert alert-success small py-2 px-3 mb-0",
+              bsicons::bs_icon("check-circle-fill", class = "me-1"),
+              "Todas las variables coinciden.")
+        } else {
+          div(class = "alert alert-danger small py-2 px-3 mb-0",
+              bsicons::bs_icon("x-circle-fill", class = "me-1"),
+              strong("Faltan: "), paste(faltantes, collapse = ", "))
+        }
+      }, error = function(e) NULL)
+    })
+
+    # Generar predicción futura
+    observeEvent(input$predecir_futuro, {
+      req(modelo_ajustado(), grilla_con_vars(), input$raster_futuro)
+
+      withProgress(message = "Generando predicci\u00f3n futura\u2026", {
+        tryCatch({
+          m  <- modelo_ajustado()
+          gc <- grilla_con_vars()
+          gc_dedup <- gc[!duplicated(gc$h3_address), ]
+
+          # Cargar rasters futuros
+          rasters <- lapply(input$raster_futuro$datapath, terra::rast)
+          stack   <- if (length(rasters) > 1) do.call(c, rasters) else rasters[[1]]
+
+          # Verificar variables
+          vars_modelo  <- setdiff(names(sf::st_drop_geometry(gc_dedup)), "h3_address")
+          vars_futuro  <- names(stack)
+          faltantes    <- setdiff(vars_modelo, vars_futuro)
+          if (length(faltantes) > 0) {
+            showNotification(
+              paste0("Faltan variables: ", paste(faltantes, collapse = ", ")),
+              type = "error", duration = 8)
+            return()
+          }
+
+          # Extraer variables futuras sobre grilla limpia
+          grilla_limpia <- grilla_sf()
+          result_fut    <- h3sdm::h3sdm_extract_num(stack[[vars_modelo]], grilla_limpia)
+          pred_futuro   <- h3sdm::h3sdm_predictors(
+            result_fut[!duplicated(result_fut$h3_address), ])
+
+          p <- h3sdm::h3sdm_predict(m, pred_futuro)
+          pred_futuro_sf(p)
+
+          # Visualizar
+          p_vis <- sf::st_cast(p, "POLYGON") |> sf::st_transform(4326)
+          bbox  <- sf::st_bbox(p_vis)
+          vals  <- p_vis$prediction
+
+          # Mapa continuo
+          pal_cont <- leaflet::colorNumeric("inferno", domain = c(0,1), reverse = TRUE)
+          leaflet::leafletProxy(ns("mapa_futuro_cont")) |>
+            leaflet::clearShapes() |> leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data = p_vis, fillColor = ~pal_cont(prediction),
+              fillOpacity = 0.85, color = "transparent", weight = 0) |>
+            leaflet::addLegend(position = "bottomright", pal = pal_cont,
+                               values = c(0,1), title = "Idoneidad", opacity = 0.8) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          # Mapa categórico
+          breaks      <- quantile(vals, probs = c(0,.2,.4,.6,.8,1), na.rm = TRUE)
+          etiquetas   <- c("Muy bajo","Bajo","Medio","Alto","Muy alto")
+          colores_cat <- c("#d73027","#fc8d59","#fee08b","#91cf60","#1a9850")
+          p_vis$categoria <- factor(
+            cut(vals, breaks = breaks, labels = etiquetas, include.lowest = TRUE),
+            levels = etiquetas, ordered = TRUE)
+          pal_cat <- leaflet::colorFactor(palette = colores_cat,
+                                          levels = etiquetas, ordered = TRUE)
+          leaflet::leafletProxy(ns("mapa_futuro_cat")) |>
+            leaflet::clearShapes() |> leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data = p_vis, fillColor = ~pal_cat(categoria),
+              fillOpacity = 0.85, color = "transparent", weight = 0) |>
+            leaflet::addLegend(position = "bottomright",
+                               colors = colores_cat, labels = etiquetas,
+                               title = "H\u00e1bitat", opacity = 0.8) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          showNotification("Predicci\u00f3n futura generada.",
+                           type = "message", duration = 4)
+
+        }, error = function(e) {
+          showNotification(paste("Error:", conditionMessage(e)),
+                           type = "error", duration = 8)
+        })
+      })
+    })
+
+    output$resumen_pred_futuro <- renderUI({
+      p <- pred_futuro_sf()
+      if (is.null(p)) return(NULL)
+      vals <- p$prediction
+      div(class = "alert alert-info small py-2 px-3 mt-2 mb-0",
+          bsicons::bs_icon("check-circle-fill", class = "me-1"),
+          strong(nrow(p)), " hex\u00e1gonos",
+          tags$br(),
+          "Media: ", strong(round(mean(vals, na.rm = TRUE), 3)),
+          tags$br(),
+          "Rango: ", strong(round(min(vals, na.rm = TRUE), 3)),
+          " \u2013 ", strong(round(max(vals, na.rm = TRUE), 3)))
+    })
+
+    output$dl_pred_futuro_cont <- downloadHandler(
+      filename = function() paste0("prediccion_futura_continua_", Sys.Date(), ".gpkg"),
+      content  = function(file) {
+        req(pred_futuro_sf())
+        sf::st_write(pred_futuro_sf(), file, delete_dsn = TRUE, quiet = TRUE)
+      }
+    )
+
+    output$dl_pred_futuro_cat <- downloadHandler(
+      filename = function() paste0("prediccion_futura_categorica_", Sys.Date(), ".gpkg"),
+      content  = function(file) {
+        req(pred_futuro_sf())
+        p      <- pred_futuro_sf()
+        breaks <- quantile(p$prediction, probs = c(0,.2,.4,.6,.8,1), na.rm = TRUE)
+        etiquetas <- c("Muy bajo","Bajo","Medio","Alto","Muy alto")
+        p$categoria <- cut(p$prediction, breaks = breaks,
+                           labels = etiquetas, include.lowest = TRUE)
+        sf::st_write(p, file, delete_dsn = TRUE, quiet = TRUE)
+      }
+    )
+
+    # ── Descargas ─────────────────────────────────────────
+
+    # Registros
+    output$dl_registros <- downloadHandler(
+      filename = function() paste0("registros_", Sys.Date(), ".csv"),
+      content  = function(file) {
+        req(registros_sf())
+        write.csv(sf::st_drop_geometry(registros_sf()), file, row.names = FALSE)
+      }
+    )
+
+    # Grilla
+    output$dl_grilla <- downloadHandler(
+      filename = function() paste0("grilla_h3_", Sys.Date(), ".gpkg"),
+      content  = function(file) {
+        req(grilla_sf())
+        sf::st_write(grilla_sf(), file, delete_dsn = TRUE, quiet = TRUE)
+      }
+    )
+
+    # Datos para modelar (PA)
+    output$dl_pa <- downloadHandler(
+      filename = function() paste0("datos_modelar_", Sys.Date(), ".csv"),
+      content  = function(file) {
+        req(dataset_pa())
+        write.csv(sf::st_drop_geometry(dataset_pa()), file, row.names = FALSE)
+      }
+    )
+
+    # Métricas
+    output$dl_metricas <- downloadHandler(
+      filename = function() paste0("metricas_", Sys.Date(), ".csv"),
+      content  = function(file) {
+        req(modelo_ajustado())
+        metrics <- tryCatch(
+          tune::collect_metrics(modelo_ajustado()$cv_model),
+          error = function(e) NULL
+        )
+        req(metrics)
+        write.csv(as.data.frame(metrics), file, row.names = FALSE)
+      }
+    )
+
+    # Importancia
+    output$dl_importancia <- downloadHandler(
+      filename = function() paste0("importancia_", Sys.Date(), ".csv"),
+      content  = function(file) {
+        req(importancia_df())
+        write.csv(as.data.frame(importancia_df()), file, row.names = FALSE)
+      }
+    )
+
+    # PDP
+    output$dl_pdp <- downloadHandler(
+      filename = function() paste0("pdp_", Sys.Date(), ".png"),
+      content  = function(file) {
+        req(explainer_obj(), input$vars_pdp)
+        pdp <- ingredients::partial_dependence(explainer_obj(),
+                                               variables = input$vars_pdp)
+        p <- plot(pdp) +
+          ggplot2::theme_minimal(base_size = 12) +
+          ggplot2::labs(title = NULL, subtitle = NULL, color = NULL) +
+          ggplot2::theme(legend.position = "none")
+        ggplot2::ggsave(file, p, width = 8, height = 5, dpi = 150)
+      }
+    )
+
+    # Predicción continua
+    output$dl_pred_cont <- downloadHandler(
+      filename = function() paste0("prediccion_continua_", Sys.Date(), ".gpkg"),
+      content  = function(file) {
+        req(prediccion_sf())
+        sf::st_write(prediccion_sf(), file, delete_dsn = TRUE, quiet = TRUE)
+      }
+    )
+
+    # Predicción categórica
+    output$dl_pred_cat <- downloadHandler(
+      filename = function() paste0("prediccion_categorica_", Sys.Date(), ".gpkg"),
+      content  = function(file) {
+        req(prediccion_sf())
+        p  <- prediccion_sf()
+        breaks <- quantile(p$prediction, probs = c(0, 0.2, 0.4, 0.6, 0.8, 1),
+                           na.rm = TRUE)
+        etiquetas <- c("Muy bajo", "Bajo", "Medio", "Alto", "Muy alto")
+        p$categoria <- cut(p$prediction, breaks = breaks,
+                           labels = etiquetas, include.lowest = TRUE)
+        sf::st_write(p, file, delete_dsn = TRUE, quiet = TRUE)
+      }
+    )
+
+    # ── Código R ──────────────────────────────────────────
+    codigo_generado <- reactive({
+      m   <- modelo_ajustado()
+      pa  <- dataset_pa()
+      gc  <- grilla_con_vars()
+      alg <- algoritmo_activo()
+
+      # Encabezado
+      cod <- paste0(
+        "# ============================================\n",
+        "# StatH3sdm \u00b7 StatSuite\n",
+        "# Generado: ", format(Sys.Date(), "%Y-%m-%d"), "\n",
+        "# Manuel Sp\u00ednola \u00b7 ICOMVIS \u00b7 UNA \u00b7 Costa Rica\n",
+        "# ============================================\n\n",
+
+        "library(h3sdm)\n",
+        "library(sf)\n",
+        "library(terra)\n",
+        "library(dplyr)\n",
+        "library(tidymodels)\n",
+        "library(spatialsample)\n\n",
+
+        "# 1. \u00c1rea de inter\u00e9s\n",
+        "# aoi_sf <- sf::st_read(\"mi_aoi.gpkg\")\n\n",
+
+        "# 2. Registros de ocurrencia\n",
+        if (!is.null(pa)) {
+          n_pres <- sum(sf::st_drop_geometry(pa)$presence == "1",
+                        na.rm = TRUE)
+          paste0("# Presencias: ", n_pres, "\n",
+                 "# records <- h3sdm_get_records(\n",
+                 "#   species   = \"Mi especie\",\n",
+                 "#   aoi_sf    = aoi_sf,\n",
+                 "#   providers = c(\"gbif\", \"inat\"),\n",
+                 "#   limit     = 500\n",
+                 "# )\n\n")
+        } else "# records <- h3sdm_get_records(...)\n\n",
+
+        "# 3. Grilla H3\n",
+        if (!is.null(gc)) {
+          paste0("h7 <- h3sdm_get_grid(aoi_sf, res = ",
+                 isolate(input$resolucion_h3), ")\n\n")
+        } else "h7 <- h3sdm_get_grid(aoi_sf, res = 7)\n\n",
+
+        "# 4. Variables ambientales\n",
+        if (!is.null(gc)) {
+          vars <- setdiff(names(sf::st_drop_geometry(gc)), "h3_address")
+          paste0("# bio <- terra::rast(\"mis_variables.tif\")\n",
+                 "# Variables extraidas: ", paste(vars, collapse = ", "), "\n",
+                 "bio_pred <- h3sdm_extract_num(bio, h7)\n",
+                 "predictors <- h3sdm_predictors(bio_pred)\n\n")
+        } else "# predictors <- h3sdm_predictors(...)\n\n",
+
+        "# 5. Presencias / Pseudoausencias\n",
+        paste0("pa <- h3sdm_pa_from_records(\n",
+               "  records     = records,\n",
+               "  aoi_sf      = aoi_sf,\n",
+               "  res         = ", isolate(input$resolucion_h3), ",\n",
+               "  n_pseudoabs = ", isolate(input$n_pseudoabs), "\n",
+               ")\n\n"),
+
+        "# 6. Combinar datos\n",
+        "pa_base <- pa[, c(\"h3_address\", \"presence\")]\n",
+        "dat <- h3sdm_data(pa_base, predictors)\n",
+        "presence_data <- dat |> filter(presence == \"1\")\n\n",
+
+        "# 7. Validaci\u00f3n cruzada espacial\n",
+        paste0("scv <- h3sdm_spatial_cv(\n",
+               "  dat,\n",
+               "  method  = \"", isolate(input$cv_method), "\",\n",
+               "  v       = ", isolate(input$cv_folds), ",\n",
+               "  repeats = ", isolate(input$cv_repeats),
+               if (isolate(input$cv_method) == "block")
+                 paste0(",\n  cellsize = ", isolate(input$block_size),
+                        ",\n  square   = ",
+                        tolower(isolate(input$block_shape) == "square"))
+               else "",
+               "\n)\n\n"),
+
+        "# 8. Recipe y modelo\n",
+        switch(alg,
+          logreg = paste0(
+            "rec <- h3sdm_recipe(dat)\n",
+            if (isolate(input$estandarizar))
+              "rec <- step_normalize(rec, all_numeric_predictors())\n"
+            else "",
+            "modelo <- logistic_reg() |>\n",
+            "  set_engine(\"glm\") |>\n",
+            "  set_mode(\"classification\")\n\n",
+            "wf <- h3sdm_workflow(modelo, rec)\n\n"
+          ),
+          rf = paste0(
+            "rec <- h3sdm_recipe(dat)\n",
+            if (isolate(input$estandarizar))
+              "rec <- step_normalize(rec, all_numeric_predictors())\n"
+            else "",
+            "modelo <- rand_forest(\n",
+            "  trees = ", isolate(input$rf_trees), "\n",
+            ") |>\n",
+            "  set_engine(\"ranger\") |>\n",
+            "  set_mode(\"classification\")\n\n",
+            "wf <- h3sdm_workflow(modelo, rec)\n\n"
+          ),
+          xgb = paste0(
+            "rec <- h3sdm_recipe(dat)\n",
+            if (isolate(input$estandarizar))
+              "rec <- step_normalize(rec, all_numeric_predictors())\n"
+            else "",
+            "modelo <- boost_tree(\n",
+            "  trees      = ", isolate(input$xgb_trees), ",\n",
+            "  learn_rate = ", isolate(input$xgb_lr), "\n",
+            ") |>\n",
+            "  set_engine(\"xgboost\") |>\n",
+            "  set_mode(\"classification\")\n\n",
+            "wf <- h3sdm_workflow(modelo, rec)\n\n"
+          ),
+          gam = paste0(
+            "rec <- h3sdm_recipe_gam(dat)\n",
+            "modelo <- gen_additive_mod() |>\n",
+            "  set_engine(\"mgcv\") |>\n",
+            "  set_mode(\"classification\")\n\n",
+            "formula_gam <- presence ~ ",
+            paste(paste0("s(", setdiff(names(sf::st_drop_geometry(dat %||% pa)),
+                                        c("h3_address", "presence", "x", "y")),
+                          ")"), collapse = " + "),
+            " + s(x, y, bs = \"tp\")\n\n",
+            "wf <- h3sdm_workflow_gam(modelo, rec, formula_gam)\n\n"
+          )
+        ),
+
+        "# 9. Ajustar modelo\n",
+        "f <- h3sdm_fit_model(wf, scv, presence_data)\n\n",
+
+        "# 10. M\u00e9tricas\n",
+        "metricas <- h3sdm_eval_metrics(\n",
+        "  fitted_model  = f$cv_model,\n",
+        "  presence_data = presence_data\n",
+        ")\n",
+        "print(metricas)\n\n",
+
+        "# 11. Predicci\u00f3n\n",
+        "p <- h3sdm_predict(f, predictors)\n\n",
+
+        "# 12. Interpretaci\u00f3n\n",
+        "e <- h3sdm_explain(f$final_model, data = dat)\n",
+        "vars_pred <- setdiff(names(e$data), c(\"h3_address\", \"x\", \"y\", \"presence\"))\n",
+        "imp <- DALEX::model_parts(e, variables = vars_pred)\n",
+        "plot(imp)\n\n",
+        "pdp <- ingredients::partial_dependence(e, variables = vars_pred[1:2])\n",
+        "plot(pdp)\n"
+      )
+      cod
+    })
+
+    output$codigo_r <- renderText({
+      req(modelo_ajustado())
+      codigo_generado()
+    })
+
+    output$descargar_codigo <- downloadHandler(
+      filename = function() {
+        paste0("StatH3sdm_", format(Sys.Date(), "%Y%m%d"), ".R")
+      },
+      content = function(file) {
+        writeLines(codigo_generado(), file)
+      }
+    )
 
     # ── Predicción ────────────────────────────────────────
     prediccion_sf <- reactiveVal(NULL)
@@ -1442,13 +2019,13 @@ mod_h3sdm_server <- function(id) {
               data        = p_vis,
               fillColor   = ~pal_cont(prediction),
               fillOpacity = 0.85,
-              color       = "#ffffff",
-              weight      = 0.2
+              color       = "transparent",
+              weight      = 0
             ) |>
             leaflet::addLegend(
               position = "bottomright",
               pal      = pal_cont,
-              values   = c(1, 0),
+              values   = c(0, 1),
               title    = "Idoneidad",
               opacity  = 0.8
             ) |>
@@ -1480,13 +2057,13 @@ mod_h3sdm_server <- function(id) {
               data        = p_vis,
               fillColor   = ~pal_cat(categoria),
               fillOpacity = 0.85,
-              color       = "#ffffff",
-              weight      = 0.2
+              color       = "transparent",
+              weight      = 0
             ) |>
             leaflet::addLegend(
               position = "bottomright",
-              pal      = pal_cat,
-              values   = etiquetas,
+              colors   = colores_cat,
+              labels   = etiquetas,
               title    = "H\u00e1bitat",
               opacity  = 0.8
             ) |>
@@ -1801,9 +2378,10 @@ mod_h3sdm_server <- function(id) {
           # 5. CV espacial — validar geometrías antes
           pa_valid <- sf::st_make_valid(dat)
           cv_args  <- list(
-            data   = pa_valid,
-            method = input$cv_method,
-            v      = input$cv_folds
+            data    = pa_valid,
+            method  = input$cv_method,
+            v       = input$cv_folds,
+            repeats = input$cv_repeats
           )
           if (input$cv_method == "block") {
             cv_args$square   <- input$block_shape == "square"
@@ -2186,8 +2764,36 @@ mod_h3sdm_server <- function(id) {
             nombres <- make.unique(nombres, sep = "_")
             names(stack) <- nombres
           }
-          grilla  <- grilla_con_vars() %||% grilla_sf()
+          # Extraer sobre grilla limpia
+          grilla  <- grilla_sf()
+          # Verificar CRS
+          crs_raster <- terra::crs(stack, describe = TRUE)$code
+          crs_aoi    <- sf::st_crs(aoi_sf())$epsg
+          if (!is.na(crs_raster) && !is.na(crs_aoi) &&
+              crs_raster != as.character(crs_aoi)) {
+            showNotification(
+              paste0("El raster est\u00e1 en EPSG:", crs_raster,
+                     " y la grilla en EPSG:4326. ",
+                     "La extracci\u00f3n se realizar\u00e1 correctamente — ",
+                     "la grilla se transforma internamente al CRS del raster."),
+              type = "message", duration = 8)
+          }
           result  <- h3sdm::h3sdm_extract_num(stack, grilla)
+
+          # Combinar con variables existentes sin duplicar
+          gc_actual <- grilla_con_vars()
+          if (!is.null(gc_actual)) {
+            vars_nuevas <- setdiff(names(sf::st_drop_geometry(result)),
+                                   c("h3_address", names(sf::st_drop_geometry(gc_actual))))
+            if (length(vars_nuevas) > 0) {
+              df_nuevo <- sf::st_drop_geometry(result)[, c("h3_address", vars_nuevas)]
+              df_actual <- sf::st_drop_geometry(gc_actual)
+              df_merged <- dplyr::left_join(df_actual, df_nuevo, by = "h3_address")
+              result <- sf::st_sf(df_merged, geometry = sf::st_geometry(gc_actual))
+            } else {
+              result <- gc_actual
+            }
+          }
           grilla_con_vars(result)
           showNotification(
             paste(terra::nlyr(stack), "variable(s) num\u00e9rica(s) extra\u00eddas."),
@@ -2209,8 +2815,22 @@ mod_h3sdm_server <- function(id) {
                    ignore.case = TRUE)][1]
           rcat <- terra::rast(rcat_path)
 
-          # Usar grilla con h3_address único — desduplicar antes de extract_cat
+          # Verificar CRS
           grilla_base <- grilla_con_vars() %||% grilla_sf()
+          crs_raster <- terra::crs(rcat, describe = TRUE)$code
+          crs_aoi    <- sf::st_crs(aoi_sf())$epsg
+          if (!is.na(crs_raster) && !is.na(crs_aoi) &&
+              crs_raster != as.character(crs_aoi)) {
+            showNotification(
+              paste0("El raster categ\u00f3rico est\u00e1 en EPSG:", crs_raster,
+                     " y la grilla en EPSG:4326. ",
+                     "La extracci\u00f3n se realizar\u00e1 correctamente — ",
+                     "la grilla se transforma internamente al CRS del raster. ",
+                     "Para rasters categ\u00f3ricos grandes esto puede ser lento."),
+              type = "message", duration = 10)
+          }
+
+          # Usar grilla con h3_address único — desduplicar antes de extract_cat
           grilla_unique <- grilla_base[
             !duplicated(grilla_base$h3_address), ]
 
@@ -2435,11 +3055,11 @@ mod_h3sdm_server <- function(id) {
             res = as.integer(input$resolucion_h3)
           )
           n_hex  <- nrow(grilla)  # conteo real antes del cast
-          grilla <- sf::st_cast(grilla, "POLYGON")
-          grilla_sf(grilla)
+          grilla_sf(grilla)       # guardar MULTIPOLYGON original
           n_hex_real(n_hex)
-          bbox <- sf::st_bbox(sf::st_transform(grilla, 4326))
-          grilla_vis <- sf::st_transform(grilla, 4326)
+          grilla_vis <- sf::st_cast(grilla, "POLYGON") |>
+            sf::st_transform(4326)
+          bbox <- sf::st_bbox(grilla_vis)
           leaflet::leafletProxy(ns("mapa_grilla")) |>
             leaflet::clearGroup("grilla") |>
             leaflet::clearGroup("aoi_grilla") |>
