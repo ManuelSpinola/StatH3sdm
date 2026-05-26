@@ -38,7 +38,8 @@ Imports:
     ranger,
     xgboost,
     spatialsample,
-    mgcv
+    mgcv,
+    leafgl
 Suggests:
     rbiodatacr
 Encoding: UTF-8
