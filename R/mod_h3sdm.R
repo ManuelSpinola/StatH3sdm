@@ -2898,26 +2898,28 @@ mod_h3sdm_server <- function(id) {
 
     # Actualizar mapa cuando cambia la variable seleccionada
     observeEvent(input$var_mapa, {
-      grilla <- grilla_con_vars(); req(grilla, input$var_mapa)
-      vals   <- sf::st_drop_geometry(grilla)[[input$var_mapa]]
-      pal    <- leaflet::colorNumeric("YlOrRd", domain = vals, na.color = "#CCCCCC")
-      bbox   <- sf::st_bbox(sf::st_transform(grilla, 4326))
+      grilla     <- grilla_con_vars(); req(grilla, input$var_mapa)
       grilla_vis <- sf::st_cast(grilla, "POLYGON") |> sf::st_transform(4326)
+      vals_vis   <- sf::st_drop_geometry(grilla_vis)[[input$var_mapa]]
+      # Reemplazar NA con la media para que leafgl no falle
+      vals_vis[is.na(vals_vis)] <- mean(vals_vis, na.rm = TRUE)
+      pal  <- leaflet::colorNumeric("YlOrRd", domain = range(vals_vis, na.rm = TRUE))
+      cols <- pal(vals_vis)
+      bbox <- sf::st_bbox(grilla_vis)
       leaflet::leafletProxy(ns("mapa_variables")) |>
         leaflet::clearShapes() |>
         leaflet::clearControls() |>
         leafgl::addGlPolygons(
           data        = grilla_vis,
           group       = "vars",
-          fillColor   = ~pal(vals),
-          fillOpacity = 0.8,
-          color       = "#ffffff",
-          weight      = 0.3
+          color       = cols,
+          fillColor   = cols,
+          fillOpacity = 0.8
         ) |>
         leaflet::addLegend(
           position = "bottomright",
           pal      = pal,
-          values   = vals,
+          values   = vals_vis,
           title    = input$var_mapa,
           opacity  = 0.8
         ) |>
