@@ -1289,62 +1289,167 @@ mod_h3sdm_ui <- function(id) {
                         "Predicci\u00f3n"),
         div(
           class = "p-3",
-          p(class = "small text-muted mb-3",
-            "Genera el mapa de idoneidad de h\u00e1bitat usando el modelo ajustado. ",
-            "Requiere que el modelo haya sido ajustado previamente."),
+          bslib::navset_tab(
 
-          bslib::layout_columns(
-            col_widths = c(3, 9),
-            fill = FALSE,
+            # ── Sub-pestaña: Predicción ──────────────────────────
+            bslib::nav_panel(
+              title = tagList(bsicons::bs_icon("palette", class = "me-1"),
+                              "Predicci\u00f3n"),
+              div(
+                class = "pt-3",
+                p(class = "small text-muted mb-3",
+                  "Genera el mapa de idoneidad de h\u00e1bitat usando el modelo ajustado. ",
+                  "Requiere que el modelo haya sido ajustado previamente."),
 
-            # Panel izquierdo
-            div(
-              bslib::card(
-                class = "mb-3",
-                bslib::card_header(
-                  bsicons::bs_icon("gear", class = "me-1"),
-                  "Opciones"
-                ),
-                bslib::card_body(
-                  p(class = "small text-muted mb-2",
-                    "La predicci\u00f3n usa la grilla con variables extraídas."),
-                  actionButton(ns("predecir"),
-                               "Generar predicci\u00f3n",
-                               class = "btn-primary w-100 mb-2",
-                               icon  = icon("play")),
-                  uiOutput(ns("resumen_prediccion")),
-                  br(),
-                  downloadButton(ns("dl_pred_cont"), "Descargar continuo (.gpkg)",
-                                 class = "btn-outline-primary btn-sm w-100 mb-1"),
-                  downloadButton(ns("dl_pred_cat"), "Descargar categórico (.gpkg)",
-                                 class = "btn-outline-primary btn-sm w-100")
+                bslib::layout_columns(
+                  col_widths = c(3, 9),
+                  fill = FALSE,
+
+                  div(
+                    bslib::card(
+                      class = "mb-3",
+                      bslib::card_header(
+                        bsicons::bs_icon("gear", class = "me-1"),
+                        "Opciones"
+                      ),
+                      bslib::card_body(
+                        p(class = "small text-muted mb-2",
+                          "La predicci\u00f3n usa la grilla con variables extra\u00eddas."),
+                        actionButton(ns("predecir"),
+                                     "Generar predicci\u00f3n",
+                                     class = "btn-primary w-100 mb-2",
+                                     icon  = icon("play")),
+                        uiOutput(ns("resumen_prediccion")),
+                        br(),
+                        downloadButton(ns("dl_pred_cont"),
+                                       "Descargar continuo (.gpkg)",
+                                       class = "btn-outline-primary btn-sm w-100 mb-1"),
+                        downloadButton(ns("dl_pred_cat"),
+                                       "Descargar categ\u00f3rico (.gpkg)",
+                                       class = "btn-outline-primary btn-sm w-100")
+                      )
+                    )
+                  ),
+
+                  div(
+                    bslib::layout_columns(
+                      col_widths = c(6, 6),
+                      fill = FALSE,
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("palette", class = "me-1"),
+                          "Idoneidad continua (0\u20131)"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_pred_continuo"),
+                                                height = "600px")
+                        )
+                      ),
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("layers", class = "me-1"),
+                          "Categor\u00edas de h\u00e1bitat (cuantiles)"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_pred_cat"),
+                                                height = "600px")
+                        )
+                      )
+                    )
+                  )
                 )
               )
             ),
 
-            # Panel derecho — dos mapas
-            div(
-              bslib::layout_columns(
-                col_widths = c(6, 6),
-                fill = FALSE,
-                bslib::card(
-                  bslib::card_header(
-                    bsicons::bs_icon("palette", class = "me-1"),
-                    "Idoneidad continua (0\u20131)"
+            # ── Sub-pestaña: AOA ─────────────────────────────────
+            bslib::nav_panel(
+              title = tagList(bsicons::bs_icon("shield-check", class = "me-1"),
+                              "AOA"),
+              div(
+                class = "pt-3",
+                p(class = "small text-muted mb-3",
+                  "El \u00c1rea de Aplicabilidad (AOA) indica d\u00f3nde el modelo puede ",
+                  "predecir con confianza. El \u00cdndice de Disimilaridad (DI) ",
+                  "muestra la distancia de cada hex\u00e1gono al espacio ambiental ",
+                  "de entrenamiento."),
+
+                bslib::layout_columns(
+                  col_widths = c(3, 9),
+                  fill = FALSE,
+
+                  div(
+                    bslib::card(
+                      class = "mb-3",
+                      bslib::card_header(
+                        bsicons::bs_icon("gear", class = "me-1"),
+                        "Opciones"
+                      ),
+                      bslib::card_body(
+                        p(class = "small text-muted mb-2",
+                          "Requiere que la predicci\u00f3n haya sido generada."),
+                        actionButton(ns("calcular_aoa"),
+                                     "Calcular AOA",
+                                     class = "btn-primary w-100 mb-2",
+                                     icon  = icon("shield")),
+                        uiOutput(ns("resumen_aoa")),
+                        br(),
+                        downloadButton(ns("dl_aoa"),
+                                       "Descargar AOA (.gpkg)",
+                                       class = "btn-outline-primary btn-sm w-100")
+                      )
+                    )
                   ),
-                  bslib::card_body(class = "p-0",
-                    leaflet::leafletOutput(ns("mapa_pred_continuo"),
-                                          height = "600px")
-                  )
-                ),
-                bslib::card(
-                  bslib::card_header(
-                    bsicons::bs_icon("layers", class = "me-1"),
-                    "Categor\u00edas de h\u00e1bitat (cuantiles)"
-                  ),
-                  bslib::card_body(class = "p-0",
-                    leaflet::leafletOutput(ns("mapa_pred_cat"),
-                                          height = "600px")
+
+                  div(
+                    bslib::layout_columns(
+                      col_widths = c(6, 6),
+                      fill = FALSE,
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("shield-check", class = "me-1"),
+                          "\u00c1rea de Aplicabilidad"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_aoa"),
+                                                height = "550px")
+                        )
+                      ),
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("graph-up", class = "me-1"),
+                          "\u00cdndice de Disimilaridad (DI)"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_di"),
+                                                height = "550px")
+                        )
+                      )
+                    ),
+                    br(),
+                    bslib::layout_columns(
+                      col_widths = c(6, 6),
+                      fill = FALSE,
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("palette", class = "me-1"),
+                          "Idoneidad dentro del AOA (continua)"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_aoa_cont"),
+                                                height = "550px")
+                        )
+                      ),
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("layers", class = "me-1"),
+                          "Categor\u00edas dentro del AOA"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_aoa_cat"),
+                                                height = "550px")
+                        )
+                      )
+                    )
                   )
                 )
               )
@@ -1361,87 +1466,187 @@ mod_h3sdm_ui <- function(id) {
                         "Predicci\u00f3n futura"),
         div(
           class = "p-3",
-          p(class = "small text-muted mb-3",
-            "Genera un mapa de idoneidad futura usando el modelo ajustado ",
-            "y rasters de variables bajo un escenario futuro. ",
-            "Los rasters deben tener los mismos nombres de capas que los actuales."),
+          bslib::navset_tab(
 
-          bslib::layout_columns(
-            col_widths = c(3, 9),
-            fill = FALSE,
+            # ── Sub-pestaña: Predicción futura ───────────────────
+            bslib::nav_panel(
+              title = tagList(bsicons::bs_icon("palette", class = "me-1"),
+                              "Predicci\u00f3n futura"),
+              div(
+                class = "pt-3",
+                p(class = "small text-muted mb-3",
+                  "Genera un mapa de idoneidad futura usando el modelo ajustado ",
+                  "y rasters de variables bajo un escenario futuro. ",
+                  "Los rasters deben tener los mismos nombres de capas que los actuales."),
 
-            # Panel izquierdo
-            div(
-              bslib::card(
-                class = "mb-3",
-                bslib::card_header(
-                  bsicons::bs_icon("info-circle", class = "me-1"),
-                  "Variables del modelo"
-                ),
-                bslib::card_body(
-                  uiOutput(ns("vars_modelo_futuro"))
-                )
-              ),
+                bslib::layout_columns(
+                  col_widths = c(3, 9),
+                  fill = FALSE,
 
-              bslib::card(
-                class = "mb-3",
-                bslib::card_header(
-                  bsicons::bs_icon("upload", class = "me-1"),
-                  "Rasters futuros"
-                ),
-                bslib::card_body(
-                  p(class = "small text-muted mb-2",
-                    "Carga los rasters en el mismo CRS, recortados y ",
-                    "enmascarados al AOI."),
-                  fileInput(
-                    ns("raster_futuro"),
-                    label    = NULL,
-                    accept   = c(".tif", ".tiff"),
-                    multiple = TRUE,
-                    buttonLabel = "Buscar\u2026",
-                    placeholder = "GeoTIFF (.tif)"
+                  div(
+                    bslib::card(
+                      class = "mb-3",
+                      bslib::card_header(
+                        bsicons::bs_icon("info-circle", class = "me-1"),
+                        "Variables del modelo"
+                      ),
+                      bslib::card_body(
+                        uiOutput(ns("vars_modelo_futuro"))
+                      )
+                    ),
+                    bslib::card(
+                      class = "mb-3",
+                      bslib::card_header(
+                        bsicons::bs_icon("upload", class = "me-1"),
+                        "Rasters futuros"
+                      ),
+                      bslib::card_body(
+                        p(class = "small text-muted mb-2",
+                          "Carga los rasters en el mismo CRS, recortados y ",
+                          "enmascarados al AOI."),
+                        fileInput(
+                          ns("raster_futuro"),
+                          label       = NULL,
+                          accept      = c(".tif", ".tiff"),
+                          multiple    = TRUE,
+                          buttonLabel = "Buscar\u2026",
+                          placeholder = "GeoTIFF (.tif)"
+                        ),
+                        uiOutput(ns("verificacion_vars_futuro"))
+                      )
+                    ),
+                    actionButton(ns("predecir_futuro"),
+                                 "Generar predicci\u00f3n futura",
+                                 class = "btn-primary w-100 mb-2",
+                                 icon  = icon("play")),
+                    uiOutput(ns("resumen_pred_futuro")),
+                    br(),
+                    downloadButton(ns("dl_pred_futuro_cont"),
+                                   "Descargar continuo (.gpkg)",
+                                   class = "btn-outline-primary btn-sm w-100 mb-1"),
+                    downloadButton(ns("dl_pred_futuro_cat"),
+                                   "Descargar categ\u00f3rico (.gpkg)",
+                                   class = "btn-outline-primary btn-sm w-100")
                   ),
-                  uiOutput(ns("verificacion_vars_futuro"))
-                )
-              ),
 
-              actionButton(ns("predecir_futuro"),
-                           "Generar predicci\u00f3n futura",
-                           class = "btn-primary w-100 mb-2",
-                           icon  = icon("play")),
-              uiOutput(ns("resumen_pred_futuro")),
-              br(),
-              downloadButton(ns("dl_pred_futuro_cont"),
-                             "Descargar continuo (.gpkg)",
-                             class = "btn-outline-primary btn-sm w-100 mb-1"),
-              downloadButton(ns("dl_pred_futuro_cat"),
-                             "Descargar categ\u00f3rico (.gpkg)",
-                             class = "btn-outline-primary btn-sm w-100")
+                  div(
+                    bslib::layout_columns(
+                      col_widths = c(6, 6),
+                      fill = FALSE,
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("palette", class = "me-1"),
+                          "Idoneidad futura continua (0\u20131)"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_futuro_cont"),
+                                                height = "500px")
+                        )
+                      ),
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("layers", class = "me-1"),
+                          "Categor\u00edas de h\u00e1bitat futuro"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_futuro_cat"),
+                                                height = "500px")
+                        )
+                      )
+                    )
+                  )
+                )
+              )
             ),
 
-            # Panel derecho
-            div(
-              bslib::layout_columns(
-                col_widths = c(6, 6),
-                fill = FALSE,
-                bslib::card(
-                  bslib::card_header(
-                    bsicons::bs_icon("palette", class = "me-1"),
-                    "Idoneidad futura continua (0\u20131)"
+            # ── Sub-pestaña: AOA futuro ──────────────────────────
+            bslib::nav_panel(
+              title = tagList(bsicons::bs_icon("shield-check", class = "me-1"),
+                              "AOA"),
+              div(
+                class = "pt-3",
+                p(class = "small text-muted mb-3",
+                  "El \u00c1rea de Aplicabilidad (AOA) para el escenario futuro indica ",
+                  "d\u00f3nde el modelo puede predecir con confianza bajo condiciones ",
+                  "clim\u00e1ticas futuras."),
+
+                bslib::layout_columns(
+                  col_widths = c(3, 9),
+                  fill = FALSE,
+
+                  div(
+                    bslib::card(
+                      class = "mb-3",
+                      bslib::card_header(
+                        bsicons::bs_icon("gear", class = "me-1"),
+                        "Opciones"
+                      ),
+                      bslib::card_body(
+                        p(class = "small text-muted mb-2",
+                          "Requiere que la predicci\u00f3n futura haya sido generada."),
+                        actionButton(ns("calcular_aoa_futuro"),
+                                     "Calcular AOA futuro",
+                                     class = "btn-primary w-100 mb-2",
+                                     icon  = icon("shield")),
+                        uiOutput(ns("resumen_aoa_futuro")),
+                        br(),
+                        downloadButton(ns("dl_aoa_futuro"),
+                                       "Descargar AOA futuro (.gpkg)",
+                                       class = "btn-outline-primary btn-sm w-100")
+                      )
+                    )
                   ),
-                  bslib::card_body(class = "p-0",
-                    leaflet::leafletOutput(ns("mapa_futuro_cont"),
-                                          height = "500px")
-                  )
-                ),
-                bslib::card(
-                  bslib::card_header(
-                    bsicons::bs_icon("layers", class = "me-1"),
-                    "Categor\u00edas de h\u00e1bitat futuro"
-                  ),
-                  bslib::card_body(class = "p-0",
-                    leaflet::leafletOutput(ns("mapa_futuro_cat"),
-                                          height = "500px")
+
+                  div(
+                    bslib::layout_columns(
+                      col_widths = c(6, 6),
+                      fill = FALSE,
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("shield-check", class = "me-1"),
+                          "\u00c1rea de Aplicabilidad futura"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_aoa_futuro"),
+                                                height = "550px")
+                        )
+                      ),
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("graph-up", class = "me-1"),
+                          "\u00cdndice de Disimilaridad futuro (DI)"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_di_futuro"),
+                                                height = "550px")
+                        )
+                      )
+                    ),
+                    br(),
+                    bslib::layout_columns(
+                      col_widths = c(6, 6),
+                      fill = FALSE,
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("palette", class = "me-1"),
+                          "Idoneidad futura dentro del AOA (continua)"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_aoa_futuro_cont"),
+                                                height = "550px")
+                        )
+                      ),
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("layers", class = "me-1"),
+                          "Categor\u00edas futuras dentro del AOA"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_aoa_futuro_cat"),
+                                                height = "550px")
+                        )
+                      )
+                    )
                   )
                 )
               )
@@ -2095,6 +2300,418 @@ mod_h3sdm_server <- function(id) {
       )
     })
 
+    # ── AOA presente ──────────────────────────────────────
+    output$mapa_aoa <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    output$mapa_di <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    output$mapa_aoa_cont <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    output$mapa_aoa_cat <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    observeEvent(input$calcular_aoa, {
+      req(prediccion_sf(), modelo_ajustado(), dat_rv())
+
+      withProgress(message = "Calculando AOA\u2026", {
+        tryCatch({
+          p   <- prediccion_sf()
+          m   <- modelo_ajustado()
+          dat <- dat_rv()
+          cv  <- cv_split_rv()
+
+          result <- h3sdm::h3sdm_aoa(
+            newdata    = p,
+            train      = dat,
+            fit_object = m,
+            cv         = cv
+          )
+
+          result <- result |>
+            dplyr::mutate(prediction_aoa = dplyr::if_else(AOA == 1L,
+                                                          prediction,
+                                                          NA_real_))
+          aoa_sf(result)
+
+          r_vis  <- sf::st_cast(result, "POLYGON") |>
+            sf::st_transform(4326)
+          bbox   <- sf::st_bbox(r_vis)
+          n_out  <- sum(result$AOA == 0L)
+          pct    <- round(100 * n_out / nrow(result), 1)
+
+          etiquetas   <- c("Muy bajo", "Bajo", "Medio", "Alto", "Muy alto")
+          colores_cat <- c("#d73027", "#fc8d59", "#fee08b", "#91cf60", "#1a9850")
+
+          # Mapa AOA binario
+          leaflet::leafletProxy(ns("mapa_aoa")) |>
+            leaflet::clearShapes() |>
+            leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data        = r_vis,
+              fillColor   = dplyr::if_else(r_vis$AOA == 1L, "#2166ac", "#d9d9d9"),
+              fillOpacity = 0.85,
+              color       = "transparent",
+              weight      = 0
+            ) |>
+            leaflet::addLegend(
+              position = "bottomright",
+              colors   = c("#2166ac", "#d9d9d9"),
+              labels   = c("Dentro del AOA", "Fuera del AOA"),
+              title    = "AOA",
+              opacity  = 0.8
+            ) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          # Mapa DI
+          pal_di <- leaflet::colorNumeric(
+            palette = "YlOrRd",
+            domain  = r_vis$DI
+          )
+          leaflet::leafletProxy(ns("mapa_di")) |>
+            leaflet::clearShapes() |>
+            leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data        = r_vis,
+              fillColor   = ~pal_di(DI),
+              fillOpacity = 0.85,
+              color       = "transparent",
+              weight      = 0
+            ) |>
+            leaflet::addLegend(
+              position = "bottomright",
+              pal      = pal_di,
+              values   = ~DI,
+              title    = "DI",
+              opacity  = 0.8
+            ) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          # Mapa AOA continuo
+          pal_cont <- leaflet::colorNumeric(
+            palette  = "inferno",
+            domain   = c(0, 1),
+            reverse  = TRUE,
+            na.color = "#d9d9d9"
+          )
+          leaflet::leafletProxy(ns("mapa_aoa_cont")) |>
+            leaflet::clearShapes() |>
+            leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data        = r_vis,
+              fillColor   = ~pal_cont(prediction_aoa),
+              fillOpacity = 0.85,
+              color       = "transparent",
+              weight      = 0
+            ) |>
+            leaflet::addLegend(
+              position = "bottomright",
+              pal      = pal_cont,
+              values   = c(0, 1),
+              title    = "Idoneidad\n(AOA)",
+              opacity  = 0.8
+            ) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          # Mapa AOA categorico
+          breaks_aoa <- quantile(result$prediction_aoa,
+                                 probs = c(0, 0.2, 0.4, 0.6, 0.8, 1),
+                                 na.rm = TRUE)
+          r_vis$categoria_aoa <- factor(
+            cut(r_vis$prediction_aoa,
+                breaks         = breaks_aoa,
+                labels         = etiquetas,
+                include.lowest = TRUE),
+            levels  = etiquetas,
+            ordered = TRUE
+          )
+          pal_cat <- leaflet::colorFactor(
+            palette  = colores_cat,
+            levels   = etiquetas,
+            ordered  = TRUE,
+            na.color = "#d9d9d9"
+          )
+          leaflet::leafletProxy(ns("mapa_aoa_cat")) |>
+            leaflet::clearShapes() |>
+            leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data        = r_vis,
+              fillColor   = ~pal_cat(categoria_aoa),
+              fillOpacity = 0.85,
+              color       = "transparent",
+              weight      = 0
+            ) |>
+            leaflet::addLegend(
+              position = "bottomright",
+              colors   = c(colores_cat, "#d9d9d9"),
+              labels   = c(etiquetas, "Fuera del AOA"),
+              title    = "H\u00e1bitat\n(AOA)",
+              opacity  = 0.8
+            ) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          showNotification(
+            paste0("AOA calculado. ", pct, "% de hex\u00e1gonos fuera del AOA."),
+            type = "message", duration = 4
+          )
+
+        }, error = function(e) {
+          showNotification(paste("Error:", conditionMessage(e)),
+                           type = "error", duration = 8)
+        })
+      })
+    })
+
+    output$resumen_aoa <- renderUI({
+      r <- aoa_sf()
+      if (is.null(r)) return(NULL)
+      n_in  <- sum(r$AOA == 1L)
+      n_out <- sum(r$AOA == 0L)
+      pct   <- round(100 * n_out / nrow(r), 1)
+      div(class = "alert alert-info small py-2 px-3 mt-2 mb-0",
+          bsicons::bs_icon("check-circle-fill", class = "me-1"),
+          strong(nrow(r)), " hex\u00e1gonos",
+          tags$br(),
+          "Dentro del AOA: ", strong(n_in),
+          tags$br(),
+          "Fuera del AOA: ", strong(n_out),
+          " (", strong(pct), "%)"
+      )
+    })
+
+    output$dl_aoa <- downloadHandler(
+      filename = function() paste0("aoa_presente_", Sys.Date(), ".gpkg"),
+      content  = function(file) {
+        req(aoa_sf())
+        sf::st_write(aoa_sf(), file, delete_dsn = TRUE, quiet = TRUE)
+      }
+    )
+
+    # ── AOA futuro ────────────────────────────────────────
+    output$mapa_aoa_futuro <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    output$mapa_di_futuro <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    output$mapa_aoa_futuro_cont <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    output$mapa_aoa_futuro_cat <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    observeEvent(input$calcular_aoa_futuro, {
+      req(pred_futuro_sf(), modelo_ajustado(), dat_rv())
+
+      withProgress(message = "Calculando AOA futuro\u2026", {
+        tryCatch({
+          p   <- pred_futuro_sf()
+          m   <- modelo_ajustado()
+          dat <- dat_rv()
+          cv  <- cv_split_rv()
+
+          result <- h3sdm::h3sdm_aoa(
+            newdata    = p,
+            train      = dat,
+            fit_object = m,
+            cv         = cv
+          )
+
+          result <- result |>
+            dplyr::mutate(prediction_aoa = dplyr::if_else(AOA == 1L,
+                                                          prediction,
+                                                          NA_real_))
+          aoa_futuro_sf(result)
+
+          r_vis  <- sf::st_cast(result, "POLYGON") |>
+            sf::st_transform(4326)
+          bbox   <- sf::st_bbox(r_vis)
+          n_out  <- sum(result$AOA == 0L)
+          pct    <- round(100 * n_out / nrow(result), 1)
+
+          etiquetas   <- c("Muy bajo", "Bajo", "Medio", "Alto", "Muy alto")
+          colores_cat <- c("#d73027", "#fc8d59", "#fee08b", "#91cf60", "#1a9850")
+
+          # Mapa AOA binario futuro
+          leaflet::leafletProxy(ns("mapa_aoa_futuro")) |>
+            leaflet::clearShapes() |>
+            leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data        = r_vis,
+              fillColor   = dplyr::if_else(r_vis$AOA == 1L, "#2166ac", "#d9d9d9"),
+              fillOpacity = 0.85,
+              color       = "transparent",
+              weight      = 0
+            ) |>
+            leaflet::addLegend(
+              position = "bottomright",
+              colors   = c("#2166ac", "#d9d9d9"),
+              labels   = c("Dentro del AOA", "Fuera del AOA"),
+              title    = "AOA futuro",
+              opacity  = 0.8
+            ) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          # Mapa DI futuro
+          pal_di <- leaflet::colorNumeric(
+            palette = "YlOrRd",
+            domain  = r_vis$DI
+          )
+          leaflet::leafletProxy(ns("mapa_di_futuro")) |>
+            leaflet::clearShapes() |>
+            leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data        = r_vis,
+              fillColor   = ~pal_di(DI),
+              fillOpacity = 0.85,
+              color       = "transparent",
+              weight      = 0
+            ) |>
+            leaflet::addLegend(
+              position = "bottomright",
+              pal      = pal_di,
+              values   = ~DI,
+              title    = "DI futuro",
+              opacity  = 0.8
+            ) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          # Mapa AOA continuo futuro
+          pal_cont <- leaflet::colorNumeric(
+            palette  = "inferno",
+            domain   = c(0, 1),
+            reverse  = TRUE,
+            na.color = "#d9d9d9"
+          )
+          leaflet::leafletProxy(ns("mapa_aoa_futuro_cont")) |>
+            leaflet::clearShapes() |>
+            leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data        = r_vis,
+              fillColor   = ~pal_cont(prediction_aoa),
+              fillOpacity = 0.85,
+              color       = "transparent",
+              weight      = 0
+            ) |>
+            leaflet::addLegend(
+              position = "bottomright",
+              pal      = pal_cont,
+              values   = c(0, 1),
+              title    = "Idoneidad\nfutura (AOA)",
+              opacity  = 0.8
+            ) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          # Mapa AOA categorico futuro
+          breaks_aoa <- quantile(result$prediction_aoa,
+                                 probs = c(0, 0.2, 0.4, 0.6, 0.8, 1),
+                                 na.rm = TRUE)
+          r_vis$categoria_aoa <- factor(
+            cut(r_vis$prediction_aoa,
+                breaks         = breaks_aoa,
+                labels         = etiquetas,
+                include.lowest = TRUE),
+            levels  = etiquetas,
+            ordered = TRUE
+          )
+          pal_cat <- leaflet::colorFactor(
+            palette  = colores_cat,
+            levels   = etiquetas,
+            ordered  = TRUE,
+            na.color = "#d9d9d9"
+          )
+          leaflet::leafletProxy(ns("mapa_aoa_futuro_cat")) |>
+            leaflet::clearShapes() |>
+            leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data        = r_vis,
+              fillColor   = ~pal_cat(categoria_aoa),
+              fillOpacity = 0.85,
+              color       = "transparent",
+              weight      = 0
+            ) |>
+            leaflet::addLegend(
+              position = "bottomright",
+              colors   = c(colores_cat, "#d9d9d9"),
+              labels   = c(etiquetas, "Fuera del AOA"),
+              title    = "H\u00e1bitat\nfuturo (AOA)",
+              opacity  = 0.8
+            ) |>
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                               bbox[["xmax"]], bbox[["ymax"]])
+
+          showNotification(
+            paste0("AOA futuro calculado. ", pct,
+                   "% de hex\u00e1gonos fuera del AOA."),
+            type = "message", duration = 4
+          )
+
+        }, error = function(e) {
+          showNotification(paste("Error:", conditionMessage(e)),
+                           type = "error", duration = 8)
+        })
+      })
+    })
+
+    output$resumen_aoa_futuro <- renderUI({
+      r <- aoa_futuro_sf()
+      if (is.null(r)) return(NULL)
+      n_in  <- sum(r$AOA == 1L)
+      n_out <- sum(r$AOA == 0L)
+      pct   <- round(100 * n_out / nrow(r), 1)
+      div(class = "alert alert-info small py-2 px-3 mt-2 mb-0",
+          bsicons::bs_icon("check-circle-fill", class = "me-1"),
+          strong(nrow(r)), " hex\u00e1gonos",
+          tags$br(),
+          "Dentro del AOA: ", strong(n_in),
+          tags$br(),
+          "Fuera del AOA: ", strong(n_out),
+          " (", strong(pct), "%)"
+      )
+    })
+
+    output$dl_aoa_futuro <- downloadHandler(
+      filename = function() paste0("aoa_futuro_", Sys.Date(), ".gpkg"),
+      content  = function(file) {
+        req(aoa_futuro_sf())
+        sf::st_write(aoa_futuro_sf(), file, delete_dsn = TRUE, quiet = TRUE)
+      }
+    )
+
+
     # ── Interpretación ────────────────────────────────────
     explainer_obj  <- reactiveVal(NULL)
     importancia_df <- reactiveVal(NULL)
@@ -2244,6 +2861,9 @@ mod_h3sdm_server <- function(id) {
     modelo_ajustado  <- reactiveVal(NULL)
     cv_split_rv      <- reactiveVal(NULL)
     algoritmo_activo <- reactiveVal("logreg")
+    dat_rv           <- reactiveVal(NULL)
+    aoa_sf           <- reactiveVal(NULL)
+    aoa_futuro_sf    <- reactiveVal(NULL)
 
     # Sincronizar tarjeta activa
     observeEvent(input$algoritmo, {
@@ -2310,6 +2930,7 @@ mod_h3sdm_server <- function(id) {
           gc_dedup <- gc[!duplicated(gc$h3_address), ]
           pred_sf  <- h3sdm::h3sdm_predictors(gc_dedup)
           dat      <- h3sdm::h3sdm_data(pa_base, pred_sf)
+          dat_rv(dat)
 
           # 3. Presence data para evaluación
           presence_data <- dat |>
