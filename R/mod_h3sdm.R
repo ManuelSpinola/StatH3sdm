@@ -964,9 +964,39 @@ mod_h3sdm_ui <- function(id) {
                     label = "N\u00famero de pseudoausencias:",
                     value = 500, min = 10, max = 10000, step = 50
                   ),
+                  p(class = "small text-muted mb-2",
+                    bsicons::bs_icon("info-circle", class = "me-1"),
+                    "Se recomienda 2\u20135\u00d7 el n\u00famero de presencias."),
+                  numericInput(
+                    ns("buffer_k"),
+                    label = "Buffer de exclusi\u00f3n (anillos H3):",
+                    value = 1L, min = 0L, max = 5L, step = 1L
+                  ),
                   p(class = "small text-muted mb-0",
                     bsicons::bs_icon("info-circle", class = "me-1"),
-                    "Se recomienda 2\u20135\u00d7 el n\u00famero de presencias.")
+                    "N\u00famero de anillos de hex\u00e1gonos vecinos a excluir alrededor de ",
+                    "cada presencia. Use 0 para desactivar."),
+                  tags$hr(),
+                  p(class = "small fw-bold mb-1",
+                    "Presencias con hex\u00e1gonos H3"),
+                  p(class = "small text-muted mb-2",
+                    "Cada hex\u00e1gono representa un \u00e1rea, no un punto \u2014 lo que modela ",
+                    "mejor la realidad de c\u00f3mo los organismos ocupan el espacio. Esto ",
+                    "permite extraer variables del paisaje (medias, varianza, proporciones) ",
+                    "dentro de cada celda. Adem\u00e1s, m\u00faltiples registros dentro del mismo ",
+                    "hex\u00e1gono se consolidan en una sola presencia, reduciendo el sesgo de ",
+                    "muestreo espacial. La resoluci\u00f3n del hex\u00e1gono controla la escala del ",
+                    "an\u00e1lisis seg\u00fan el organismo de inter\u00e9s."),
+                  p(class = "small fw-bold mb-1",
+                    "Pseudoausencias"),
+                  p(class = "small text-muted mb-0",
+                    "Se generan fuera del \u00e1rea de distribuci\u00f3n conocida \u2014 excluyendo las ",
+                    "celdas con presencias y su buffer \u2014 para evitar contaminar las ausencias ",
+                    "con zonas potencialmente ocupadas. Se limitan al \u00e1rea de estudio definida ",
+                    "por el usuario, respetando el contexto ambiental relevante para la especie. ",
+                    "Su selecci\u00f3n se realiza mediante k-means en el espacio ambiental, ",
+                    "garantizando que representen la diversidad de condiciones disponibles, ",
+                    "no solo la distribuci\u00f3n geogr\u00e1fica.")
                 )
               ),
 
@@ -1395,7 +1425,30 @@ mod_h3sdm_ui <- function(id) {
                         br(),
                         downloadButton(ns("dl_aoa"),
                                        "Descargar AOA (.gpkg)",
-                                       class = "btn-outline-primary btn-sm w-100")
+                                       class = "btn-outline-primary btn-sm w-100"),
+                        br(),
+                        tags$hr(),
+                        p(class = "small fw-bold mb-1", "Área de Aplicabilidad (AOA)"),
+                        p(class = "small text-muted mb-2",
+                          "El AOA delimita la región geográfica donde el modelo puede hacer ",
+                          "predicciones confiables. Se basa en comparar las condiciones ambientales ",
+                          "de cada hexágono con las del conjunto de entrenamiento. Los hexágonos ",
+                          "fuera del AOA están en condiciones ambientales no representadas por los ",
+                          "datos de presencia/ausencia usados para entrenar el modelo — las ",
+                          "predicciones ahí no son confiables."),
+                        p(class = "small fw-bold mb-1", "Índice de Disimilaridad (DI)"),
+                        p(class = "small text-muted mb-0",
+                          "El DI mide qué tan diferente es cada hexágono del espacio ambiental de ",
+                          "entrenamiento. Se calcula como la distancia euclidiana entre los valores ",
+                          "de las variables predictoras de cada hexágono y los puntos de entrenamiento ",
+                          "más cercanos. Valores bajos indican que el hexágono está en condiciones ",
+                          "ambientales bien representadas por los datos de entrenamiento y el modelo ",
+                          "puede predecir con confianza. Valores altos indican condiciones poco ",
+                          "representadas donde las predicciones son menos confiables. El umbral del ",
+                          "AOA se define a partir de la media de las distancias euclidianas entre ",
+                          "todos los pares de puntos de entrenamiento en el espacio ambiental — un ",
+                          "hexágono queda fuera del AOA cuando su DI supera ese umbral. ",
+                          "El DI no está acotado entre 0 y 1.")
                       )
                     )
                   ),
@@ -1691,42 +1744,50 @@ mod_h3sdm_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # Selector de proyección — aparece solo cuando hay AOI
+    # Selector de CRS de trabajo — aparece solo cuando hay AOI
     output$sel_proyeccion <- renderUI({
       req(aoi_sf())
-      crs_actual <- sf::st_crs(aoi_sf())$epsg
       tagList(
         tags$hr(),
         p(class = "small fw-bold mb-1",
           bsicons::bs_icon("globe2", class = "me-1"),
-          "Proyecci\u00f3n:"),
+          "CRS de trabajo:"),
         p(class = "small text-muted mb-2",
-          "CRS actual: ",
-          code(paste0("EPSG:", crs_actual %||% "desconocido"))),
+          "Define la proyecci\u00f3n que se usar\u00e1 al extraer variables y generar el ",
+          "dataset PA. La grilla siempre se genera en WGS84 (H3 trabaja en esf\u00e9rico) ",
+          "y se transforma a este CRS en el momento de la extracci\u00f3n. ",
+          "Usa 4326 para \u00e1reas grandes o multiples zonas UTM; usa un CRS proyectado ",
+          "(ej. 5367 para Costa Rica) para m\u00e9tricas del paisaje m\u00e1s precisas."),
+        p(class = "small text-muted mb-1",
+          "CRS actual: ", code(paste0("EPSG:", crs_trabajo()))),
         numericInput(
           ns("crs_custom"),
           label = "C\u00f3digo EPSG:",
-          value = crs_actual %||% 4326,
+          value = crs_trabajo(),
           min   = 1
         ),
         actionButton(ns("aplicar_proyeccion"),
-                     "Aplicar proyecci\u00f3n",
+                     "Aplicar CRS de trabajo",
                      class = "btn-outline-primary btn-sm w-100",
                      icon  = icon("globe"))
       )
     })
 
+    # CRS de trabajo para extracción y PA (4326 por defecto)
+    crs_trabajo <- reactiveVal(4326)
+
     observeEvent(input$aplicar_proyeccion, {
-      req(aoi_sf(), input$crs_custom)
+      req(input$crs_custom)
       tryCatch({
-        aoi_reproj <- sf::st_transform(aoi_sf(), input$crs_custom)
-        aoi_sf(aoi_reproj)
+        sf::st_crs(as.integer(input$crs_custom))  # validar EPSG
+        crs_trabajo(as.integer(input$crs_custom))
+        tipo <- if (input$crs_custom == 4326) "geogr\u00e1fico (WGS84)" else "proyectado"
         showNotification(
-          paste0("AOI proyectado a EPSG:", input$crs_custom,
-                 ". Aseg\u00farate de que tus rasters de variables est\u00e9n en la misma ",
-                 "proyecci\u00f3n, recortados y enmascarados al AOI. ",
-                 "Puedes hacerlo en R (terra), QGIS u otro software GIS."),
-          type = "warning", duration = 10)
+          paste0("CRS de trabajo: EPSG:", input$crs_custom, " (", tipo, "). ",
+                 "La grilla se transformar\u00e1 a este CRS al extraer variables ",
+                 "y al generar el dataset PA. ",
+                 "Aseg\u00farate de que tus rasters est\u00e9n en la misma proyecci\u00f3n."),
+          type = "message", duration = 10)
       }, error = function(e) {
         showNotification(paste("EPSG no v\u00e1lido:", conditionMessage(e)),
                          type = "error")
@@ -1836,7 +1897,7 @@ mod_h3sdm_server <- function(id) {
           pred_futuro_sf(p)
 
           # Visualizar
-          p_vis <- sf::st_cast(p, "POLYGON") |> sf::st_transform(4326)
+          p_vis <- suppressWarnings(sf::st_cast(p, "POLYGON")) |> sf::st_transform(4326)
           bbox  <- sf::st_bbox(p_vis)
           vals  <- p_vis$prediction
 
@@ -2066,7 +2127,8 @@ mod_h3sdm_server <- function(id) {
                "  records     = records,\n",
                "  aoi_sf      = aoi_sf,\n",
                "  res         = ", isolate(input$resolucion_h3), ",\n",
-               "  n_pseudoabs = ", isolate(input$n_pseudoabs), "\n",
+               "  n_pseudoabs = ", isolate(input$n_pseudoabs), ",\n",
+               "  buffer_k    = ", isolate(input$buffer_k), "\n",
                ")\n\n"),
 
         "# 6. Combinar datos\n",
@@ -2206,7 +2268,7 @@ mod_h3sdm_server <- function(id) {
           prediccion_sf(p)
 
           # Transformar a WGS84 para leaflet
-          p_vis <- sf::st_cast(p, "POLYGON") |>
+          p_vis <- suppressWarnings(sf::st_cast(p, "POLYGON")) |>
             sf::st_transform(4326)
           bbox  <- sf::st_bbox(p_vis)
           vals  <- p_vis$prediction
@@ -2238,8 +2300,7 @@ mod_h3sdm_server <- function(id) {
                                bbox[["xmax"]], bbox[["ymax"]])
 
           # ── Mapa categórico (cuantiles) ───────────────
-          breaks <- quantile(vals, probs = c(0, 0.2, 0.4, 0.6, 0.8, 1),
-                             na.rm = TRUE)
+          breaks <- c(0, 0.2, 0.4, 0.6, 0.8, 1)
           etiquetas <- c("Muy bajo", "Bajo", "Medio", "Alto", "Muy alto")
           colores_cat <- c("#d73027", "#fc8d59", "#fee08b", "#91cf60", "#1a9850")
 
@@ -2348,22 +2409,27 @@ mod_h3sdm_server <- function(id) {
                                                           NA_real_))
           aoa_sf(result)
 
-          r_vis  <- sf::st_cast(result, "POLYGON") |>
+          r_vis <- suppressWarnings(sf::st_cast(result, "POLYGON")) |>
             sf::st_transform(4326)
-          bbox   <- sf::st_bbox(r_vis)
-          n_out  <- sum(result$AOA == 0L)
-          pct    <- round(100 * n_out / nrow(result), 1)
+          bbox  <- sf::st_bbox(r_vis)
+          n_out <- sum(result$AOA == 0L, na.rm = TRUE)
+          pct   <- round(100 * n_out / nrow(result), 1)
 
-          etiquetas   <- c("Muy bajo", "Bajo", "Medio", "Alto", "Muy alto")
-          colores_cat <- c("#d73027", "#fc8d59", "#fee08b", "#91cf60", "#1a9850")
+                    # Reducir a columnas necesarias para leafgl
+          r_vis <- r_vis[, c("h3_address", "prediction", "DI", "AOA", "prediction_aoa")]
 
-          # Mapa AOA binario
+          # ── Mapa AOA binario ──────────────────────────────────
+          pal_aoa <- leaflet::colorFactor(
+            palette  = c("#d9d9d9", "#2166ac"),
+            levels   = c(0L, 1L),
+            na.color = "#d9d9d9"
+          )
           leaflet::leafletProxy(ns("mapa_aoa")) |>
             leaflet::clearShapes() |>
             leaflet::clearControls() |>
             leafgl::addGlPolygons(
               data        = r_vis,
-              fillColor   = dplyr::if_else(r_vis$AOA == 1L, "#2166ac", "#d9d9d9"),
+              fillColor   = ~pal_aoa(AOA),
               fillOpacity = 0.85,
               color       = "transparent",
               weight      = 0
@@ -2378,10 +2444,11 @@ mod_h3sdm_server <- function(id) {
             leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
 
-          # Mapa DI
+          # ── Mapa DI ─────────────────────────────────────────
           pal_di <- leaflet::colorNumeric(
-            palette = "YlOrRd",
-            domain  = r_vis$DI
+            palette  = "YlOrRd",
+            domain   = r_vis$DI,
+            na.color = "#d9d9d9"
           )
           leaflet::leafletProxy(ns("mapa_di")) |>
             leaflet::clearShapes() |>
@@ -2396,14 +2463,14 @@ mod_h3sdm_server <- function(id) {
             leaflet::addLegend(
               position = "bottomright",
               pal      = pal_di,
-              values   = ~DI,
+              values   = r_vis$DI,
               title    = "DI",
               opacity  = 0.8
             ) |>
             leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
 
-          # Mapa AOA continuo
+          # ── Mapa continuo (idoneidad dentro AOA) ────────────────
           pal_cont <- leaflet::colorNumeric(
             palette  = "inferno",
             domain   = c(0, 1),
@@ -2430,17 +2497,15 @@ mod_h3sdm_server <- function(id) {
             leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
 
-          # Mapa AOA categorico
-          breaks_aoa <- quantile(result$prediction_aoa,
-                                 probs = c(0, 0.2, 0.4, 0.6, 0.8, 1),
-                                 na.rm = TRUE)
+          # ── Mapa categórico (idoneidad dentro AOA) ──────────────
+          etiquetas   <- c("Muy bajo", "Bajo", "Medio", "Alto", "Muy alto")
+          colores_cat <- c("#d73027", "#fc8d59", "#fee08b", "#91cf60", "#1a9850")
+          vals_aoa    <- r_vis$prediction_aoa
+          breaks_aoa  <- c(0, 0.2, 0.4, 0.6, 0.8, 1)
           r_vis$categoria_aoa <- factor(
-            cut(r_vis$prediction_aoa,
-                breaks         = breaks_aoa,
-                labels         = etiquetas,
+            cut(vals_aoa, breaks = breaks_aoa, labels = etiquetas,
                 include.lowest = TRUE),
-            levels  = etiquetas,
-            ordered = TRUE
+            levels = etiquetas, ordered = TRUE
           )
           pal_cat <- leaflet::colorFactor(
             palette  = colores_cat,
@@ -2462,14 +2527,14 @@ mod_h3sdm_server <- function(id) {
               position = "bottomright",
               colors   = c(colores_cat, "#d9d9d9"),
               labels   = c(etiquetas, "Fuera del AOA"),
-              title    = "H\u00e1bitat\n(AOA)",
+              title    = "Hábitat\n(AOA)",
               opacity  = 0.8
             ) |>
             leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
 
           showNotification(
-            paste0("AOA calculado. ", pct, "% de hex\u00e1gonos fuera del AOA."),
+            paste0("AOA calculado. ", pct, "% de hexágonos fuera del AOA."),
             type = "message", duration = 4
           )
 
@@ -2553,22 +2618,30 @@ mod_h3sdm_server <- function(id) {
                                                           NA_real_))
           aoa_futuro_sf(result)
 
-          r_vis  <- sf::st_cast(result, "POLYGON") |>
+          r_vis <- suppressWarnings(sf::st_cast(result, "POLYGON")) |>
             sf::st_transform(4326)
-          bbox   <- sf::st_bbox(r_vis)
-          n_out  <- sum(result$AOA == 0L)
-          pct    <- round(100 * n_out / nrow(result), 1)
+          bbox  <- sf::st_bbox(r_vis)
+          n_out <- sum(result$AOA == 0L, na.rm = TRUE)
+          pct   <- round(100 * n_out / nrow(result), 1)
+
+          # Reducir a columnas necesarias para leafgl
+          r_vis <- r_vis[, c("h3_address", "prediction", "DI", "AOA", "prediction_aoa")]
 
           etiquetas   <- c("Muy bajo", "Bajo", "Medio", "Alto", "Muy alto")
           colores_cat <- c("#d73027", "#fc8d59", "#fee08b", "#91cf60", "#1a9850")
 
-          # Mapa AOA binario futuro
+          # ── Mapa AOA binario futuro ──────────────────────────
+          pal_aoa <- leaflet::colorFactor(
+            palette  = c("#d9d9d9", "#2166ac"),
+            levels   = c(0L, 1L),
+            na.color = "#d9d9d9"
+          )
           leaflet::leafletProxy(ns("mapa_aoa_futuro")) |>
             leaflet::clearShapes() |>
             leaflet::clearControls() |>
             leafgl::addGlPolygons(
               data        = r_vis,
-              fillColor   = dplyr::if_else(r_vis$AOA == 1L, "#2166ac", "#d9d9d9"),
+              fillColor   = ~pal_aoa(AOA),
               fillOpacity = 0.85,
               color       = "transparent",
               weight      = 0
@@ -2583,10 +2656,11 @@ mod_h3sdm_server <- function(id) {
             leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
 
-          # Mapa DI futuro
+          # ── Mapa DI futuro ─────────────────────────────────────────
           pal_di <- leaflet::colorNumeric(
-            palette = "YlOrRd",
-            domain  = r_vis$DI
+            palette  = "YlOrRd",
+            domain   = r_vis$DI,
+            na.color = "#d9d9d9"
           )
           leaflet::leafletProxy(ns("mapa_di_futuro")) |>
             leaflet::clearShapes() |>
@@ -2601,14 +2675,14 @@ mod_h3sdm_server <- function(id) {
             leaflet::addLegend(
               position = "bottomright",
               pal      = pal_di,
-              values   = ~DI,
+              values   = r_vis$DI,
               title    = "DI futuro",
               opacity  = 0.8
             ) |>
             leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
 
-          # Mapa AOA continuo futuro
+          # ── Mapa continuo futuro (idoneidad dentro AOA) ──────────────
           pal_cont <- leaflet::colorNumeric(
             palette  = "inferno",
             domain   = c(0, 1),
@@ -2635,17 +2709,13 @@ mod_h3sdm_server <- function(id) {
             leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
 
-          # Mapa AOA categorico futuro
-          breaks_aoa <- quantile(result$prediction_aoa,
-                                 probs = c(0, 0.2, 0.4, 0.6, 0.8, 1),
-                                 na.rm = TRUE)
+          # ── Mapa categórico futuro (idoneidad dentro AOA) ────────────
+          vals_aoa   <- r_vis$prediction_aoa
+          breaks_aoa <- c(0, 0.2, 0.4, 0.6, 0.8, 1)
           r_vis$categoria_aoa <- factor(
-            cut(r_vis$prediction_aoa,
-                breaks         = breaks_aoa,
-                labels         = etiquetas,
+            cut(vals_aoa, breaks = breaks_aoa, labels = etiquetas,
                 include.lowest = TRUE),
-            levels  = etiquetas,
-            ordered = TRUE
+            levels = etiquetas, ordered = TRUE
           )
           pal_cat <- leaflet::colorFactor(
             palette  = colores_cat,
@@ -2678,7 +2748,6 @@ mod_h3sdm_server <- function(id) {
                    "% de hex\u00e1gonos fuera del AOA."),
             type = "message", duration = 4
           )
-
         }, error = function(e) {
           showNotification(paste("Error:", conditionMessage(e)),
                            type = "error", duration = 8)
@@ -3140,13 +3209,23 @@ mod_h3sdm_server <- function(id) {
 
       withProgress(message = "Generando dataset presencia/pseudoausencia\u2026", {
         tryCatch({
-          # Generar PA con registros ya descargados
+          # Proyectar registros y AOI al CRS de trabajo
+          crs_op       <- crs_trabajo()
+          registros_op <- sf::st_transform(registros_sf(), crs_op)
+          aoi_op       <- sf::st_transform(aoi_sf(), crs_op)
+
+          # Generar PA en el CRS de trabajo
           pa <- h3sdm::h3sdm_pa_from_records(
-            records     = registros_sf(),
-            aoi_sf      = aoi_sf(),
-            res         = as.integer(input$resolucion_h3),
-            n_pseudoabs = input$n_pseudoabs
+            records       = registros_op,
+            aoi_sf        = aoi_op,
+            res           = as.integer(input$resolucion_h3),
+            n_pseudoabs   = input$n_pseudoabs,
+            buffer_k      = as.integer(input$buffer_k),
+            predictors_sf = grilla_con_vars()
           )
+
+          # Volver a WGS84 para visualización y join con variables
+          pa <- sf::st_transform(pa, 4326)
 
           # Unir con variables si están disponibles
           if (!is.null(grilla_con_vars())) {
@@ -3169,7 +3248,7 @@ mod_h3sdm_server <- function(id) {
           n_abs  <- sum(pa$presence == "0")
 
           # Cast y transformar a WGS84 para leafgl
-          pa_vis  <- sf::st_cast(pa, "POLYGON") |>
+          pa_vis  <- suppressWarnings(sf::st_cast(pa, "POLYGON")) |>
             sf::st_transform(4326)
           bbox    <- sf::st_bbox(sf::st_transform(pa, 4326))
           pal_pa  <- leaflet::colorFactor(
@@ -3385,20 +3464,8 @@ mod_h3sdm_server <- function(id) {
             nombres <- make.unique(nombres, sep = "_")
             names(stack) <- nombres
           }
-          # Extraer sobre grilla limpia
-          grilla  <- grilla_sf()
-          # Verificar CRS
-          crs_raster <- terra::crs(stack, describe = TRUE)$code
-          crs_aoi    <- sf::st_crs(aoi_sf())$epsg
-          if (!is.na(crs_raster) && !is.na(crs_aoi) &&
-              crs_raster != as.character(crs_aoi)) {
-            showNotification(
-              paste0("El raster est\u00e1 en EPSG:", crs_raster,
-                     " y la grilla en EPSG:4326. ",
-                     "La extracci\u00f3n se realizar\u00e1 correctamente — ",
-                     "la grilla se transforma internamente al CRS del raster."),
-              type = "message", duration = 8)
-          }
+          # Transformar grilla al CRS de trabajo elegido por el usuario
+          grilla  <- sf::st_transform(grilla_sf(), crs_trabajo())
           result  <- h3sdm::h3sdm_extract_num(stack, grilla)
 
           # Combinar con variables existentes sin duplicar
@@ -3436,30 +3503,16 @@ mod_h3sdm_server <- function(id) {
                    ignore.case = TRUE)][1]
           rcat <- terra::rast(rcat_path)
 
-          # Verificar CRS
+          # Transformar grilla al CRS de trabajo y desduplicar h3_address
           grilla_base <- grilla_con_vars() %||% grilla_sf()
-          crs_raster <- terra::crs(rcat, describe = TRUE)$code
-          crs_aoi    <- sf::st_crs(aoi_sf())$epsg
-          if (!is.na(crs_raster) && !is.na(crs_aoi) &&
-              crs_raster != as.character(crs_aoi)) {
-            showNotification(
-              paste0("El raster categ\u00f3rico est\u00e1 en EPSG:", crs_raster,
-                     " y la grilla en EPSG:4326. ",
-                     "La extracci\u00f3n se realizar\u00e1 correctamente — ",
-                     "la grilla se transforma internamente al CRS del raster. ",
-                     "Para rasters categ\u00f3ricos grandes esto puede ser lento."),
-              type = "message", duration = 10)
-          }
-
-          # Usar grilla con h3_address único — desduplicar antes de extract_cat
-          grilla_unique <- grilla_base[
-            !duplicated(grilla_base$h3_address), ]
+          grilla_base <- sf::st_transform(grilla_base, crs_trabajo())
+          grilla_unique <- grilla_base[!duplicated(grilla_base$h3_address), ]
 
           result <- h3sdm::h3sdm_extract_cat(
             rcat, grilla_unique, proportion = TRUE)
 
           # Cast a POLYGON para leafgl
-          result <- sf::st_cast(result, "POLYGON")
+          result <- suppressWarnings(sf::st_cast(result, "POLYGON"))
           grilla_con_vars(result)
 
           # Verificar columnas nuevas
@@ -3494,6 +3547,7 @@ mod_h3sdm_server <- function(id) {
           req(rit_path)
           rcat   <- terra::rast(rit_path)
           grilla <- grilla_con_vars() %||% grilla_sf()
+          grilla <- sf::st_transform(grilla, crs_trabajo())
           result <- h3sdm::h3sdm_calculate_it_metrics(rcat, grilla)
           grilla_con_vars(result)
           showNotification("M\u00e9tricas IT calculadas.",
@@ -3520,7 +3574,7 @@ mod_h3sdm_server <- function(id) {
     # Actualizar mapa cuando cambia la variable seleccionada
     observeEvent(input$var_mapa, {
       grilla     <- grilla_con_vars(); req(grilla, input$var_mapa)
-      grilla_vis <- sf::st_cast(grilla, "POLYGON") |> sf::st_transform(4326)
+      grilla_vis <- suppressWarnings(sf::st_cast(grilla, "POLYGON")) |> sf::st_transform(4326)
       vals_vis   <- sf::st_drop_geometry(grilla_vis)[[input$var_mapa]]
       # Reemplazar NA con la media para que leafgl no falle
       vals_vis[is.na(vals_vis)] <- mean(vals_vis, na.rm = TRUE)
@@ -3680,7 +3734,7 @@ mod_h3sdm_server <- function(id) {
           n_hex  <- nrow(grilla)  # conteo real antes del cast
           grilla_sf(grilla)       # guardar MULTIPOLYGON original
           n_hex_real(n_hex)
-          grilla_vis <- sf::st_cast(grilla, "POLYGON") |>
+          grilla_vis <- suppressWarnings(sf::st_cast(grilla, "POLYGON")) |>
             sf::st_transform(4326)
           bbox <- sf::st_bbox(grilla_vis)
           leaflet::leafletProxy(ns("mapa_grilla")) |>
@@ -3695,7 +3749,7 @@ mod_h3sdm_server <- function(id) {
               weight      = 1
             ) |>
             leaflet::addPolygons(
-              data = aoi_sf(), group = "aoi_grilla",
+              data = sf::st_transform(aoi_sf(), 4326), group = "aoi_grilla",
               color = colores$peligro, fillOpacity = 0,
               weight = 2, dashArray = "5,5"
             ) |>
@@ -3852,7 +3906,7 @@ mod_h3sdm_server <- function(id) {
       # Mostrar AOI si existe
       if (!is.null(aoi_sf())) {
         leaflet::leafletProxy(ns("mapa_registros")) |>
-          leaflet::addPolygons(data = aoi_sf(), group = "aoi_reg",
+          leaflet::addPolygons(data = sf::st_transform(aoi_sf(), 4326), group = "aoi_reg",
                                color = colores$primario,
                                fillOpacity = 0.1, weight = 2)
       }
