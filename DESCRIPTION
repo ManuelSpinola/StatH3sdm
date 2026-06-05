@@ -39,7 +39,8 @@ Imports:
     xgboost,
     spatialsample,
     mgcv,
-    leafgl
+    leafgl,
+    pkgload,
 Suggests:
     rbiodatacr
 Remotes:
