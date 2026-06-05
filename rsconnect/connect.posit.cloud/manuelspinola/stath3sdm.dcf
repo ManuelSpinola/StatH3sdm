@@ -1,0 +1,12 @@
+name: stath3sdm
+title: StatH3sdm
+username: manuelspinola
+account: manuelspinola
+server: connect.posit.cloud
+hostUrl: https://api.connect.posit.cloud/v1
+appId: 019e9867-9de7-2d4a-d31f-277d0bb69806
+bundleId:
+url: https://connect.posit.cloud/manuelspinola/content/019e9867-9de7-2d4a-d31f-277d0bb69806
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
