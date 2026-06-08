@@ -4041,34 +4041,44 @@
       }
     },
     "h3sdm": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Source": "github",
+      "Repository": null,
       "description": {
         "Package": "h3sdm",
         "Type": "Package",
         "Title": "Species Distribution Modeling with H3 Grids",
-        "Version": "0.1.4",
+        "Version": "0.1.5",
         "Authors@R": "\n    person(given = \"Manuel\",\n           family = \"Spínola\",\n           role = c(\"aut\", \"cre\"),\n           email = \"mspinola10@gmail.com\")",
         "Description": "Provides tools for species distribution modeling using H3\n  hexagonal grids (Uber Technologies Inc., 2022, <https://h3geo.org>).\n  Facilitates retrieval of species occurrence records, generation of H3 grids,\n  computation of landscape metrics, and preparation of spatial data for modern\n  species distribution models workflows. Designed for biodiversity and landscape ecology research.",
         "URL": "https://github.com/ManuelSpinola/h3sdm",
         "BugReports": "https://github.com/ManuelSpinola/h3sdm/issues",
         "License": "MIT + file LICENSE",
         "Encoding": "UTF-8",
+        "Roxygen": "list(markdown = TRUE)",
         "Depends": "R (>= 4.1)",
         "Config/Needs/website": "tidyverse/tidytemplate",
         "Imports": "stats, sf, dplyr, purrr, tibble, rlang, terra, spatialsample,\nrecipes, rsample, tune, workflows, yardstick, ecospat, DALEX,\nstacks",
-        "Suggests": "ggplot2, paisaje, knitr, rmarkdown, here, tidyr, themis,\nDALEXtra, ingredients, exactextractr, landscapemetrics, h3jsr,\ntidyterra, spocc, tidymodels, workflowsets, ranger, xgboost,\nggbrick, parsnip, tidyverse, rbiodatacr, vip",
+        "Suggests": "ggplot2, paisaje, knitr, rmarkdown, here, tidyr, themis,\nDALEXtra, ingredients, exactextractr, landscapemetrics, h3jsr,\ntidyterra, spocc, tidymodels, workflowsets, ranger, xgboost,\nggbrick, parsnip, tidyverse, rbiodatacr, vip, DALEXtra,\ntidytemplate",
         "VignetteBuilder": "knitr",
         "LazyData": "true",
         "Language": "en-US",
         "Config/roxygen2/version": "8.0.0",
+        "RemoteType": "github",
+        "RemoteHost": "api.github.com",
+        "RemoteRepo": "h3sdm",
+        "RemoteUsername": "ManuelSpinola",
+        "RemotePkgRef": "ManuelSpinola/h3sdm",
+        "RemoteRef": "HEAD",
+        "RemoteSha": "452a415bc57e819fcee394bf2782964102c0e6a6",
+        "GithubRepo": "h3sdm",
+        "GithubUsername": "ManuelSpinola",
+        "GithubRef": "HEAD",
+        "GithubSHA1": "452a415bc57e819fcee394bf2782964102c0e6a6",
         "NeedsCompilation": "no",
-        "Packaged": "2026-05-29 12:36:37 UTC; manuel_nuevo",
+        "Packaged": "2026-06-06 12:52:07 UTC; manuel_nuevo",
         "Author": "Manuel Spínola [aut, cre]",
         "Maintainer": "Manuel Spínola <mspinola10@gmail.com>",
-        "Repository": "RSPM",
-        "Date/Publication": "2026-05-29 20:50:02 UTC",
-        "Built": "R 4.6.0; ; 2026-05-30 15:28:36 UTC; unix"
+        "Built": "R 4.6.0; ; 2026-06-06 12:52:07 UTC; unix"
       }
     },
     "hardhat": {
@@ -10634,7 +10644,7 @@
       "checksum": "342cb6b242616c1715433348e153edfa"
     },
     ".Rprofile": {
-      "checksum": "916507eb80ab979a056490262886d990"
+      "checksum": "49e8275547bd557182dd134012a3516a"
     },
     "app.R": {
       "checksum": "586640534090d652e54fb61ae2b7041f"
@@ -10700,7 +10710,7 @@
       "checksum": "476011bbc4ffefa824e5bfb8386d849b"
     },
     "renv.lock": {
-      "checksum": "0f630201aa691d5b7469cdf5461a22d6"
+      "checksum": "759aa955e5e055cb82cae96f7c2ad491"
     }
   },
   "users": null

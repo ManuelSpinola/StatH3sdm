@@ -4728,8 +4728,8 @@
     },
     "h3sdm": {
       "Package": "h3sdm",
-      "Version": "0.1.4",
-      "Source": "Repository",
+      "Version": "0.1.5",
+      "Source": "GitHub",
       "Type": "Package",
       "Title": "Species Distribution Modeling with H3 Grids",
       "Authors@R": "person(given = \"Manuel\", family = \"Spínola\", role = c(\"aut\", \"cre\"), email = \"mspinola10@gmail.com\")",
@@ -4738,6 +4738,7 @@
       "BugReports": "https://github.com/ManuelSpinola/h3sdm/issues",
       "License": "MIT + file LICENSE",
       "Encoding": "UTF-8",
+      "Roxygen": "list(markdown = TRUE)",
       "Depends": [
         "R (>= 4.1)"
       ],
@@ -4783,16 +4784,24 @@
         "parsnip",
         "tidyverse",
         "rbiodatacr",
-        "vip"
+        "vip",
+        "DALEXtra",
+        "tidytemplate"
       ],
       "VignetteBuilder": "knitr",
       "LazyData": "true",
       "Language": "en-US",
       "Config/roxygen2/version": "8.0.0",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "h3sdm",
+      "RemoteUsername": "ManuelSpinola",
+      "RemotePkgRef": "ManuelSpinola/h3sdm",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "452a415bc57e819fcee394bf2782964102c0e6a6",
       "NeedsCompilation": "no",
       "Author": "Manuel Spínola [aut, cre]",
-      "Maintainer": "Manuel Spínola <mspinola10@gmail.com>",
-      "Repository": "RSPM"
+      "Maintainer": "Manuel Spínola <mspinola10@gmail.com>"
     },
     "hardhat": {
       "Package": "hardhat",
