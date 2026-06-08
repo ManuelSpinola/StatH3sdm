@@ -4,9 +4,9 @@
   "platform": "4.6.0",
   "metadata": {
     "appmode": "shiny",
-    "primary_rmd": null,
-    "primary_html": null,
-    "content_category": null,
+    "primary_rmd": {},
+    "primary_html": {},
+    "content_category": {},
     "has_parameters": false
   },
   "environment": {
@@ -761,24 +761,6 @@
         "RemoteRef": "SQUAREM",
         "RemoteRepos": "https://cran.rstudio.com",
         "RemoteSha": "2026.1"
-      }
-    },
-    "StatH3sdm": {
-      "Source": "github",
-      "Repository": null,
-      "description": {
-        "Package": "StatH3sdm",
-        "Title": "Species Distribution Modeling with H3 Spatial Grids",
-        "Version": "0.0.0.9000",
-        "Authors@R": "\n    person(given = \"Manuel\",\n           family = \"Spínola\",\n           role = c(\"aut\", \"cre\"),\n           email = \"manuel.spinola@una.ac.cr\",\n           comment = c(ORCID = \"\"))",
-        "Description": "Interactive Shiny application for species distribution modeling \n    (SDM) using hexagonal H3 spatial grids. Built on the h3sdm package, \n    supports occurrence data from GBIF, iNaturalist, BiodataCR and user files. \n    Part of StatSuite — ICOMVIS, Universidad Nacional, Costa Rica.",
-        "License": "MIT + file LICENSE",
-        "Imports": "config,\ngolem,\nshiny,\nbslib,\nbsicons,\nshinyjs,\nleaflet,\nsf,\nh3sdm,\ndplyr,\nggplot2,\nDT,\nterra,\nparsnip,\nrecipes,\nworkflows,\nyardstick,\ntune,\nrsample,\nleaflet.extras,\nspocc,\ncorrelation,\nranger,\nxgboost,\nspatialsample,\nmgcv,\nleafgl,\npkgload,",
-        "Suggests": "rbiodatacr",
-        "Remotes": "ManuelSpinola/h3sdm",
-        "Encoding": "UTF-8",
-        "LazyData": "true",
-        "Config/roxygen2/version": "8.0.0"
       }
     },
     "V8": {
@@ -10718,5 +10700,5 @@
       "checksum": "dfaf6b02bc4c8571290a9c4c48949f9b"
     }
   },
-  "users": null
+  "users": {}
 }
