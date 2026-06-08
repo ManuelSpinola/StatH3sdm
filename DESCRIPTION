@@ -1,0 +1,50 @@
+Package: StatH3sdm
+Title: Species Distribution Modeling with H3 Spatial Grids
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Manuel",
+           family = "Spínola",
+           role = c("aut", "cre"),
+           email = "manuel.spinola@una.ac.cr",
+           comment = c(ORCID = ""))
+Description: Interactive Shiny application for species distribution modeling 
+    (SDM) using hexagonal H3 spatial grids. Built on the h3sdm package, 
+    supports occurrence data from GBIF, iNaturalist, BiodataCR and user files. 
+    Part of StatSuite — ICOMVIS, Universidad Nacional, Costa Rica.
+License: MIT + file LICENSE
+Imports:
+    config,
+    golem,
+    shiny,
+    bslib,
+    bsicons,
+    shinyjs,
+    leaflet,
+    sf,
+    h3sdm,
+    dplyr,
+    ggplot2,
+    DT,
+    terra,
+    parsnip,
+    recipes,
+    workflows,
+    yardstick,
+    tune,
+    rsample,
+    leaflet.extras,
+    spocc,
+    correlation,
+    ranger,
+    xgboost,
+    spatialsample,
+    mgcv,
+    leafgl,
+    pkgload,
+Suggests:
+    rbiodatacr
+Remotes:
+    ManuelSpinola/h3sdm
+Encoding: UTF-8
+LazyData: true
+Config/roxygen2/version: 8.0.0

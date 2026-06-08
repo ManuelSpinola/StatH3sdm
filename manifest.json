@@ -4,9 +4,9 @@
   "platform": "4.6.0",
   "metadata": {
     "appmode": "shiny",
-    "primary_rmd": {},
-    "primary_html": {},
-    "content_category": {},
+    "primary_rmd": null,
+    "primary_html": null,
+    "content_category": null,
     "has_parameters": false
   },
   "environment": {
@@ -10634,10 +10634,13 @@
       "checksum": "342cb6b242616c1715433348e153edfa"
     },
     ".Rprofile": {
-      "checksum": "93aee55728a83ba3b748ec730ed863d2"
+      "checksum": "916507eb80ab979a056490262886d990"
     },
     "app.R": {
       "checksum": "586640534090d652e54fb61ae2b7041f"
+    },
+    "DESCRIPTION.bak": {
+      "checksum": "6d0d6c8fe595d5be590c1ea839c71fac"
     },
     "dev/01_start.R": {
       "checksum": "d1a186b6fd5dbdb708342c85783e4b48"
@@ -10697,8 +10700,8 @@
       "checksum": "476011bbc4ffefa824e5bfb8386d849b"
     },
     "renv.lock": {
-      "checksum": "dfaf6b02bc4c8571290a9c4c48949f9b"
+      "checksum": "0f630201aa691d5b7469cdf5461a22d6"
     }
   },
-  "users": {}
+  "users": null
 }
