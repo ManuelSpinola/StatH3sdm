@@ -10652,19 +10652,34 @@
       "checksum": "342cb6b242616c1715433348e153edfa"
     },
     ".Rprofile": {
-      "checksum": "ed27ce9b43641eeceb905095333fe4e0"
+      "checksum": "93aee55728a83ba3b748ec730ed863d2"
     },
     "app.R": {
       "checksum": "586640534090d652e54fb61ae2b7041f"
     },
-    "DESCRIPTION": {
-      "checksum": "6d0d6c8fe595d5be590c1ea839c71fac"
+    "dev/01_start.R": {
+      "checksum": "d1a186b6fd5dbdb708342c85783e4b48"
+    },
+    "dev/02_dev.R": {
+      "checksum": "cd67f0526025a2ceeaf267b58d0903be"
+    },
+    "dev/03_deploy.R": {
+      "checksum": "8f60d232c82f906cd3b739f8180153ec"
+    },
+    "dev/run_dev.R": {
+      "checksum": "e21d8f5db5d57cd4d0f2db6d012a6109"
     },
     "inst/app/www/hexsticker_StatH3sdm.png": {
       "checksum": "59b21a1da1ad440831fe3d98198e06d0"
     },
     "inst/golem-config.yml": {
       "checksum": "59e64d4b49747a96a75fcc25a3a46f47"
+    },
+    "LICENSE": {
+      "checksum": "6d381582c20b7b8b480f0902f32f016a"
+    },
+    "man/run_app.Rd": {
+      "checksum": "db153f001c7c98594f4a6e64193fbf8a"
     },
     "NAMESPACE": {
       "checksum": "5aa41ebd076bf06b187a48eb57b846a5"
