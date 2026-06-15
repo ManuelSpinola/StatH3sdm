@@ -17,7 +17,7 @@
   "packages": {
     "BH": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "BH",
         "Type": "Package",
@@ -48,7 +48,7 @@
     },
     "BiocManager": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "BiocManager",
         "Title": "Access the Bioconductor Project Package Repository",
@@ -107,7 +107,7 @@
     },
     "DALEX": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "DALEX",
         "Title": "moDel Agnostic Language for Exploration and eXplanation",
@@ -139,7 +139,7 @@
     },
     "DBI": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "DBI",
         "Title": "R Database Interface",
@@ -176,7 +176,7 @@
     },
     "DT": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "DT",
@@ -208,7 +208,7 @@
     },
     "DiceDesign": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "DiceDesign",
         "Type": "Package",
@@ -238,7 +238,7 @@
     },
     "FNN": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "FNN",
         "Version": "1.1.4.1",
@@ -267,7 +267,7 @@
     },
     "Formula": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "Formula",
         "Version": "1.2-5",
@@ -293,7 +293,7 @@
     },
     "GauPro": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "GauPro",
         "Type": "Package",
@@ -328,7 +328,7 @@
     },
     "Hmisc": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "Hmisc",
         "Version": "5.2-5",
@@ -361,7 +361,7 @@
     },
     "KernSmooth": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "KernSmooth",
         "Priority": "recommended",
@@ -386,7 +386,7 @@
     },
     "MASS": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "MASS",
         "Priority": "recommended",
@@ -415,7 +415,7 @@
     },
     "Matrix": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "Matrix",
         "Version": "1.7-5",
@@ -448,7 +448,7 @@
     },
     "PKI": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "PKI",
         "Version": "0.1-15",
@@ -479,7 +479,7 @@
     },
     "PresenceAbsence": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "PresenceAbsence",
         "Type": "Package",
@@ -505,7 +505,7 @@
     },
     "R6": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "R6",
         "Title": "Encapsulated Classes with Reference Semantics",
@@ -537,7 +537,7 @@
     },
     "RColorBrewer": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "RColorBrewer",
         "Version": "1.1-3",
@@ -563,7 +563,7 @@
     },
     "Rcpp": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "Rcpp",
         "Title": "Seamless R and C++ Integration",
@@ -598,7 +598,7 @@
     },
     "RcppArmadillo": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "RcppArmadillo",
         "Type": "Package",
@@ -629,7 +629,7 @@
     },
     "RcppEigen": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "RcppEigen",
         "Type": "Package",
@@ -664,7 +664,7 @@
     },
     "RcppTOML": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "RcppTOML",
         "Type": "Package",
@@ -700,7 +700,7 @@
     },
     "S7": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "S7",
         "Title": "An Object Oriented System Meant to Become a Successor to S3 and\nS4",
@@ -738,7 +738,7 @@
     },
     "SQUAREM": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "SQUAREM",
         "Version": "2026.1",
@@ -765,7 +765,7 @@
     },
     "V8": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "V8",
         "Type": "Package",
@@ -803,7 +803,7 @@
     },
     "abind": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "abind",
         "Version": "1.4-8",
@@ -830,7 +830,7 @@
     },
     "ade4": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ade4",
         "Version": "1.7-24",
@@ -863,7 +863,7 @@
     },
     "adehabitatHR": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "adehabitatHR",
         "Version": "0.4.22",
@@ -893,7 +893,7 @@
     },
     "adehabitatLT": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "adehabitatLT",
         "Version": "0.3.29",
@@ -923,7 +923,7 @@
     },
     "adehabitatMA": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "adehabitatMA",
         "Version": "0.3.17",
@@ -953,7 +953,7 @@
     },
     "askpass": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "askpass",
         "Type": "Package",
@@ -986,7 +986,7 @@
     },
     "assertthat": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "assertthat",
         "Title": "Easy Pre and Post Assertions",
@@ -1017,7 +1017,7 @@
     },
     "attempt": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "attempt",
         "Title": "Tools for Defensive Programming",
@@ -1050,7 +1050,7 @@
     },
     "backports": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "backports",
         "Type": "Package",
@@ -1082,7 +1082,7 @@
     },
     "base64enc": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "base64enc",
         "Version": "0.1-6",
@@ -1111,7 +1111,7 @@
     },
     "bayestestR": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "bayestestR",
@@ -1145,7 +1145,7 @@
     },
     "biomod2": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "biomod2",
         "Type": "Package",
@@ -1176,7 +1176,7 @@
     },
     "bit": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "bit",
         "Title": "Classes and Methods for Fast Memory-Efficient Boolean Selections",
@@ -1210,7 +1210,7 @@
     },
     "bit64": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "bit64",
         "Title": "A S3 Class for Vectors of 64bit Integers",
@@ -1241,7 +1241,7 @@
     },
     "blob": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "blob",
         "Title": "A Simple S3 Class for Representing Vectors of Binary Data\n('BLOBS')",
@@ -1275,7 +1275,7 @@
     },
     "boot": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "boot",
         "Priority": "recommended",
@@ -1301,7 +1301,7 @@
     },
     "brew": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "brew",
@@ -1331,7 +1331,7 @@
     },
     "brio": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "brio",
         "Title": "Basic R Input Output",
@@ -1364,7 +1364,7 @@
     },
     "broom": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "broom",
@@ -1404,7 +1404,7 @@
     },
     "bsicons": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "bsicons",
         "Title": "Easily Work with 'Bootstrap' Icons",
@@ -1436,7 +1436,7 @@
     },
     "bslib": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "bslib",
         "Title": "Custom 'Bootstrap' 'Sass' Themes for 'shiny' and 'rmarkdown'",
@@ -1476,7 +1476,7 @@
     },
     "butcher": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "butcher",
         "Title": "Model Butcher",
@@ -1511,7 +1511,7 @@
     },
     "cachem": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "cachem",
         "Version": "1.1.0",
@@ -1544,7 +1544,7 @@
     },
     "callr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "callr",
         "Title": "Call R from R",
@@ -1578,7 +1578,7 @@
     },
     "cellranger": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "cellranger",
         "Title": "Translate Spreadsheet Cell Ranges to Rows and Columns",
@@ -1610,7 +1610,7 @@
     },
     "checkmate": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "checkmate",
         "Type": "Package",
@@ -1647,7 +1647,7 @@
     },
     "class": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "class",
         "Priority": "recommended",
@@ -1672,7 +1672,7 @@
     },
     "classInt": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "classInt",
         "Version": "0.4-11",
@@ -1706,7 +1706,7 @@
     },
     "cli": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "cli",
         "Title": "Helpers for Developing Command Line Interfaces",
@@ -1741,7 +1741,7 @@
     },
     "clipr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "clipr",
@@ -1770,7 +1770,7 @@
     },
     "clock": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "clock",
         "Title": "Date-Time Types and Tools",
@@ -1808,7 +1808,7 @@
     },
     "cluster": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "cluster",
         "Version": "2.1.8.2",
@@ -1841,7 +1841,7 @@
     },
     "codetools": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "codetools",
         "Version": "0.2-20",
@@ -1862,7 +1862,7 @@
     },
     "colorspace": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "colorspace",
         "Version": "2.1-2",
@@ -1897,7 +1897,7 @@
     },
     "commonmark": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "commonmark",
         "Type": "Package",
@@ -1929,7 +1929,7 @@
     },
     "config": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "config",
         "Type": "Package",
@@ -1965,7 +1965,7 @@
     },
     "conflicted": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "conflicted",
         "Title": "An Alternative Conflict Resolution Strategy",
@@ -1998,7 +1998,7 @@
     },
     "correlation": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "correlation",
@@ -2035,7 +2035,7 @@
     },
     "cowplot": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "cowplot",
         "Title": "Streamlined Plot Theme and Plot Annotations for 'ggplot2'",
@@ -2068,7 +2068,7 @@
     },
     "cpp11": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "cpp11",
         "Title": "A C++11 Interface for R's C Interface",
@@ -2104,7 +2104,7 @@
     },
     "crayon": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "crayon",
         "Title": "Colored Terminal Output",
@@ -2136,7 +2136,7 @@
     },
     "credentials": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "credentials",
         "Type": "Package",
@@ -2170,7 +2170,7 @@
     },
     "crosstalk": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "crosstalk",
@@ -2202,7 +2202,7 @@
     },
     "crul": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "crul",
         "Title": "HTTP Client",
@@ -2241,7 +2241,7 @@
     },
     "curl": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "curl",
         "Type": "Package",
@@ -2276,7 +2276,7 @@
     },
     "data.table": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "data.table",
         "Version": "1.18.4",
@@ -2310,7 +2310,7 @@
     },
     "datawizard": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "datawizard",
@@ -2348,7 +2348,7 @@
     },
     "dbplyr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "dbplyr",
@@ -2386,7 +2386,7 @@
     },
     "desc": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "desc",
         "Title": "Manipulate DESCRIPTION Files",
@@ -2421,7 +2421,7 @@
     },
     "devtools": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "devtools",
         "Title": "Tools to Make Developing R Packages Easier",
@@ -2459,7 +2459,7 @@
     },
     "diagram": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "diagram",
         "Version": "1.6.5",
@@ -2485,7 +2485,7 @@
     },
     "dials": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "dials",
         "Title": "Tools for Creating Tuning Parameter Values",
@@ -2521,7 +2521,7 @@
     },
     "diffobj": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "diffobj",
         "Type": "Package",
@@ -2556,7 +2556,7 @@
     },
     "digest": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "digest",
         "Authors@R": "c(person(\"Dirk\", \"Eddelbuettel\", role = c(\"aut\", \"cre\"), email = \"edd@debian.org\",\n                    comment = c(ORCID = \"0000-0001-6419-907X\")),\n             person(\"Antoine\", \"Lucas\", role=\"ctb\", comment = c(ORCID = \"0000-0002-8059-9767\")),\n             person(\"Jarek\", \"Tuszynski\", role=\"ctb\"),\n             person(\"Henrik\", \"Bengtsson\", role=\"ctb\", comment = c(ORCID = \"0000-0002-7579-5165\")),\n             person(\"Simon\", \"Urbanek\", role=\"ctb\", comment = c(ORCID = \"0000-0003-2297-1732\")),\n             person(\"Mario\", \"Frasca\", role=\"ctb\"),\n             person(\"Bryan\", \"Lewis\", role=\"ctb\"),\n             person(\"Murray\", \"Stokely\", role=\"ctb\"),\n             person(\"Hannes\", \"Muehleisen\", role=\"ctb\", comment = c(ORCID = \"0000-0001-8552-0029\")),\n             person(\"Duncan\", \"Murdoch\", role=\"ctb\"),\n             person(\"Jim\", \"Hester\", role=\"ctb\", comment = c(ORCID = \"0000-0002-2739-7082\")),\n             person(\"Wush\", \"Wu\", role=\"ctb\", comment = c(ORCID = \"0000-0001-5180-0567\")),\n             person(\"Qiang\", \"Kou\", role=\"ctb\", comment = c(ORCID = \"0000-0001-6786-5453\")),\n             person(\"Thierry\", \"Onkelinx\", role=\"ctb\", comment = c(ORCID = \"0000-0001-8804-4216\")),\n             person(\"Michel\", \"Lang\", role=\"ctb\", comment = c(ORCID = \"0000-0001-9754-0393\")),\n             person(\"Viliam\", \"Simko\", role=\"ctb\"),\n             person(\"Kurt\", \"Hornik\", role=\"ctb\", comment = c(ORCID = \"0000-0003-4198-9911\")),\n             person(\"Radford\", \"Neal\", role=\"ctb\", comment = c(ORCID = \"0000-0002-2473-3407\")),\n             person(\"Kendon\", \"Bell\", role=\"ctb\", comment = c(ORCID = \"0000-0002-9093-8312\")),\n             person(\"Matthew\", \"de Queljoe\", role=\"ctb\"),\n             person(\"Dmitry\", \"Selivanov\", role=\"ctb\", comment = c(ORCID = \"0000-0003-0492-6647\")),\n             person(\"Ion\", \"Suruceanu\", role=\"ctb\", comment = c(ORCID = \"0009-0005-6446-4909\")),\n             person(\"Bill\", \"Denney\", role=\"ctb\", comment = c(ORCID = \"0000-0002-5759-428X\")),\n             person(\"Dirk\", \"Schumacher\", role=\"ctb\"),\n             person(\"András\", \"Svraka\", role=\"ctb\", comment = c(ORCID = \"0009-0008-8480-1329\")),\n             person(\"Sergey\", \"Fedorov\", role=\"ctb\", comment = c(ORCID = \"0000-0002-5970-7233\")),\n             person(\"Will\", \"Landau\", role=\"ctb\", comment = c(ORCID = \"0000-0003-1878-3253\")),\n             person(\"Floris\", \"Vanderhaeghe\", role=\"ctb\", comment = c(ORCID = \"0000-0002-6378-6229\")),\n             person(\"Kevin\", \"Tappe\", role=\"ctb\"),\n             person(\"Harris\", \"McGehee\", role=\"ctb\"),\n             person(\"Tim\", \"Mastny\", role=\"ctb\"),\n             person(\"Aaron\", \"Peikert\", role=\"ctb\", comment = c(ORCID = \"0000-0001-7813-818X\")),\n             person(\"Mark\", \"van der Loo\", role=\"ctb\", comment = c(ORCID = \"0000-0002-9807-4686\")),\n             person(\"Chris\", \"Muir\", role=\"ctb\", comment = c(ORCID = \"0000-0003-2555-3878\")),\n             person(\"Moritz\", \"Beller\", role=\"ctb\", comment = c(ORCID = \"0000-0003-4852-0526\")),\n             person(\"Sebastian\", \"Campbell\", role=\"ctb\", comment = c(ORCID = \"0009-0000-5948-4503\")),\n             person(\"Winston\", \"Chang\", role=\"ctb\", comment = c(ORCID = \"0000-0002-1576-2126\")),\n             person(\"Dean\", \"Attali\", role=\"ctb\", comment = c(ORCID = \"0000-0002-5645-3493\")),\n             person(\"Michael\", \"Chirico\", role=\"ctb\", comment = c(ORCID = \"0000-0003-0787-087X\")),\n             person(\"Kevin\", \"Ushey\", role=\"ctb\", comment = c(ORCID = \"0000-0003-2880-7407\")),\n             person(\"Carl\", \"Pearson\", role=\"ctb\", comment = c(ORCID = \"0000-0003-0701-7860\")))",
@@ -2589,7 +2589,7 @@
     },
     "dismo": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "dismo",
         "Type": "Package",
@@ -2625,7 +2625,7 @@
     },
     "doFuture": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "doFuture",
         "Version": "1.2.2",
@@ -2654,7 +2654,7 @@
     },
     "downlit": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "downlit",
         "Title": "Syntax Highlighting and Automatic Linking",
@@ -2687,7 +2687,7 @@
     },
     "dplyr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "dplyr",
@@ -2725,7 +2725,7 @@
     },
     "dtplyr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "dtplyr",
         "Title": "Data Table Back-End for 'dplyr'",
@@ -2759,7 +2759,7 @@
     },
     "e1071": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "e1071",
         "Version": "1.7-17",
@@ -2788,7 +2788,7 @@
     },
     "ecodist": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ecodist",
         "Version": "2.1.3",
@@ -2820,7 +2820,7 @@
     },
     "ecospat": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ecospat",
         "Version": "4.1.3",
@@ -2852,7 +2852,7 @@
     },
     "effectsize": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "effectsize",
@@ -2884,7 +2884,7 @@
     },
     "ellipsis": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ellipsis",
         "Version": "0.3.3",
@@ -2915,7 +2915,7 @@
     },
     "evaluate": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "evaluate",
@@ -2948,7 +2948,7 @@
     },
     "exactextractr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "exactextractr",
         "Title": "Fast Extraction from Raster Datasets using Polygons",
@@ -2984,7 +2984,7 @@
     },
     "fansi": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "fansi",
         "Title": "ANSI Control Sequence Aware String Functions",
@@ -3018,7 +3018,7 @@
     },
     "farver": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "farver",
@@ -3050,7 +3050,7 @@
     },
     "fastmap": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "fastmap",
         "Title": "Fast Data Structures",
@@ -3080,7 +3080,7 @@
     },
     "fontawesome": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "fontawesome",
@@ -3114,7 +3114,7 @@
     },
     "forcats": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "forcats",
         "Title": "Tools for Working with Categorical Variables (Factors)",
@@ -3149,7 +3149,7 @@
     },
     "foreach": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "foreach",
         "Type": "Package",
@@ -3182,7 +3182,7 @@
     },
     "foreign": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "foreign",
         "Priority": "recommended",
@@ -3212,7 +3212,7 @@
     },
     "fs": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "fs",
         "Title": "Cross-Platform File System Operations Based on 'libuv'",
@@ -3251,7 +3251,7 @@
     },
     "furrr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "furrr",
         "Title": "Apply Mapping Functions in Parallel using Futures",
@@ -3284,7 +3284,7 @@
     },
     "future": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "future",
         "Version": "1.70.0",
@@ -3320,7 +3320,7 @@
     },
     "future.apply": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "future.apply",
         "Version": "1.20.2",
@@ -3354,7 +3354,7 @@
     },
     "gargle": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "gargle",
         "Title": "Utilities for Working with Google APIs",
@@ -3389,7 +3389,7 @@
     },
     "gbm": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "gbm",
         "Version": "2.2.3",
@@ -3422,7 +3422,7 @@
     },
     "generics": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "generics",
         "Title": "Common S3 Generics not Provided by Base R Methods Related to\nModel Fitting",
@@ -3455,7 +3455,7 @@
     },
     "geojsonsf": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "geojsonsf",
         "Type": "Package",
@@ -3492,7 +3492,7 @@
     },
     "geometries": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "geometries",
         "Type": "Package",
@@ -3527,7 +3527,7 @@
     },
     "gert": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "gert",
@@ -3562,7 +3562,7 @@
     },
     "ggplot2": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ggplot2",
         "Title": "Create Elegant Data Visualisations Using the Grammar of Graphics",
@@ -3600,7 +3600,7 @@
     },
     "gh": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "gh",
         "Title": "'GitHub' 'API'",
@@ -3631,7 +3631,7 @@
     },
     "gitcreds": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "gitcreds",
         "Title": "Query 'git' Credentials from 'R'",
@@ -3665,7 +3665,7 @@
     },
     "glmnet": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "glmnet",
         "Type": "Package",
@@ -3701,7 +3701,7 @@
     },
     "globals": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "globals",
         "Version": "0.19.1",
@@ -3734,7 +3734,7 @@
     },
     "glue": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "glue",
         "Title": "Interpreted String Literals",
@@ -3771,7 +3771,7 @@
     },
     "golem": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "golem",
         "Title": "A Framework for Robust Shiny Applications",
@@ -3808,7 +3808,7 @@
     },
     "googledrive": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "googledrive",
         "Title": "An Interface to Google Drive",
@@ -3843,7 +3843,7 @@
     },
     "googlesheets4": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "googlesheets4",
         "Title": "Access Google Sheets using the Sheets API V4",
@@ -3878,7 +3878,7 @@
     },
     "gower": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "gower",
         "Maintainer": "Mark van der Loo <mark.vanderloo@gmail.com>",
@@ -3909,7 +3909,7 @@
     },
     "gridExtra": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "gridExtra",
         "Authors@R": "c(person(\"Baptiste\", \"Auguie\",\n    email = \"baptiste.auguie@gmail.com\",\n    role = c(\"aut\", \"cre\")), person(\"Anton\", \"Antonov\",\n    email = \"tonytonov@gmail.com\",\n    role = c(\"ctb\")))",
@@ -3938,7 +3938,7 @@
     },
     "gtable": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "gtable",
         "Title": "Arrange 'Grobs' in Tables",
@@ -3973,7 +3973,7 @@
     },
     "gtools": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "gtools",
         "Title": "Various R Programming Tools",
@@ -4005,7 +4005,7 @@
     },
     "h3jsr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "h3jsr",
         "Type": "Package",
@@ -4041,49 +4041,45 @@
       }
     },
     "h3sdm": {
-      "Source": "github",
-      "Repository": null,
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "h3sdm",
         "Type": "Package",
         "Title": "Species Distribution Modeling with H3 Grids",
-        "Version": "0.1.5",
+        "Version": "0.1.6",
         "Authors@R": "\n    person(given = \"Manuel\",\n           family = \"Spínola\",\n           role = c(\"aut\", \"cre\"),\n           email = \"mspinola10@gmail.com\")",
         "Description": "Provides tools for species distribution modeling using H3\n  hexagonal grids (Uber Technologies Inc., 2022, <https://h3geo.org>).\n  Facilitates retrieval of species occurrence records, generation of H3 grids,\n  computation of landscape metrics, and preparation of spatial data for modern\n  species distribution models workflows. Designed for biodiversity and landscape ecology research.",
         "URL": "https://github.com/ManuelSpinola/h3sdm",
         "BugReports": "https://github.com/ManuelSpinola/h3sdm/issues",
         "License": "MIT + file LICENSE",
         "Encoding": "UTF-8",
-        "Roxygen": "list(markdown = TRUE)",
         "Depends": "R (>= 4.1)",
         "Config/Needs/website": "tidyverse/tidytemplate",
-        "Imports": "stats, sf, dplyr, purrr, tibble, rlang, terra, spatialsample,\nrecipes, rsample, tune, workflows, yardstick, ecospat, DALEX,\nstacks",
-        "Suggests": "ggplot2, paisaje, knitr, rmarkdown, here, tidyr, themis,\nDALEXtra, ingredients, exactextractr, landscapemetrics, h3jsr,\ntidyterra, spocc, tidymodels, workflowsets, ranger, xgboost,\nggbrick, parsnip, tidyverse, rbiodatacr, vip, DALEXtra,\ntidytemplate",
+        "Imports": "stats, sf, dplyr, purrr, tibble, rlang, terra, spatialsample,\nrecipes, rsample, tune, workflows, yardstick, ecospat, DALEX,\nstacks, h3jsr, landscapemetrics, rbiodatacr, spocc, vip,\nexactextractr, tidyr, cli",
+        "Suggests": "ggplot2, paisaje, knitr, rmarkdown, here, themis, DALEXtra,\ningredients, tidyterra, tidymodels, workflowsets, ranger,\nxgboost, ggbrick, parsnip, tidyverse, geodata",
         "VignetteBuilder": "knitr",
         "LazyData": "true",
         "Language": "en-US",
         "Config/roxygen2/version": "8.0.0",
-        "RemoteType": "github",
-        "RemoteHost": "api.github.com",
-        "RemoteRepo": "h3sdm",
-        "RemoteUsername": "ManuelSpinola",
-        "RemotePkgRef": "ManuelSpinola/h3sdm",
-        "RemoteRef": "HEAD",
-        "RemoteSha": "452a415bc57e819fcee394bf2782964102c0e6a6",
-        "GithubRepo": "h3sdm",
-        "GithubUsername": "ManuelSpinola",
-        "GithubRef": "HEAD",
-        "GithubSHA1": "452a415bc57e819fcee394bf2782964102c0e6a6",
         "NeedsCompilation": "no",
-        "Packaged": "2026-06-06 12:52:07 UTC; manuel_nuevo",
+        "Packaged": "2026-06-15 05:10:04 UTC; manuel_nuevo",
         "Author": "Manuel Spínola [aut, cre]",
         "Maintainer": "Manuel Spínola <mspinola10@gmail.com>",
-        "Built": "R 4.6.0; ; 2026-06-06 12:52:07 UTC; unix"
+        "Repository": "CRAN",
+        "Date/Publication": "2026-06-15 07:50:25 UTC",
+        "Built": "R 4.6.0; ; 2026-06-15 08:48:29 UTC; unix",
+        "RemoteType": "standard",
+        "RemoteRef": "h3sdm",
+        "RemotePkgRef": "h3sdm",
+        "RemoteRepos": "https://cran.r-project.org",
+        "RemotePkgPlatform": "aarch64-apple-darwin23",
+        "RemoteSha": "0.1.6"
       }
     },
     "hardhat": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "hardhat",
         "Title": "Construct Modeling Packages",
@@ -4119,7 +4115,7 @@
     },
     "haven": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "haven",
         "Title": "Import and Export 'SPSS', 'Stata' and 'SAS' Files",
@@ -4156,7 +4152,7 @@
     },
     "here": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "here",
         "Title": "A Simpler Way to Find Your Files",
@@ -4192,7 +4188,7 @@
     },
     "highr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "highr",
         "Type": "Package",
@@ -4225,7 +4221,7 @@
     },
     "hms": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "hms",
         "Title": "Pretty Time of Day",
@@ -4258,7 +4254,7 @@
     },
     "htmlTable": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "htmlTable",
         "Version": "2.5.0",
@@ -4291,7 +4287,7 @@
     },
     "htmltools": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "htmltools",
@@ -4328,7 +4324,7 @@
     },
     "htmlwidgets": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "htmlwidgets",
@@ -4361,7 +4357,7 @@
     },
     "httpcode": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "httpcode",
         "Title": "'HTTP' Status Code Helper",
@@ -4393,7 +4389,7 @@
     },
     "httpuv": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "httpuv",
@@ -4432,7 +4428,7 @@
     },
     "httr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "httr",
         "Title": "Tools for Working with URLs and HTTP",
@@ -4465,7 +4461,7 @@
     },
     "httr2": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "httr2",
         "Title": "Perform HTTP Requests and Process the Responses",
@@ -4501,7 +4497,7 @@
     },
     "iBreakDown": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "iBreakDown",
         "Title": "Model Agnostic Instance Level Variable Attributions",
@@ -4533,7 +4529,7 @@
     },
     "ids": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ids",
         "Title": "Generate Random Identifiers",
@@ -4563,7 +4559,7 @@
     },
     "igraph": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "igraph",
         "Title": "Network Analysis and Visualization",
@@ -4610,7 +4606,7 @@
     },
     "ingredients": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ingredients",
         "Title": "Effects and Importances of Model Ingredients",
@@ -4642,7 +4638,7 @@
     },
     "ini": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ini",
         "Type": "Package",
@@ -4672,7 +4668,7 @@
     },
     "insight": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "insight",
@@ -4711,7 +4707,7 @@
     },
     "ipred": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ipred",
         "Title": "Improved Predictors",
@@ -4740,7 +4736,7 @@
     },
     "isoband": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "isoband",
         "Title": "Generate Isolines and Isobands from Regularly Spaced Elevation\nGrids",
@@ -4777,7 +4773,7 @@
     },
     "iterators": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "iterators",
         "Type": "Package",
@@ -4805,7 +4801,7 @@
     },
     "jose": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "jose",
         "Type": "Package",
@@ -4841,7 +4837,7 @@
     },
     "jquerylib": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "jquerylib",
         "Title": "Obtain 'jQuery' as an HTML Dependency Object",
@@ -4870,7 +4866,7 @@
     },
     "jsonify": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "jsonify",
         "Type": "Package",
@@ -4905,7 +4901,7 @@
     },
     "jsonlite": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "jsonlite",
         "Version": "2.0.0",
@@ -4937,7 +4933,7 @@
     },
     "kableExtra": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "kableExtra",
         "Type": "Package",
@@ -4974,7 +4970,7 @@
     },
     "kernelshap": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "kernelshap",
         "Title": "Kernel SHAP",
@@ -5006,7 +5002,7 @@
     },
     "kernlab": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "kernlab",
         "Version": "0.9-33",
@@ -5034,7 +5030,7 @@
     },
     "knitr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "knitr",
         "Type": "Package",
@@ -5069,7 +5065,7 @@
     },
     "ks": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ks",
         "Version": "1.15.2",
@@ -5101,7 +5097,7 @@
     },
     "labeling": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "labeling",
         "Type": "Package",
@@ -5128,7 +5124,7 @@
     },
     "landscapemetrics": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "landscapemetrics",
@@ -5167,7 +5163,7 @@
     },
     "later": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "later",
@@ -5206,7 +5202,7 @@
     },
     "lattice": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "lattice",
         "Version": "0.22-9",
@@ -5235,7 +5231,7 @@
     },
     "lava": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "lava",
         "Type": "Package",
@@ -5265,7 +5261,7 @@
     },
     "lazyeval": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "lazyeval",
         "Version": "0.2.3",
@@ -5296,7 +5292,7 @@
     },
     "lbfgs": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "lbfgs",
         "Type": "Package",
@@ -5325,7 +5321,7 @@
     },
     "leafgl": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "leafgl",
         "Title": "High-Performance 'WebGl' Rendering for Package 'leaflet'",
@@ -5357,7 +5353,7 @@
     },
     "leaflegend": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "leaflegend",
         "Type": "Package",
@@ -5392,7 +5388,7 @@
     },
     "leaflet": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "leaflet",
@@ -5427,7 +5423,7 @@
     },
     "leaflet.extras": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "leaflet.extras",
         "Type": "Package",
@@ -5461,7 +5457,7 @@
     },
     "leaflet.providers": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "leaflet.providers",
@@ -5497,7 +5493,7 @@
     },
     "lifecycle": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "lifecycle",
         "Title": "Manage the Life Cycle of your Package Functions",
@@ -5531,7 +5527,7 @@
     },
     "listenv": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "listenv",
         "Version": "0.10.1",
@@ -5564,7 +5560,7 @@
     },
     "lobstr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "lobstr",
         "Title": "Visualize R Data Structures with Trees",
@@ -5600,7 +5596,7 @@
     },
     "lubridate": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "lubridate",
@@ -5640,7 +5636,7 @@
     },
     "magrittr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "magrittr",
@@ -5675,7 +5671,7 @@
     },
     "maps": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "maps",
         "Title": "Draw Geographical Maps",
@@ -5709,7 +5705,7 @@
     },
     "matrixStats": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "matrixStats",
         "Version": "1.5.0",
@@ -5742,7 +5738,7 @@
     },
     "mclust": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "mclust",
         "Version": "6.1.2",
@@ -5776,7 +5772,7 @@
     },
     "memoise": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "memoise",
         "Title": "'Memoisation' of Functions",
@@ -5806,7 +5802,7 @@
     },
     "mgcv": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "mgcv",
         "Version": "1.9-4",
@@ -5831,7 +5827,7 @@
     },
     "mime": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "mime",
         "Type": "Package",
@@ -5862,7 +5858,7 @@
     },
     "miniUI": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "miniUI",
         "Type": "Package",
@@ -5892,7 +5888,7 @@
     },
     "mixopt": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "mixopt",
         "Type": "Package",
@@ -5924,7 +5920,7 @@
     },
     "modelbased": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "modelbased",
@@ -5958,7 +5954,7 @@
     },
     "modelenv": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "modelenv",
         "Title": "Provide Tools to Register Models for Use in 'tidymodels'",
@@ -5990,7 +5986,7 @@
     },
     "modelr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "modelr",
         "Title": "Modelling Functions that Work with the Pipe",
@@ -6024,7 +6020,7 @@
     },
     "multicool": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "multicool",
         "Type": "Package",
@@ -6057,7 +6053,7 @@
     },
     "mvtnorm": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "mvtnorm",
         "Title": "Multivariate Normal and t Distributions",
@@ -6088,7 +6084,7 @@
     },
     "nabor": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "nabor",
         "Type": "Package",
@@ -6121,7 +6117,7 @@
     },
     "nlme": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "nlme",
         "Version": "3.1-169",
@@ -6151,7 +6147,7 @@
     },
     "nnet": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "nnet",
         "Priority": "recommended",
@@ -6176,7 +6172,7 @@
     },
     "numDeriv": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "numDeriv",
         "Version": "2016.8-1.1",
@@ -6207,7 +6203,7 @@
     },
     "oai": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "oai",
         "Type": "Package",
@@ -6242,7 +6238,7 @@
     },
     "openssl": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "openssl",
         "Type": "Package",
@@ -6277,7 +6273,7 @@
     },
     "otel": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "otel",
         "Title": "OpenTelemetry R API",
@@ -6310,7 +6306,7 @@
     },
     "pROC": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "pROC",
         "Type": "Package",
@@ -6345,7 +6341,7 @@
     },
     "packrat": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "packrat",
@@ -6380,7 +6376,7 @@
     },
     "pak": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "pak",
         "Title": "Another Approach to Package Installation",
@@ -6419,7 +6415,7 @@
     },
     "parallelly": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "parallelly",
         "Version": "1.47.0",
@@ -6454,7 +6450,7 @@
     },
     "parameters": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "parameters",
@@ -6488,7 +6484,7 @@
     },
     "parsnip": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "parsnip",
         "Title": "A Common API to Modeling and Analysis Functions",
@@ -6521,7 +6517,7 @@
     },
     "patchwork": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "patchwork",
         "Type": "Package",
@@ -6549,7 +6545,7 @@
     },
     "performance": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "performance",
@@ -6581,7 +6577,7 @@
     },
     "permute": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "permute",
         "Title": "Functions for Generating Restricted Permutations of Data",
@@ -6614,7 +6610,7 @@
     },
     "pillar": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "pillar",
         "Title": "Coloured Formatting for Columns",
@@ -6652,7 +6648,7 @@
     },
     "pixmap": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "pixmap",
         "Version": "0.4-14",
@@ -6679,7 +6675,7 @@
     },
     "pkgbuild": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "pkgbuild",
         "Title": "Find Tools Needed to Build R Packages",
@@ -6713,7 +6709,7 @@
     },
     "pkgconfig": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "pkgconfig",
         "Title": "Private Configuration for 'R' Packages",
@@ -6742,7 +6738,7 @@
     },
     "pkgdown": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "pkgdown",
         "Title": "Make Static HTML Documentation for a Package",
@@ -6781,7 +6777,7 @@
     },
     "pkgload": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "pkgload",
         "Title": "Simulate Package Installation and Attach",
@@ -6816,7 +6812,7 @@
     },
     "plyr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "plyr",
         "Title": "Tools for Splitting, Applying and Combining Data",
@@ -6850,7 +6846,7 @@
     },
     "png": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "png",
         "Version": "0.1-9",
@@ -6879,7 +6875,7 @@
     },
     "poibin": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "poibin",
         "Version": "1.6",
@@ -6905,7 +6901,7 @@
     },
     "pracma": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "pracma",
         "Type": "Package",
@@ -6939,7 +6935,7 @@
     },
     "praise": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "praise",
         "Title": "Praise Users",
@@ -6967,7 +6963,7 @@
     },
     "prettyunits": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "prettyunits",
         "Title": "Pretty, Human Readable Formatting of Quantities",
@@ -6997,7 +6993,7 @@
     },
     "processx": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "processx",
         "Title": "Execute and Control System Processes",
@@ -7031,7 +7027,7 @@
     },
     "prodlim": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "prodlim",
         "Title": "Product-Limit Estimation for Censored Event History Analysis",
@@ -7062,7 +7058,7 @@
     },
     "profvis": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "profvis",
         "Title": "Interactive Visualizations for Profiling R Code",
@@ -7097,7 +7093,7 @@
     },
     "progress": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "progress",
         "Title": "Terminal Progress Bars",
@@ -7130,7 +7126,7 @@
     },
     "progressr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "progressr",
         "Version": "0.19.0",
@@ -7163,7 +7159,7 @@
     },
     "promises": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "promises",
@@ -7200,7 +7196,7 @@
     },
     "proxy": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "proxy",
         "Type": "Package",
@@ -7231,7 +7227,7 @@
     },
     "ps": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ps",
         "Title": "List, Query, Manipulate System Processes",
@@ -7266,7 +7262,7 @@
     },
     "purrr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "purrr",
         "Title": "Functional Programming Tools",
@@ -7305,7 +7301,7 @@
     },
     "ragg": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "ragg",
@@ -7343,7 +7339,7 @@
     },
     "ranger": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ranger",
         "Type": "Package",
@@ -7379,7 +7375,7 @@
     },
     "rapidjsonr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rapidjsonr",
         "Type": "Package",
@@ -7408,7 +7404,7 @@
     },
     "rappdirs": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "rappdirs",
@@ -7444,7 +7440,7 @@
     },
     "raster": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "raster",
         "Type": "Package",
@@ -7477,7 +7473,7 @@
     },
     "rbiodatacr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rbiodatacr",
         "Type": "Package",
@@ -7513,7 +7509,7 @@
     },
     "rcmdcheck": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rcmdcheck",
         "Title": "Run 'R CMD check' from 'R' and Capture Results",
@@ -7544,7 +7540,7 @@
     },
     "readr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "readr",
         "Title": "Read Rectangular Text Data",
@@ -7583,7 +7579,7 @@
     },
     "readxl": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "readxl",
         "Title": "Read Excel Files",
@@ -7622,7 +7618,7 @@
     },
     "rebird": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rebird",
         "Version": "1.3.0",
@@ -7659,7 +7655,7 @@
     },
     "recipes": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "recipes",
         "Title": "Preprocessing and Feature Engineering Steps for Modeling",
@@ -7690,7 +7686,7 @@
     },
     "rematch": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rematch",
         "Title": "Match Regular Expressions with a Nicer 'API'",
@@ -7718,7 +7714,7 @@
     },
     "rematch2": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rematch2",
         "Title": "Tidy Output from Regular Expression Matching",
@@ -7749,7 +7745,7 @@
     },
     "renv": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "renv",
         "Type": "Package",
@@ -7780,7 +7776,7 @@
     },
     "reprex": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "reprex",
         "Title": "Prepare Reproducible Example Code via the Clipboard",
@@ -7818,7 +7814,7 @@
     },
     "reshape": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "reshape",
         "Version": "0.8.10",
@@ -7846,7 +7842,7 @@
     },
     "reshape2": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "reshape2",
         "Title": "Flexibly Reshape Data: A Reboot of the Reshape Package",
@@ -7881,7 +7877,7 @@
     },
     "rgbif": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rgbif",
         "Title": "Interface to the Global Biodiversity Information Facility API",
@@ -7918,7 +7914,7 @@
     },
     "ridigbio": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "ridigbio",
         "Title": "Interface to the iDigBio Data API",
@@ -7953,7 +7949,7 @@
     },
     "rlang": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rlang",
         "Version": "1.2.0",
@@ -7991,7 +7987,7 @@
     },
     "rmarkdown": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "rmarkdown",
@@ -8027,7 +8023,7 @@
     },
     "roxygen2": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "roxygen2",
         "Title": "In-Line Documentation for R",
@@ -8069,7 +8065,7 @@
     },
     "rpart": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rpart",
         "Priority": "recommended",
@@ -8096,7 +8092,7 @@
     },
     "rprojroot": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rprojroot",
         "Title": "Finding Files in Project Subdirectories",
@@ -8131,7 +8127,7 @@
     },
     "rsample": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rsample",
         "Title": "General Resampling Infrastructure",
@@ -8166,7 +8162,7 @@
     },
     "rsconnect": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "rsconnect",
@@ -8205,7 +8201,7 @@
     },
     "rstudioapi": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rstudioapi",
         "Title": "Safely Access the RStudio API",
@@ -8235,7 +8231,7 @@
     },
     "rversions": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rversions",
         "Title": "Query 'R' Versions, Including 'r-release' and 'r-oldrel'",
@@ -8266,7 +8262,7 @@
     },
     "rvertnet": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rvertnet",
         "Title": "Search 'Vertnet', a 'Database' of Vertebrate Specimen Records",
@@ -8304,7 +8300,7 @@
     },
     "rvest": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "rvest",
         "Title": "Easily Harvest (Scrape) Web Pages",
@@ -8340,7 +8336,7 @@
     },
     "s2": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "s2",
         "Title": "Spherical Geometry Operators Using the S2 Geometry Library",
@@ -8377,7 +8373,7 @@
     },
     "sass": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "sass",
@@ -8412,7 +8408,7 @@
     },
     "scales": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "scales",
         "Title": "Scale Functions for Visualization",
@@ -8447,7 +8443,7 @@
     },
     "see": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "see",
@@ -8479,7 +8475,7 @@
     },
     "selectr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "selectr",
         "Type": "Package",
@@ -8509,7 +8505,7 @@
     },
     "sessioninfo": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "sessioninfo",
         "Title": "R Session Information",
@@ -8543,7 +8539,7 @@
     },
     "sf": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "sf",
         "Version": "1.1-1",
@@ -8581,7 +8577,7 @@
     },
     "sfd": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "sfd",
         "Title": "Space-Filling Design Library",
@@ -8613,7 +8609,7 @@
     },
     "sfheaders": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "sfheaders",
         "Type": "Package",
@@ -8648,7 +8644,7 @@
     },
     "shape": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "shape",
         "Version": "1.4.6.1",
@@ -8673,7 +8669,7 @@
     },
     "shiny": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "shiny",
@@ -8708,7 +8704,7 @@
     },
     "shinyjs": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "shinyjs",
         "Title": "Easily Improve the User Experience of Your Shiny Apps in Seconds",
@@ -8742,7 +8738,7 @@
     },
     "slider": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "slider",
         "Title": "Sliding Window Functions",
@@ -8781,7 +8777,7 @@
     },
     "snowflakeauth": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "snowflakeauth",
         "Title": "Authentication Helpers for 'Snowflake'",
@@ -8814,7 +8810,7 @@
     },
     "sourcetools": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "sourcetools",
         "Type": "Package",
@@ -8845,7 +8841,7 @@
     },
     "sp": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "sp",
         "Version": "2.2-1",
@@ -8877,7 +8873,7 @@
     },
     "sparsevctrs": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "sparsevctrs",
         "Title": "Sparse Vectors for Use in Data Frames",
@@ -8913,7 +8909,7 @@
     },
     "spatial": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "spatial",
         "Priority": "recommended",
@@ -8939,7 +8935,7 @@
     },
     "spatialsample": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "spatialsample",
         "Title": "Spatial Resampling Infrastructure",
@@ -8977,7 +8973,7 @@
     },
     "splitfngr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "splitfngr",
         "Type": "Package",
@@ -9005,7 +9001,7 @@
     },
     "spocc": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "spocc",
         "Title": "Interface to Species Occurrence Data Sources",
@@ -9042,7 +9038,7 @@
     },
     "stacks": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "stacks",
         "Title": "Tidy Model Stacking",
@@ -9078,7 +9074,7 @@
     },
     "stringi": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "stringi",
         "Version": "1.8.7",
@@ -9113,7 +9109,7 @@
     },
     "stringr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "stringr",
         "Title": "Simple, Consistent Wrappers for Common String Operations",
@@ -9149,7 +9145,7 @@
     },
     "survival": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Title": "Survival Analysis",
         "Priority": "recommended",
@@ -9176,7 +9172,7 @@
     },
     "svglite": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "svglite",
         "Title": "An 'SVG' Graphics Device",
@@ -9215,7 +9211,7 @@
     },
     "sys": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "sys",
         "Type": "Package",
@@ -9247,7 +9243,7 @@
     },
     "systemfonts": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "systemfonts",
@@ -9286,7 +9282,7 @@
     },
     "tailor": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "tailor",
         "Title": "Iterative Steps for Postprocessing Model Predictions",
@@ -9320,7 +9316,7 @@
     },
     "terra": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "terra",
         "Type": "Package",
@@ -9357,7 +9353,7 @@
     },
     "testthat": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "testthat",
         "Title": "Unit Testing for R",
@@ -9394,7 +9390,7 @@
     },
     "textshaping": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "textshaping",
         "Title": "Bindings to the 'HarfBuzz' and 'Fribidi' Libraries for Text\nShaping",
@@ -9432,7 +9428,7 @@
     },
     "tibble": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "tibble",
         "Title": "Simple Data Frames",
@@ -9473,7 +9469,7 @@
     },
     "tidyr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "tidyr",
         "Title": "Tidy Messy Data",
@@ -9511,7 +9507,7 @@
     },
     "tidyselect": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "tidyselect",
         "Title": "Select from a Set of Strings",
@@ -9546,7 +9542,7 @@
     },
     "tidyverse": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "tidyverse",
         "Title": "Easily Install and Load the 'Tidyverse'",
@@ -9580,7 +9576,7 @@
     },
     "timeDate": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "timeDate",
         "Title": "Rmetrics - Chronological and Calendar Objects",
@@ -9610,7 +9606,7 @@
     },
     "timechange": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "timechange",
         "Title": "Efficient Manipulation of Date-Times",
@@ -9643,7 +9639,7 @@
     },
     "tinytex": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "tinytex",
         "Type": "Package",
@@ -9674,7 +9670,7 @@
     },
     "triebeard": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "triebeard",
         "Type": "Package",
@@ -9709,7 +9705,7 @@
     },
     "tune": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "tune",
         "Title": "Tidy Tuning Tools",
@@ -9744,7 +9740,7 @@
     },
     "tzdb": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "tzdb",
         "Title": "Time Zone Database Information",
@@ -9779,7 +9775,7 @@
     },
     "units": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "units",
         "Version": "1.0-1",
@@ -9815,7 +9811,7 @@
     },
     "urlchecker": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "urlchecker",
         "Title": "Run CRAN URL Checks from Older R Versions",
@@ -9846,7 +9842,7 @@
     },
     "urltools": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "urltools",
         "Type": "Package",
@@ -9884,7 +9880,7 @@
     },
     "usethis": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "usethis",
         "Title": "Automate Package and Project Setup",
@@ -9921,7 +9917,7 @@
     },
     "utf8": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "utf8",
         "Title": "Unicode Text Processing",
@@ -9954,7 +9950,7 @@
     },
     "uuid": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "uuid",
         "Version": "1.2-2",
@@ -9982,7 +9978,7 @@
     },
     "vctrs": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "vctrs",
         "Title": "Vector Helpers",
@@ -10021,7 +10017,7 @@
     },
     "vegan": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "vegan",
         "Title": "Community Ecology Package",
@@ -10051,9 +10047,44 @@
         "RemoteSha": "2.7-5"
       }
     },
+    "vip": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "vip",
+        "Type": "Package",
+        "Title": "Variable Importance Plots",
+        "Version": "0.4.6",
+        "Authors@R": "c(\n  person(c(\"Brandon\", \"M.\"), family = \"Greenwell\", \n         email = \"greenwell.brandon@gmail.com\",\n         role = c(\"aut\", \"cre\"), \n         comment = c(ORCID = \"0000-0002-8120-0084\")),\n  person(\"Brad\", \"Boehmke\",\n         email = \"bradleyboehmke@gmail.com\",\n         role = c(\"aut\"),\n         comment = c(ORCID = \"0000-0002-3611-8516\"))\n  )",
+        "Description": "A general framework for constructing variable importance plots from \n  various types of machine learning models in R. Aside from some standard model-\n  specific variable importance measures, this package also provides model-\n  agnostic approaches that can be applied to any supervised learning algorithm.\n  These include 1) an efficient permutation-based variable importance measure, \n  2) variable importance based on Shapley values (Strumbelj and Kononenko, \n  2014) <doi:10.1007/s10115-013-0679-x>, and 3) the variance-based \n  approach described in Greenwell et al. (2018) <doi:10.48550/arXiv.1805.04755>. A \n  variance-based method for quantifying the relative strength of interaction \n  effects is also included (see the previous reference for details).",
+        "License": "GPL (>= 2)",
+        "URL": "https://github.com/koalaverse/vip/,\nhttps://koalaverse.github.io/vip/",
+        "BugReports": "https://github.com/koalaverse/vip/issues",
+        "Encoding": "UTF-8",
+        "VignetteBuilder": "knitr",
+        "Depends": "R (>= 4.1.0)",
+        "Imports": "foreach, ggplot2 (>= 0.9.0), stats, tibble, utils, yardstick",
+        "Suggests": "bookdown, DT, covr, doParallel, dplyr, fastshap (>= 0.1.0),\nknitr, lattice, mlbench, modeldata, NeuralNetTools, pdp,\nrmarkdown, tinytest (>= 1.4.3), varImp",
+        "Enhances": "C50, caret, Cubist, earth, gbm, glmnet, h2o, lightgbm,\nmixOmics, mlr, mlr3, neuralnet, nnet, parsnip (>= 0.1.7),\nparty, partykit, pls, randomForest, ranger, rpart, RSNNS,\nsparklyr (>= 0.8.0), tidymodels, workflows (>= 0.2.3), xgboost\n(>= 3.2.0)",
+        "RoxygenNote": "7.3.3",
+        "NeedsCompilation": "no",
+        "Packaged": "2026-04-22 19:28:15 UTC; greenwbm",
+        "Author": "Brandon M. Greenwell [aut, cre] (ORCID:\n    <https://orcid.org/0000-0002-8120-0084>),\n  Brad Boehmke [aut] (ORCID: <https://orcid.org/0000-0002-3611-8516>)",
+        "Maintainer": "Brandon M. Greenwell <greenwell.brandon@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2026-04-23 07:20:02 UTC",
+        "Built": "R 4.6.0; ; 2026-04-26 13:43:19 UTC; unix",
+        "RemoteType": "standard",
+        "RemotePkgRef": "vip",
+        "RemoteRef": "vip",
+        "RemoteRepos": "https://cran.rstudio.com/",
+        "RemotePkgPlatform": "aarch64-apple-darwin23",
+        "RemoteSha": "0.4.6"
+      }
+    },
     "viridisLite": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "viridisLite",
         "Type": "Package",
@@ -10085,7 +10116,7 @@
     },
     "vroom": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "vroom",
         "Title": "Read and Write Rectangular Text Data Quickly",
@@ -10126,7 +10157,7 @@
     },
     "waldo": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "waldo",
         "Title": "Find Differences Between R Objects",
@@ -10159,7 +10190,7 @@
     },
     "warp": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "warp",
         "Title": "Group Dates",
@@ -10195,7 +10226,7 @@
     },
     "whisker": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "whisker",
         "Maintainer": "Edwin de Jonge <edwindjonge@gmail.com>",
@@ -10223,7 +10254,7 @@
     },
     "withr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "withr",
         "Title": "Run Code 'With' Temporarily Modified Global State",
@@ -10258,7 +10289,7 @@
     },
     "wk": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "wk",
         "Title": "Lightweight Well-Known Geometry Parsing",
@@ -10291,7 +10322,7 @@
     },
     "workflows": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "workflows",
         "Title": "Modeling Workflows",
@@ -10326,7 +10357,7 @@
     },
     "xfun": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "xfun",
         "Type": "Package",
@@ -10361,7 +10392,7 @@
     },
     "xgboost": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "xgboost",
         "Type": "Package",
@@ -10398,7 +10429,7 @@
     },
     "xml2": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "xml2",
         "Title": "Parse XML",
@@ -10435,7 +10466,7 @@
     },
     "xopen": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "xopen",
         "Title": "Open System Files, 'URLs', Anything",
@@ -10468,7 +10499,7 @@
     },
     "xtable": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "xtable",
         "Version": "1.8-8",
@@ -10498,7 +10529,7 @@
     },
     "yaml": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "yaml",
@@ -10532,7 +10563,7 @@
     },
     "yardstick": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Type": "Package",
         "Package": "yardstick",
@@ -10571,7 +10602,7 @@
     },
     "yyjsonr": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "yyjsonr",
         "Type": "Package",
@@ -10608,7 +10639,7 @@
     },
     "zip": {
       "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "Repository": "https://cran.r-project.org",
       "description": {
         "Package": "zip",
         "Title": "Cross-Platform 'zip' Compression",
@@ -10644,13 +10675,13 @@
       "checksum": "342cb6b242616c1715433348e153edfa"
     },
     ".Rprofile": {
-      "checksum": "59604f35f7f394038bf32cef47dd8f0d"
+      "checksum": "8c2e27a763ed7301219f5904c3b15a09"
     },
     "app.R": {
       "checksum": "586640534090d652e54fb61ae2b7041f"
     },
     "DESCRIPTION": {
-      "checksum": "6d0d6c8fe595d5be590c1ea839c71fac"
+      "checksum": "e00a4ce26c82f4af3c31f52661a6429a"
     },
     "dev/01_start.R": {
       "checksum": "d1a186b6fd5dbdb708342c85783e4b48"
@@ -10704,13 +10735,13 @@
       "checksum": "bac7b588788e5accbdf7be6ca319b99f"
     },
     "R/mod_h3sdm.R": {
-      "checksum": "da033ac8802619590e05c94b9657dc2d"
+      "checksum": "444c5d1e171e083ceb17dc07355f4d00"
     },
     "R/run_app.R": {
       "checksum": "476011bbc4ffefa824e5bfb8386d849b"
     },
     "renv.lock": {
-      "checksum": "759aa955e5e055cb82cae96f7c2ad491"
+      "checksum": "8f5890cb33cfab4668bc94eb0410f386"
     }
   },
   "users": null
