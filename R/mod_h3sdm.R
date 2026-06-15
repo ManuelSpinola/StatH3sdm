@@ -865,6 +865,7 @@ mod_h3sdm_ui <- function(id) {
                                "Calcular correlaciones",
                                class = "btn-outline-primary btn-sm w-100 mb-2",
                                icon  = icon("chart-line")),
+                  uiOutput(ns("aviso_correlacion")),
                   actionButton(ns("eliminar_cor"),
                                "Eliminar correlacionadas",
                                class = "btn-outline-danger btn-sm w-100",
@@ -3417,6 +3418,19 @@ mod_h3sdm_server <- function(id) {
         choices = vars,
         selected = sel
       )
+    })
+
+    # Aviso de correlación calculada
+    output$aviso_correlacion <- renderUI({
+      req(input$calcular_cor)
+      grilla <- grilla_con_vars(); req(grilla)
+      df   <- sf::st_drop_geometry(grilla)
+      vars <- setdiff(names(df), "h3_address")
+      nums <- vars[sapply(df[, vars, drop = FALSE], is.numeric)]
+      if (length(nums) < 2) return(NULL)
+      div(class = "alert alert-success small py-1 px-2 my-2 mb-2",
+          bsicons::bs_icon("check-circle-fill", class = "me-1"),
+          "Matriz de correlaci\u00f3n lista. Presiona ", strong("Eliminar correlacionadas"), ".")
     })
 
     # Calcular y mostrar matriz de correlación
