@@ -3258,10 +3258,9 @@ mod_h3sdm_server <- function(id) {
                 "El filtro de outliers requiere variables ambientales extraídas. Extrae las variables primero en la pestaña correspondiente.",
                 type = "warning", duration = 8)
             } else {
-              n_pres_antes <- sum(pa$presence == "1")
-              pa <- h3sdm::h3sdm_filter_outliers(pa)
-              n_pres_despues <- sum(pa$presence == "1")
-              n_removidos <- n_pres_antes - n_pres_despues
+              resultado_filtro <- h3sdm::h3sdm_filter_outliers(pa)
+              pa <- resultado_filtro$pa_clean
+              n_removidos <- resultado_filtro$n_removed
               if (n_removidos > 0) {
                 showNotification(
                   paste0("Filtro de outliers: ", n_removidos,
