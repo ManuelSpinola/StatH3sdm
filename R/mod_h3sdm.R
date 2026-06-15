@@ -977,6 +977,33 @@ mod_h3sdm_ui <- function(id) {
                     "N\u00famero de anillos de hex\u00e1gonos vecinos a excluir alrededor de ",
                     "cada presencia. Use 0 para desactivar."),
                   tags$hr(),
+                  checkboxInput(
+                    ns("aplicar_filtro_outliers"),
+                    label = strong("Filtrar outliers ambientales"),
+                    value = FALSE
+                  ),
+                  div(
+                    class = "small text-muted mb-2",
+                    p(class = "mb-1",
+                      bsicons::bs_icon("funnel", class = "me-1"),
+                      "Elimina hex\u00e1gonos de presencia cuyas condiciones ambientales ",
+                      "son muy distintas al resto, usando la ",
+                      strong("distancia de Mahalanobis"), " en el espacio multivariado ",
+                      "de las variables predictoras."),
+                    p(class = "mb-1",
+                      bsicons::bs_icon("question-circle", class = "me-1"),
+                      strong("\u00bfPara qu\u00e9 sirve?"), " Las bases de datos como GBIF e iNaturalist ",
+                      "pueden contener registros con coordenadas err\u00f3neas, especímenes fuera ",
+                      "de su rango natural, o individuos en h\u00e1bitats atípicos (cautiverio, ",
+                      "jardines, introducciones). Estos registros pueden distorsionar el modelo ",
+                      "al incluir condiciones ambientales no representativas de la especie."),
+                    p(class = "mb-0",
+                      bsicons::bs_icon("exclamation-triangle", class = "me-1"),
+                      strong("Requiere"), " haber extra\u00eddo las variables ambientales primero. ",
+                      "Si las variables no est\u00e1n disponibles, el filtro no se aplicar\u00e1 y ",
+                      "ver\u00e1s un aviso.")
+                  ),
+                  tags$hr(),
                   p(class = "small fw-bold mb-1",
                     "Presencias con hex\u00e1gonos H3"),
                   p(class = "small text-muted mb-2",
@@ -3214,6 +3241,35 @@ mod_h3sdm_server <- function(id) {
           registros_op <- sf::st_transform(registros_sf(), crs_op)
           aoi_op       <- sf::st_transform(aoi_sf(), crs_op)
 
+          # Filtro de outliers ambientales (opcional)
+          if (isTRUE(input$aplicar_filtro_outliers)) {
+            if (is.null(grilla_con_vars())) {
+              showNotification(
+                "El filtro de outliers requiere variables ambientales extraídas. \
+Extrae las variables primero en la pestaña correspondiente.",
+                type = "warning", duration = 8)
+            } else {
+              n_antes <- nrow(registros_op)
+              registros_op <- h3sdm::h3sdm_filter_outliers(
+                records       = registros_op,
+                predictors_sf = grilla_con_vars(),
+                res           = as.integer(input$resolucion_h3)
+              )
+              n_despues <- nrow(registros_op)
+              n_removidos <- n_antes - n_despues
+              if (n_removidos > 0) {
+                showNotification(
+                  paste0("Filtro de outliers: ", n_removidos,
+                         " registro(s) eliminado(s) como outliers ambientales."),
+                  type = "message", duration = 5)
+              } else {
+                showNotification(
+                  "Filtro de outliers: no se detectaron outliers ambientales.",
+                  type = "message", duration = 4)
+              }
+            }
+          }
+
           # Generar PA en el CRS de trabajo
           pa <- h3sdm::h3sdm_pa_from_records(
             records       = registros_op,
@@ -3924,9 +3980,37 @@ mod_h3sdm_server <- function(id) {
     output$resumen_registros <- renderUI({
       recs <- registros_sf()
       if (is.null(recs)) return(NULL)
-      div(class = "alert alert-info small py-2 px-3 mt-2 mb-0",
-          bsicons::bs_icon("check-circle-fill", class = "me-1"),
-          strong(nrow(recs)), " registros listos.")
+
+      resumen <- div(
+        class = "alert alert-info small py-2 px-3 mt-2 mb-0",
+        bsicons::bs_icon("check-circle-fill", class = "me-1"),
+        strong(nrow(recs)), " registros descargados."
+      )
+
+      # Tabla por fuente si existe columna provider
+      if ("provider" %in% names(recs)) {
+        conteos <- sort(table(recs$provider), decreasing = TRUE)
+        filas <- lapply(names(conteos), function(p) {
+          tags$tr(tags$td(p), tags$td(style = "text-align:right;", conteos[[p]]))
+        })
+        tabla_fuentes <- div(
+          class = "mt-2",
+          p(class = "small text-muted mb-1",
+            bsicons::bs_icon("info-circle", class = "me-1"),
+            "Registros por fuente:"),
+          tags$table(
+            class = "table table-sm small mb-0",
+            tags$thead(
+              style = paste0("background:", colores$primario, "; color:#fff;"),
+              tags$tr(tags$th("Fuente"), tags$th(style = "text-align:right;", "N"))
+            ),
+            tags$tbody(filas)
+          )
+        )
+        tagList(resumen, tabla_fuentes)
+      } else {
+        resumen
+      }
     })
     aoi_sf <- reactiveVal(NULL)
 

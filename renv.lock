@@ -4,27 +4,7 @@
     "Repositories": [
       {
         "Name": "CRAN",
-        "URL": "https://packagemanager.posit.co/cran/latest"
-      },
-      {
-        "Name": "BioCsoft",
-        "URL": "https://bioconductor.org/packages/3.23/bioc"
-      },
-      {
-        "Name": "BioCann",
-        "URL": "https://bioconductor.org/packages/3.23/data/annotation"
-      },
-      {
-        "Name": "BioCexp",
-        "URL": "https://bioconductor.org/packages/3.23/data/experiment"
-      },
-      {
-        "Name": "BioCworkflows",
-        "URL": "https://bioconductor.org/packages/3.23/workflows"
-      },
-      {
-        "Name": "BioCbooks",
-        "URL": "https://bioconductor.org/packages/3.23/books"
+        "URL": "https://cran.r-project.org"
       }
     ]
   },
@@ -4728,8 +4708,8 @@
     },
     "h3sdm": {
       "Package": "h3sdm",
-      "Version": "0.1.5",
-      "Source": "GitHub",
+      "Version": "0.1.6",
+      "Source": "Repository",
       "Type": "Package",
       "Title": "Species Distribution Modeling with H3 Grids",
       "Authors@R": "person(given = \"Manuel\", family = \"Spínola\", role = c(\"aut\", \"cre\"), email = \"mspinola10@gmail.com\")",
@@ -4738,7 +4718,6 @@
       "BugReports": "https://github.com/ManuelSpinola/h3sdm/issues",
       "License": "MIT + file LICENSE",
       "Encoding": "UTF-8",
-      "Roxygen": "list(markdown = TRUE)",
       "Depends": [
         "R (>= 4.1)"
       ],
@@ -4759,7 +4738,15 @@
         "yardstick",
         "ecospat",
         "DALEX",
-        "stacks"
+        "stacks",
+        "h3jsr",
+        "landscapemetrics",
+        "rbiodatacr",
+        "spocc",
+        "vip",
+        "exactextractr",
+        "tidyr",
+        "cli"
       ],
       "Suggests": [
         "ggplot2",
@@ -4767,15 +4754,10 @@
         "knitr",
         "rmarkdown",
         "here",
-        "tidyr",
         "themis",
         "DALEXtra",
         "ingredients",
-        "exactextractr",
-        "landscapemetrics",
-        "h3jsr",
         "tidyterra",
-        "spocc",
         "tidymodels",
         "workflowsets",
         "ranger",
@@ -4783,25 +4765,16 @@
         "ggbrick",
         "parsnip",
         "tidyverse",
-        "rbiodatacr",
-        "vip",
-        "DALEXtra",
-        "tidytemplate"
+        "geodata"
       ],
       "VignetteBuilder": "knitr",
       "LazyData": "true",
       "Language": "en-US",
       "Config/roxygen2/version": "8.0.0",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "h3sdm",
-      "RemoteUsername": "ManuelSpinola",
-      "RemotePkgRef": "ManuelSpinola/h3sdm",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "452a415bc57e819fcee394bf2782964102c0e6a6",
       "NeedsCompilation": "no",
       "Author": "Manuel Spínola [aut, cre]",
-      "Maintainer": "Manuel Spínola <mspinola10@gmail.com>"
+      "Maintainer": "Manuel Spínola <mspinola10@gmail.com>",
+      "Repository": "CRAN"
     },
     "hardhat": {
       "Package": "hardhat",
@@ -12066,6 +12039,80 @@
       "NeedsCompilation": "yes",
       "Author": "Jari Oksanen [aut, cre] (ORCID: <https://orcid.org/0000-0001-7102-9626>), Gavin L. Simpson [aut] (ORCID: <https://orcid.org/0000-0002-9084-8413>), F. Guillaume Blanchet [aut], Roeland Kindt [aut], Pierre Legendre [aut], Peter R. Minchin [aut], R.B. O'Hara [aut], Peter Solymos [aut], M. Henry H. Stevens [aut], Eduard Szoecs [aut], Helene Wagner [aut], Matt Barbour [ctb], Michael Bedward [aut], Henrik Bengtsson [ctb], Ben Bolker [aut], Daniel Borcard [aut], Tuomas Borman [ctb], Gustavo Carvalho [aut], Michael Chirico [ctb], Miquel De Caceres [aut], Sebastien Durand [aut], Heloisa Beatriz Antoniazi Evangelista [aut], Rich FitzJohn [ctb], Michael Friendly [ctb], Brendan Furneaux [ctb], Geoffrey Hannigan [aut], Isaac Heida [ctb], Mark O. Hill [aut], Leo Lahti [aut], Cameron Martino [aut], Dan McGlinn [ctb], Marie-Helene Ouellette [aut], Eduardo Ribeiro Cunha [aut], Tyler Smith [aut], Adrian Stier [aut], Cajo J.F. Ter Braak [aut], James Weedon [aut]",
       "Maintainer": "Jari Oksanen <jhoksane@gmail.com>",
+      "Repository": "CRAN"
+    },
+    "vip": {
+      "Package": "vip",
+      "Version": "0.4.6",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Variable Importance Plots",
+      "Authors@R": "c( person(c(\"Brandon\", \"M.\"), family = \"Greenwell\",  email = \"greenwell.brandon@gmail.com\", role = c(\"aut\", \"cre\"),  comment = c(ORCID = \"0000-0002-8120-0084\")), person(\"Brad\", \"Boehmke\", email = \"bradleyboehmke@gmail.com\", role = c(\"aut\"), comment = c(ORCID = \"0000-0002-3611-8516\")) )",
+      "Description": "A general framework for constructing variable importance plots from  various types of machine learning models in R. Aside from some standard model- specific variable importance measures, this package also provides model- agnostic approaches that can be applied to any supervised learning algorithm. These include 1) an efficient permutation-based variable importance measure,  2) variable importance based on Shapley values (Strumbelj and Kononenko,  2014) <doi:10.1007/s10115-013-0679-x>, and 3) the variance-based  approach described in Greenwell et al. (2018) <doi:10.48550/arXiv.1805.04755>. A  variance-based method for quantifying the relative strength of interaction  effects is also included (see the previous reference for details).",
+      "License": "GPL (>= 2)",
+      "URL": "https://github.com/koalaverse/vip/, https://koalaverse.github.io/vip/",
+      "BugReports": "https://github.com/koalaverse/vip/issues",
+      "Encoding": "UTF-8",
+      "VignetteBuilder": "knitr",
+      "Depends": [
+        "R (>= 4.1.0)"
+      ],
+      "Imports": [
+        "foreach",
+        "ggplot2 (>= 0.9.0)",
+        "stats",
+        "tibble",
+        "utils",
+        "yardstick"
+      ],
+      "Suggests": [
+        "bookdown",
+        "DT",
+        "covr",
+        "doParallel",
+        "dplyr",
+        "fastshap (>= 0.1.0)",
+        "knitr",
+        "lattice",
+        "mlbench",
+        "modeldata",
+        "NeuralNetTools",
+        "pdp",
+        "rmarkdown",
+        "tinytest (>= 1.4.3)",
+        "varImp"
+      ],
+      "Enhances": [
+        "C50",
+        "caret",
+        "Cubist",
+        "earth",
+        "gbm",
+        "glmnet",
+        "h2o",
+        "lightgbm",
+        "mixOmics",
+        "mlr",
+        "mlr3",
+        "neuralnet",
+        "nnet",
+        "parsnip (>= 0.1.7)",
+        "party",
+        "partykit",
+        "pls",
+        "randomForest",
+        "ranger",
+        "rpart",
+        "RSNNS",
+        "sparklyr (>= 0.8.0)",
+        "tidymodels",
+        "workflows (>= 0.2.3)",
+        "xgboost (>= 3.2.0)"
+      ],
+      "RoxygenNote": "7.3.3",
+      "NeedsCompilation": "no",
+      "Author": "Brandon M. Greenwell [aut, cre] (ORCID: <https://orcid.org/0000-0002-8120-0084>), Brad Boehmke [aut] (ORCID: <https://orcid.org/0000-0002-3611-8516>)",
+      "Maintainer": "Brandon M. Greenwell <greenwell.brandon@gmail.com>",
       "Repository": "CRAN"
     },
     "viridisLite": {
