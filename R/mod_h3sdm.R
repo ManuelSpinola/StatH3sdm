@@ -3241,35 +3241,6 @@ mod_h3sdm_server <- function(id) {
           registros_op <- sf::st_transform(registros_sf(), crs_op)
           aoi_op       <- sf::st_transform(aoi_sf(), crs_op)
 
-          # Filtro de outliers ambientales (opcional)
-          if (isTRUE(input$aplicar_filtro_outliers)) {
-            if (is.null(grilla_con_vars())) {
-              showNotification(
-                "El filtro de outliers requiere variables ambientales extraídas. \
-Extrae las variables primero en la pestaña correspondiente.",
-                type = "warning", duration = 8)
-            } else {
-              n_antes <- nrow(registros_op)
-              registros_op <- h3sdm::h3sdm_filter_outliers(
-                records       = registros_op,
-                predictors_sf = grilla_con_vars(),
-                res           = as.integer(input$resolucion_h3)
-              )
-              n_despues <- nrow(registros_op)
-              n_removidos <- n_antes - n_despues
-              if (n_removidos > 0) {
-                showNotification(
-                  paste0("Filtro de outliers: ", n_removidos,
-                         " registro(s) eliminado(s) como outliers ambientales."),
-                  type = "message", duration = 5)
-              } else {
-                showNotification(
-                  "Filtro de outliers: no se detectaron outliers ambientales.",
-                  type = "message", duration = 4)
-              }
-            }
-          }
-
           # Generar PA en el CRS de trabajo
           pa <- h3sdm::h3sdm_pa_from_records(
             records       = registros_op,
@@ -3279,6 +3250,30 @@ Extrae las variables primero en la pestaña correspondiente.",
             buffer_k      = as.integer(input$buffer_k),
             predictors_sf = grilla_con_vars()
           )
+
+          # Filtro de outliers ambientales (opcional) — se aplica sobre el PA generado
+          if (isTRUE(input$aplicar_filtro_outliers)) {
+            if (is.null(grilla_con_vars())) {
+              showNotification(
+                "El filtro de outliers requiere variables ambientales extraídas. Extrae las variables primero en la pestaña correspondiente.",
+                type = "warning", duration = 8)
+            } else {
+              n_pres_antes <- sum(pa$presence == "1")
+              pa <- h3sdm::h3sdm_filter_outliers(pa)
+              n_pres_despues <- sum(pa$presence == "1")
+              n_removidos <- n_pres_antes - n_pres_despues
+              if (n_removidos > 0) {
+                showNotification(
+                  paste0("Filtro de outliers: ", n_removidos,
+                         " presencia(s) eliminada(s) como outliers ambientales."),
+                  type = "message", duration = 5)
+              } else {
+                showNotification(
+                  "Filtro de outliers: no se detectaron outliers ambientales.",
+                  type = "message", duration = 4)
+              }
+            }
+          }
 
           # Volver a WGS84 para visualización y join con variables
           pa <- sf::st_transform(pa, 4326)
