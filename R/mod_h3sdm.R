@@ -1937,8 +1937,12 @@ mod_h3sdm_server <- function(id) {
               fillOpacity = 0.85, color = "transparent", weight = 0) |>
             leaflet::addLegend(position = "bottomright", pal = pal_cont,
                                values = c(0,1), title = "Idoneidad", opacity = 0.8) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           # Mapa categórico
           breaks      <- quantile(vals, probs = c(0,.2,.4,.6,.8,1), na.rm = TRUE)
@@ -1957,8 +1961,12 @@ mod_h3sdm_server <- function(id) {
             leaflet::addLegend(position = "bottomright",
                                colors = colores_cat, labels = etiquetas,
                                title = "H\u00e1bitat", opacity = 0.8) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           showNotification("Predicci\u00f3n futura generada.",
                            type = "message", duration = 4)
@@ -2323,8 +2331,12 @@ mod_h3sdm_server <- function(id) {
               title    = "Idoneidad",
               opacity  = 0.8
             ) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           # ── Mapa categórico (cuantiles) ───────────────
           breaks <- c(0, 0.2, 0.4, 0.6, 0.8, 1)
@@ -2360,8 +2372,12 @@ mod_h3sdm_server <- function(id) {
               title    = "H\u00e1bitat",
               opacity  = 0.8
             ) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           showNotification("Predicci\u00f3n generada.",
                            type = "message", duration = 4)
@@ -2468,8 +2484,12 @@ mod_h3sdm_server <- function(id) {
               title    = "AOA",
               opacity  = 0.8
             ) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           # ── Mapa DI ─────────────────────────────────────────
           pal_di <- leaflet::colorNumeric(
@@ -2494,8 +2514,12 @@ mod_h3sdm_server <- function(id) {
               title    = "DI",
               opacity  = 0.8
             ) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           # ── Mapa continuo (idoneidad dentro AOA) ────────────────
           pal_cont <- leaflet::colorNumeric(
@@ -2521,8 +2545,12 @@ mod_h3sdm_server <- function(id) {
               title    = "Idoneidad\n(AOA)",
               opacity  = 0.8
             ) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           # ── Mapa categórico (idoneidad dentro AOA) ──────────────
           etiquetas   <- c("Muy bajo", "Bajo", "Medio", "Alto", "Muy alto")
@@ -2557,8 +2585,12 @@ mod_h3sdm_server <- function(id) {
               title    = "Hábitat\n(AOA)",
               opacity  = 0.8
             ) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           showNotification(
             paste0("AOA calculado. ", pct, "% de hexágonos fuera del AOA."),
@@ -2680,8 +2712,12 @@ mod_h3sdm_server <- function(id) {
               title    = "AOA futuro",
               opacity  = 0.8
             ) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           # ── Mapa DI futuro ─────────────────────────────────────────
           pal_di <- leaflet::colorNumeric(
@@ -2706,8 +2742,12 @@ mod_h3sdm_server <- function(id) {
               title    = "DI futuro",
               opacity  = 0.8
             ) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           # ── Mapa continuo futuro (idoneidad dentro AOA) ──────────────
           pal_cont <- leaflet::colorNumeric(
@@ -2733,8 +2773,12 @@ mod_h3sdm_server <- function(id) {
               title    = "Idoneidad\nfutura (AOA)",
               opacity  = 0.8
             ) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           # ── Mapa categórico futuro (idoneidad dentro AOA) ────────────
           vals_aoa   <- r_vis$prediction_aoa
@@ -2767,8 +2811,12 @@ mod_h3sdm_server <- function(id) {
               title    = "H\u00e1bitat\nfuturo (AOA)",
               opacity  = 0.8
             ) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           showNotification(
             paste0("AOA futuro calculado. ", pct,
@@ -3323,8 +3371,12 @@ mod_h3sdm_server <- function(id) {
               labels   = c("Pseudoausencia", "Presencia"),
               opacity  = 0.8
             ) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
 
           showNotification(
             paste0("Dataset generado: ", n_pres, " presencias, ",
@@ -3648,8 +3700,12 @@ mod_h3sdm_server <- function(id) {
           title    = input$var_mapa,
           opacity  = 0.8
         ) |>
-        leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+        shinyjs::delay(400, {
+
+          leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                            bbox[["xmax"]], bbox[["ymax"]])
+
+        })
     })
 
     # Resumen de NAs
@@ -3803,8 +3859,12 @@ mod_h3sdm_server <- function(id) {
               color = colores$peligro, fillOpacity = 0,
               weight = 2, dashArray = "5,5"
             ) |>
-            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+            shinyjs::delay(400, {
+
+              leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                                bbox[["xmax"]], bbox[["ymax"]])
+
+            })
           showNotification(paste(nrow(grilla), "hex\u00e1gonos generados."),
                            type = "message", duration = 4)
         }, error = function(e) {
@@ -3950,8 +4010,12 @@ mod_h3sdm_server <- function(id) {
           fillOpacity = 0.7, weight = 1,
           popup  = if ("name" %in% names(recs)) recs$name else NULL
         ) |>
-        leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+        shinyjs::delay(400, {
+
+          leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                            bbox[["xmax"]], bbox[["ymax"]])
+
+        })
 
       # Mostrar AOI si existe
       if (!is.null(aoi_sf())) {
@@ -4096,8 +4160,12 @@ mod_h3sdm_server <- function(id) {
             fillOpacity = 0.2,
             weight      = 2
           ) |>
-          leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+          shinyjs::delay(400, {
+
+            leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
                              bbox[["xmax"]], bbox[["ymax"]])
+
+          })
 
         showNotification("AOI cargado correctamente.", type = "message", duration = 3)
       }, error = function(e) {
