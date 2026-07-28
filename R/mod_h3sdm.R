@@ -2019,7 +2019,12 @@ mod_h3sdm_server <- function(id) {
       filename = function() paste0("registros_", Sys.Date(), ".csv"),
       content  = function(file) {
         req(registros_sf())
-        write.csv(sf::st_drop_geometry(registros_sf()), file, row.names = FALSE)
+        recs   <- registros_sf()
+        coords <- sf::st_coordinates(recs)
+        df     <- sf::st_drop_geometry(recs)
+        df$longitude <- coords[, "X"]
+        df$latitude  <- coords[, "Y"]
+        write.csv(df, file, row.names = FALSE)
       }
     )
 
