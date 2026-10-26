@@ -509,8 +509,8 @@ mod_h3sdm_ui <- function(id) {
                   p(class = "small text-muted mb-2",
                     "Selecciona una o m\u00e1s fuentes:"),
                   checkboxInput(ns("src_gbif"), 
-                               tagList(tags$img(src = "https://www.gbif.org/img/logo/GBIF-2015.png",
-                                               height = "16px", class = "me-1"), "GBIF"),
+                               tagList(bsicons::bs_icon("globe2", class = "me-1"),
+                                       "GBIF"),
                                value = TRUE),
                   checkboxInput(ns("src_inat"),
                                tagList(bsicons::bs_icon("binoculars", class = "me-1"),
@@ -1838,13 +1838,13 @@ mod_h3sdm_server <- function(id) {
 
     output$mapa_futuro_cont <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
     output$mapa_futuro_cat <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
@@ -2282,13 +2282,13 @@ mod_h3sdm_server <- function(id) {
 
     output$mapa_pred_continuo <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
     output$mapa_pred_cat <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
@@ -2409,25 +2409,25 @@ mod_h3sdm_server <- function(id) {
     # ── AOA presente ──────────────────────────────────────
     output$mapa_aoa <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
     output$mapa_di <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
     output$mapa_aoa_cont <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
     output$mapa_aoa_cat <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
@@ -2630,25 +2630,25 @@ mod_h3sdm_server <- function(id) {
     # ── AOA futuro ────────────────────────────────────────
     output$mapa_aoa_futuro <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
     output$mapa_di_futuro <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
     output$mapa_aoa_futuro_cont <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
     output$mapa_aoa_futuro_cat <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
@@ -3219,7 +3219,7 @@ mod_h3sdm_server <- function(id) {
     # Mapa base PA
     output$mapa_pa <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
@@ -3555,7 +3555,7 @@ mod_h3sdm_server <- function(id) {
     # Mapa de variables
     output$mapa_variables <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
@@ -3827,7 +3827,7 @@ mod_h3sdm_server <- function(id) {
 
     output$mapa_grilla <- leaflet::renderLeaflet({
       leaflet::leaflet() |>
-        leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
         leaflet::setView(lng = 0, lat = 20, zoom = 2)
     })
 
