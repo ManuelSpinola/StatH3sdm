@@ -2637,8 +2637,8 @@ mod_h3sdm_server <- function(id) {
     output$resumen_aoa <- renderUI({
       r <- aoa_sf()
       if (is.null(r)) return(NULL)
-      n_in  <- sum(r$AOA == 1L)
-      n_out <- sum(r$AOA == 0L)
+      n_in  <- sum(r$AOA == 1L, na.rm = TRUE)
+      n_out <- sum(r$AOA == 0L, na.rm = TRUE)
       pct   <- round(100 * n_out / nrow(r), 1)
       div(class = "alert alert-info small py-2 px-3 mt-2 mb-0",
           bsicons::bs_icon("check-circle-fill", class = "me-1"),
@@ -2859,8 +2859,8 @@ mod_h3sdm_server <- function(id) {
     output$resumen_aoa_futuro <- renderUI({
       r <- aoa_futuro_sf()
       if (is.null(r)) return(NULL)
-      n_in  <- sum(r$AOA == 1L)
-      n_out <- sum(r$AOA == 0L)
+      n_in  <- sum(r$AOA == 1L, na.rm = TRUE)
+      n_out <- sum(r$AOA == 0L, na.rm = TRUE)
       pct   <- round(100 * n_out / nrow(r), 1)
       div(class = "alert alert-info small py-2 px-3 mt-2 mb-0",
           bsicons::bs_icon("check-circle-fill", class = "me-1"),
@@ -3100,6 +3100,24 @@ mod_h3sdm_server <- function(id) {
           gc_dedup <- gc[!duplicated(gc$h3_address), ]
           pred_sf  <- h3sdm::h3sdm_predictors(gc_dedup)
           dat      <- h3sdm::h3sdm_data(pa_base, pred_sf)
+
+          # Quitar hexágonos con NA en algún predictor (p. ej. en la costa o
+          # fuera de un raster). Algunos algoritmos los descartan en silencio
+          # y otros fallan; además h3sdm_aoa() no admite NA en el
+          # entrenamiento ("missing value where TRUE/FALSE needed").
+          # Quitarlos aquí deja modelo, CV y AOA con las mismas filas.
+          vars_pred <- setdiff(names(sf::st_drop_geometry(dat)),
+                               c("h3_address", "presence"))
+          completos <- stats::complete.cases(
+            sf::st_drop_geometry(dat)[, vars_pred, drop = FALSE])
+          n_na <- sum(!completos)
+          if (n_na > 0) {
+            dat <- dat[completos, ]
+            showNotification(
+              paste0(n_na, " hex\u00e1gono(s) con valores faltantes en ",
+                     "alg\u00fan predictor se excluyeron del ajuste."),
+              type = "warning", duration = 8)
+          }
           dat_rv(dat)
 
           # 3. Presence data para evaluación
