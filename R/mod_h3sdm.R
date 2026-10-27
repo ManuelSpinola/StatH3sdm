@@ -1858,7 +1858,8 @@ mod_h3sdm_server <- function(id) {
       vars <- setdiff(names(sf::st_drop_geometry(gc)), "h3_address")
       tagList(
         p(class = "small text-muted mb-1",
-          "Los rasters futuros deben tener estas capas:"),
+          "Variables del modelo. Las que no est\u00e9n en los rasters ",
+          "futuros se mantendr\u00e1n con sus valores actuales:"),
         tags$ul(class = "small mb-0",
                 lapply(vars, function(v) tags$li(code(v))))
       )
@@ -1882,10 +1883,19 @@ mod_h3sdm_server <- function(id) {
           div(class = "alert alert-success small py-2 px-3 mb-0",
               bsicons::bs_icon("check-circle-fill", class = "me-1"),
               "Todas las variables coinciden.")
-        } else {
+        } else if (length(faltantes) == length(vars_modelo)) {
           div(class = "alert alert-danger small py-2 px-3 mb-0",
               bsicons::bs_icon("x-circle-fill", class = "me-1"),
-              strong("Faltan: "), paste(faltantes, collapse = ", "))
+              "Ninguna variable del modelo est\u00e1 en los rasters futuros. ",
+              "Revisa que los nombres de las capas coincidan.")
+        } else {
+          div(class = "alert alert-warning small py-2 px-3 mb-0",
+              bsicons::bs_icon("exclamation-triangle-fill", class = "me-1"),
+              strong("Se mantendr\u00e1n constantes (valores actuales): "),
+              paste(faltantes, collapse = ", "),
+              br(),
+              "La predicci\u00f3n supone que estas variables no cambian ",
+              "en el escenario futuro.")
         }
       }, error = function(e) NULL)
     })
@@ -1904,22 +1914,35 @@ mod_h3sdm_server <- function(id) {
           rasters <- lapply(input$raster_futuro$datapath, terra::rast)
           stack   <- if (length(rasters) > 1) do.call(c, rasters) else rasters[[1]]
 
-          # Verificar variables
+          # Variables del modelo: las que trae el raster futuro se
+          # extraen; las demás se mantienen con sus valores actuales
           vars_modelo  <- setdiff(names(sf::st_drop_geometry(gc_dedup)), "h3_address")
-          vars_futuro  <- names(stack)
-          faltantes    <- setdiff(vars_modelo, vars_futuro)
-          if (length(faltantes) > 0) {
+          vars_futuro  <- intersect(vars_modelo, names(stack))
+          constantes   <- setdiff(vars_modelo, vars_futuro)
+          if (length(vars_futuro) == 0) {
             showNotification(
-              paste0("Faltan variables: ", paste(faltantes, collapse = ", ")),
+              paste0("Ninguna variable del modelo est\u00e1 en los rasters ",
+                     "futuros. Revisa los nombres de las capas."),
               type = "error", duration = 8)
             return()
           }
 
           # Extraer variables futuras sobre grilla limpia
           grilla_limpia <- grilla_sf()
-          result_fut    <- h3sdm::h3sdm_extract_num(stack[[vars_modelo]], grilla_limpia)
-          pred_futuro   <- h3sdm::h3sdm_predictors(
-            result_fut[!duplicated(result_fut$h3_address), ])
+          result_fut    <- h3sdm::h3sdm_extract_num(stack[[vars_futuro]], grilla_limpia)
+          result_fut    <- result_fut[!duplicated(result_fut$h3_address), ]
+          pred_futuro   <- if (length(constantes) > 0) {
+            h3sdm::h3sdm_predictors(
+              result_fut, gc_dedup[, c("h3_address", constantes)])
+          } else {
+            h3sdm::h3sdm_predictors(result_fut)
+          }
+          if (length(constantes) > 0) {
+            showNotification(
+              paste0("Variables mantenidas con sus valores actuales: ",
+                     paste(constantes, collapse = ", ")),
+              type = "warning", duration = 10)
+          }
 
           p <- h3sdm::h3sdm_predict(m, pred_futuro)
           pred_futuro_sf(p)
@@ -1945,7 +1968,7 @@ mod_h3sdm_server <- function(id) {
           })
 
           # Mapa categórico
-          breaks      <- quantile(vals, probs = c(0,.2,.4,.6,.8,1), na.rm = TRUE)
+          breaks      <- c(0, 0.2, 0.4, 0.6, 0.8, 1)
           etiquetas   <- c("Muy bajo","Bajo","Medio","Alto","Muy alto")
           colores_cat <- c("#d73027","#fc8d59","#fee08b","#91cf60","#1a9850")
           p_vis$categoria <- factor(
@@ -2004,7 +2027,7 @@ mod_h3sdm_server <- function(id) {
       content  = function(file) {
         req(pred_futuro_sf())
         p      <- pred_futuro_sf()
-        breaks <- quantile(p$prediction, probs = c(0,.2,.4,.6,.8,1), na.rm = TRUE)
+        breaks <- c(0, 0.2, 0.4, 0.6, 0.8, 1)
         etiquetas <- c("Muy bajo","Bajo","Medio","Alto","Muy alto")
         p$categoria <- cut(p$prediction, breaks = breaks,
                            labels = etiquetas, include.lowest = TRUE)
@@ -2099,8 +2122,7 @@ mod_h3sdm_server <- function(id) {
       content  = function(file) {
         req(prediccion_sf())
         p  <- prediccion_sf()
-        breaks <- quantile(p$prediction, probs = c(0, 0.2, 0.4, 0.6, 0.8, 1),
-                           na.rm = TRUE)
+        breaks <- c(0, 0.2, 0.4, 0.6, 0.8, 1)
         etiquetas <- c("Muy bajo", "Bajo", "Medio", "Alto", "Muy alto")
         p$categoria <- cut(p$prediction, breaks = breaks,
                            labels = etiquetas, include.lowest = TRUE)
@@ -2109,6 +2131,20 @@ mod_h3sdm_server <- function(id) {
     )
 
     # ── Código R ──────────────────────────────────────────
+    # Fórmula GAM para el código R: la misma que se usó al ajustar
+    # (manual si se editó; si no, s() de cada variable numérica de dat)
+    formula_gam_codigo <- function() {
+      if (isTRUE(input$editar_formula) &&
+          nchar(input$formula_gam_manual %||% "") > 5)
+        return(input$formula_gam_manual)
+      df_dat <- sf::st_drop_geometry(dat_rv() %||% dataset_pa())
+      vars <- setdiff(names(df_dat), c("h3_address", "presence", "x", "y"))
+      vars <- vars[vapply(df_dat[, vars, drop = FALSE], is.numeric, logical(1))]
+      paste0("presence ~ ",
+             paste(paste0("s(", vars, ")"), collapse = " + "),
+             " + s(x, y, bs = \"tp\")")
+    }
+
     codigo_generado <- reactive({
       m   <- modelo_ajustado()
       pa  <- dataset_pa()
@@ -2230,11 +2266,7 @@ mod_h3sdm_server <- function(id) {
             "modelo <- gen_additive_mod() |>\n",
             "  set_engine(\"mgcv\") |>\n",
             "  set_mode(\"classification\")\n\n",
-            "formula_gam <- presence ~ ",
-            paste(paste0("s(", setdiff(names(sf::st_drop_geometry(dat %||% pa)),
-                                        c("h3_address", "presence", "x", "y")),
-                          ")"), collapse = " + "),
-            " + s(x, y, bs = \"tp\")\n\n",
+            "formula_gam <- ", formula_gam_codigo(), "\n\n",
             "wf <- h3sdm_workflow_gam(modelo, rec, formula_gam)\n\n"
           )
         ),
@@ -2341,7 +2373,7 @@ mod_h3sdm_server <- function(id) {
                                  bbox[["xmax"]], bbox[["ymax"]])
           })
 
-          # ── Mapa categórico (cuantiles) ───────────────
+          # ── Mapa categórico (intervalos fijos) ────────
           breaks <- c(0, 0.2, 0.4, 0.6, 0.8, 1)
           etiquetas <- c("Muy bajo", "Bajo", "Medio", "Alto", "Muy alto")
           colores_cat <- c("#d73027", "#fc8d59", "#fee08b", "#91cf60", "#1a9850")
@@ -3402,9 +3434,10 @@ mod_h3sdm_server <- function(id) {
     output$tabla_pa <- DT::renderDT({
       pa <- dataset_pa(); req(pa)
       df <- sf::st_drop_geometry(pa)
-      DT::datatable(df,
+      dt <- DT::datatable(df,
                     options = list(pageLength = 10, scrollX = TRUE),
                     rownames = FALSE, class = "table-sm")
+      redondear_dt(dt, df)
     })
 
     # ── Selección de variables ────────────────────────────
@@ -3656,10 +3689,40 @@ mod_h3sdm_server <- function(id) {
           rcat   <- terra::rast(rit_path)
           grilla <- grilla_con_vars() %||% grilla_sf()
           grilla <- sf::st_transform(grilla, crs_trabajo())
-          result <- h3sdm::h3sdm_calculate_it_metrics(rcat, grilla)
+          grilla <- grilla[!duplicated(grilla$h3_address), ]
+          # Quitar métricas IT de un cálculo anterior (evita columnas .x/.y)
+          grilla <- grilla[, !startsWith(names(grilla), "lsm_")]
+
+          # sample_lsm() recorta el raster con cada hexágono y falla
+          # ("extents do not overlap") si alguno queda fuera del raster.
+          # Se calculan solo los hexágonos que se solapan; el resto queda NA.
+          # terra::crop() no reproyecta: la grilla debe estar en el CRS
+          # del raster (exactextractr, usado en categóricas, sí lo hace
+          # solo, por eso aquellas funcionaban con CRS distintos).
+          crs_r <- sf::st_crs(terra::crs(rcat))
+          grilla_r <- sf::st_transform(grilla, crs_r)
+          e <- as.vector(terra::ext(rcat))
+          ext_r <- sf::st_as_sfc(sf::st_bbox(
+            c(xmin = e[[1]], xmax = e[[2]], ymin = e[[3]], ymax = e[[4]]),
+            crs = crs_r))
+          dentro <- lengths(sf::st_intersects(grilla_r, ext_r)) > 0
+          n_fuera <- sum(!dentro)
+          if (!any(dentro)) stop(
+            "Ning\u00fan hex\u00e1gono se solapa con el raster.")
+
+          metr <- h3sdm::h3sdm_calculate_it_metrics(rcat, grilla_r[dentro, ])
+          metr <- sf::st_drop_geometry(metr)
+          metr <- metr[, c("h3_address",
+                           grep("^lsm_", names(metr), value = TRUE))]
+          result <- dplyr::left_join(grilla, metr, by = "h3_address")
           grilla_con_vars(result)
-          showNotification("M\u00e9tricas IT calculadas.",
-                           type = "message", duration = 4)
+          showNotification(
+            paste0("M\u00e9tricas IT calculadas.",
+                   if (n_fuera > 0) paste0(" ", n_fuera,
+                     " hex\u00e1gono(s) fuera de la extensi\u00f3n del raster",
+                     " quedaron como NA.")),
+            type = if (n_fuera > 0) "warning" else "message",
+            duration = 6)
         }, error = function(e) {
           showNotification(paste("Error:", conditionMessage(e)),
                            type = "error", duration = 8)
@@ -3778,9 +3841,10 @@ mod_h3sdm_server <- function(id) {
     output$tabla_predictores <- DT::renderDT({
       grilla <- grilla_con_vars(); req(grilla)
       df <- sf::st_drop_geometry(grilla)
-      DT::datatable(df,
+      dt <- DT::datatable(df,
                     options = list(pageLength = 10, scrollX = TRUE),
                     rownames = FALSE, class = "table-sm")
+      redondear_dt(dt, df)
     })
 
     # Resumen de variables extraídas
@@ -4212,4 +4276,14 @@ mod_h3sdm_server <- function(id) {
     })
 
   })
+}
+
+# Redondea en pantalla las columnas decimales de una tabla DT.
+# Solo afecta la visualización: los datos del modelo conservan
+# su precisión completa.
+redondear_dt <- function(dt, df, digitos = 2) {
+  cols_dec <- names(df)[vapply(df, function(x)
+    is.double(x) && any(x != round(x), na.rm = TRUE), logical(1))]
+  if (length(cols_dec) == 0) return(dt)
+  DT::formatRound(dt, columns = cols_dec, digits = digitos)
 }
