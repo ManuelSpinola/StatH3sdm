@@ -4057,8 +4057,11 @@ mod_h3sdm_server <- function(id) {
         ext  <- tools::file_ext(input$archivo_registros$name)
         path <- input$archivo_registros$datapath
         recs <- if (ext %in% c("gpkg", "geojson")) {
-          sf::st_read(path, quiet = TRUE) |>
+          r <- sf::st_read(path, quiet = TRUE) |>
             sf::st_transform(4326)
+          # GeoPackage nombra la geometría "geom"; h3sdm_pa_from_records()
+          # selecciona la columna "geometry" por nombre
+          sf::st_sf(sf::st_drop_geometry(r), geometry = sf::st_geometry(r))
         } else if (ext == "xlsx") {
           df <- readxl::read_excel(path)
           lat_col <- grep("lat", names(df), ignore.case = TRUE, value = TRUE)[1]
