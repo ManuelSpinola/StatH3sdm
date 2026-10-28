@@ -8,6 +8,53 @@
 # y showNotification los muestra como texto: [38;5;232m…)
 .msg_error <- function(e) gsub("\033\\[[0-9;]*m", "", conditionMessage(e))
 
+# Tamaño del bloque de CV: el usuario lo da en km y spatialsample lo usa
+# en las unidades del CRS de los datos (grados en 4326, metros en un CRS
+# proyectado). En grados es aproximado: 1° de latitud ≈ 111.32 km.
+.bloque_unidades_crs <- function(km, crs) {
+  crs <- sf::st_crs(crs)
+  if (isTRUE(sf::st_is_longlat(crs))) return(km / 111.32)
+  u <- crs$units_gdal %||% "metre"
+  factor_m <- switch(u,
+    "metre"         = 1,
+    "foot"          = 0.3048,
+    "US survey foot" = 1200 / 3937,
+    stop("Unidades del CRS no reconocidas para el tama\u00f1o del bloque: ", u))
+  km * 1000 / factor_m
+}
+
+# Descripción legible de un CRS: "EPSG:5367 — CR05 / CRTM05"
+.desc_crs <- function(crs) {
+  crs  <- sf::st_crs(crs)
+  epsg <- crs$epsg
+  nom  <- crs$Name %||% crs$input
+  if (!is.null(epsg) && !is.na(epsg)) return(paste0("EPSG:", epsg, " \u2014 ", nom))
+  if (grepl("+proj=laea", crs$proj4string %||% "", fixed = TRUE))
+    return("Lambert azimutal equivalente centrada en el \u00e1rea de estudio")
+  nom
+}
+
+# Puntos de control del área: esquinas, centros de borde y centro del bbox
+.puntos_control <- function(g) {
+  bb <- sf::st_bbox(sf::st_transform(g, 4326))
+  xs <- c(bb[["xmin"]], (bb[["xmin"]] + bb[["xmax"]]) / 2, bb[["xmax"]])
+  ys <- c(bb[["ymin"]], (bb[["ymin"]] + bb[["ymax"]]) / 2, bb[["ymax"]])
+  sf::st_as_sf(expand.grid(x = xs, y = ys), coords = c("x", "y"), crs = 4326)
+}
+
+# Distorsión máxima de distancias de un CRS en el área: compara distancias
+# en ese CRS con las geodésicas. 0.01 = 1 %. Sirve en cualquier lugar del
+# mundo para saber si un CRS es adecuado para el área de estudio.
+.distorsion_crs <- function(crs, g) {
+  pts <- .puntos_control(g)
+  d_geo <- as.numeric(sf::st_distance(pts))
+  d_crs <- as.numeric(stats::dist(sf::st_coordinates(sf::st_transform(pts, crs))))
+  d_geo <- d_geo[lower.tri(matrix(0, nrow(pts), nrow(pts)))]
+  ok <- d_geo > 0
+  max(abs(d_crs[ok] / d_geo[ok] - 1))
+}
+
+
 mod_h3sdm_ui <- function(id) {
   ns <- NS(id)
   tagList(
@@ -1735,6 +1782,118 @@ mod_h3sdm_ui <- function(id) {
                   )
                 )
               )
+            ),
+
+            # ── Sub-pestaña: Cambio presente vs futuro ───────────
+            bslib::nav_panel(
+              title = tagList(bsicons::bs_icon("arrow-left-right", class = "me-1"),
+                              "Cambio presente vs futuro"),
+              div(
+                class = "pt-3",
+                p(class = "small text-muted mb-3",
+                  "Compara la idoneidad del presente con la del escenario futuro ",
+                  "en cada hex\u00e1gono. Requiere la predicci\u00f3n futura; la del ",
+                  "presente se calcula con el modelo ajustado."),
+
+                bslib::layout_columns(
+                  col_widths = c(3, 9),
+                  fill = FALSE,
+
+                  div(
+                    bslib::card(
+                      class = "mb-3",
+                      bslib::card_header(
+                        bsicons::bs_icon("gear", class = "me-1"),
+                        "Opciones"
+                      ),
+                      bslib::card_body(
+                        radioButtons(
+                          ns("metodo_umbral"),
+                          label    = "Umbral de idoneidad:",
+                          choices  = c("M\u00e1ximo TSS (datos de entrenamiento)" = "tss",
+                                       "Valor fijo" = "fijo"),
+                          selected = "tss"
+                        ),
+                        conditionalPanel(
+                          condition = paste0("input['", ns("metodo_umbral"), "'] == 'fijo'"),
+                          numericInput(ns("umbral_fijo"), label = NULL,
+                                       value = 0.5, min = 0, max = 1, step = 0.05)
+                        ),
+                        p(class = "small text-muted mb-2",
+                          "El mismo umbral se aplica al presente y al futuro."),
+                        checkboxInput(ns("cambio_solo_aoa"),
+                                      "Excluir hex\u00e1gonos fuera del AOA futuro",
+                                      value = FALSE),
+                        p(class = "small text-muted mb-2",
+                          "Requiere calcular antes el AOA futuro."),
+                        actionButton(ns("calcular_cambio"),
+                                     "Calcular cambio",
+                                     class = "btn-primary w-100 mb-2",
+                                     icon  = icon("play")),
+                        uiOutput(ns("resumen_cambio")),
+                        br(),
+                        downloadButton(ns("dl_cambio_gpkg"),
+                                       "Descargar mapa (.gpkg)",
+                                       class = "btn-outline-primary btn-sm w-100 mb-1"),
+                        downloadButton(ns("dl_cambio_csv"),
+                                       "Descargar tablas (.csv)",
+                                       class = "btn-outline-primary btn-sm w-100")
+                      )
+                    )
+                  ),
+
+                  div(
+                    bslib::layout_columns(
+                      col_widths = c(6, 6),
+                      fill = FALSE,
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("palette", class = "me-1"),
+                          "Cambio en idoneidad (futuro \u2212 presente)"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_cambio_delta"),
+                                                height = "500px")
+                        )
+                      ),
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("layers", class = "me-1"),
+                          "Ganancia, p\u00e9rdida y estabilidad"
+                        ),
+                        bslib::card_body(class = "p-0",
+                          leaflet::leafletOutput(ns("mapa_cambio_cat"),
+                                                height = "500px")
+                        )
+                      )
+                    ),
+                    br(),
+                    bslib::layout_columns(
+                      col_widths = c(5, 7),
+                      fill = FALSE,
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("table", class = "me-1"),
+                          "Hex\u00e1gonos por categor\u00eda"
+                        ),
+                        bslib::card_body(
+                          DT::DTOutput(ns("tabla_cambio_cat"))
+                        )
+                      ),
+                      bslib::card(
+                        bslib::card_header(
+                          bsicons::bs_icon("bar-chart", class = "me-1"),
+                          "Indicadores de cambio"
+                        ),
+                        bslib::card_body(
+                          DT::DTOutput(ns("tabla_cambio_metricas")),
+                          uiOutput(ns("texto_cambio"))
+                        )
+                      )
+                    )
+                  )
+                )
+              )
             )
           )
         )
@@ -1779,61 +1938,150 @@ mod_h3sdm_server <- function(id) {
     # Selector de CRS de trabajo — aparece solo cuando hay AOI
     output$sel_proyeccion <- renderUI({
       req(aoi_sf())
+      origen <- if (!is.null(crs_proyecto()))
+        "tomado del primer raster proyectado que cargaste"
+      else
+        "elegido autom\u00e1ticamente para el \u00e1rea de estudio; cambiar\u00e1 al CRS del primer raster proyectado que cargues, si es adecuado para el \u00e1rea"
       tagList(
         tags$hr(),
         p(class = "small fw-bold mb-1",
           bsicons::bs_icon("globe2", class = "me-1"),
-          "CRS de trabajo:"),
-        p(class = "small text-muted mb-2",
-          "Define la proyecci\u00f3n que se usar\u00e1 al extraer variables y generar el ",
-          "dataset PA. La grilla siempre se genera en WGS84 (H3 trabaja en esf\u00e9rico) ",
-          "y se transforma a este CRS en el momento de la extracci\u00f3n. ",
-          "Usa 4326 para \u00e1reas grandes o multiples zonas UTM; usa un CRS proyectado ",
-          "(ej. 5367 para Costa Rica) para m\u00e9tricas del paisaje m\u00e1s precisas."),
-        p(class = "small text-muted mb-1",
-          "CRS actual: ", code(paste0("EPSG:", crs_trabajo()))),
-        numericInput(
-          ns("crs_custom"),
-          label = "C\u00f3digo EPSG:",
-          value = crs_trabajo(),
-          min   = 1
-        ),
-        actionButton(ns("aplicar_proyeccion"),
-                     "Aplicar CRS de trabajo",
-                     class = "btn-outline-primary btn-sm w-100",
-                     icon  = icon("globe"))
+          "CRS del proyecto:"),
+        p(class = "small mb-1", code(.desc_crs(crs_analisis()))),
+        p(class = "small text-muted mb-0",
+          paste0("(", origen, "). "),
+          "Como en QGIS o ArcGIS, cada raster se usa en su propio CRS y el ",
+          "an\u00e1lisis (coordenadas, bloques de validaci\u00f3n) se hace en el CRS ",
+          "del proyecto. Los mapas y descargas se muestran en WGS84."),
+        tags$details(
+          class = "small mt-2",
+          tags$summary("Cambiar CRS del proyecto"),
+          div(class = "mt-2",
+            numericInput(ns("crs_manual"), label = "C\u00f3digo EPSG (proyectado, en metros):",
+                         value = NA, min = 1),
+            actionButton(ns("aplicar_crs_manual"), "Usar este CRS",
+                         class = "btn-outline-primary btn-sm w-100 mb-1",
+                         icon = icon("globe")),
+            actionLink(ns("crs_automatico"), "Volver a la elecci\u00f3n autom\u00e1tica")
+          )
+        )
       )
     })
 
-    # CRS de trabajo para extracción y PA (4326 por defecto)
-    crs_trabajo <- reactiveVal(4326)
+    # ── CRS del proyecto (como en QGIS/ArcGIS) ────────────
+    # - Se fija con el primer raster en un CRS proyectado en metros.
+    # - Solo si ese CRS distorsiona poco las distancias en el área
+    #   (≤ 1 %, o no más que el CRS automático en áreas muy grandes).
+    # - Sin ese raster, se usa un CRS automático (crs_auto).
+    # - Se reinicia al generar una grilla nueva.
+    # El modelo guarda el CRS con que se ajustó (crs_ajuste) y las
+    # predicciones usan ese, para que x, y coincidan siempre.
+    crs_proyecto <- reactiveVal(NULL)
+    crs_ajuste   <- reactiveVal(NULL)
 
-    observeEvent(input$aplicar_proyeccion, {
-      req(input$crs_custom)
-      tryCatch({
-        sf::st_crs(as.integer(input$crs_custom))  # validar EPSG
-        crs_trabajo(as.integer(input$crs_custom))
-        tipo <- if (input$crs_custom == 4326) "geogr\u00e1fico (WGS84)" else "proyectado"
+    # CRS automático, válido en cualquier lugar del mundo:
+    # - área pequeña (hasta ~6° de ancho, fuera de las zonas polares):
+    #   la zona UTM de su centro;
+    # - área grande, polar o que cruza el antimeridiano: Lambert azimutal
+    #   equivalente centrada en el área (distancias y áreas sin grandes
+    #   distorsiones a escala continental).
+    crs_auto <- reactive({
+      g <- aoi_sf() %||% grilla_sf(); req(g)
+      g4  <- sf::st_transform(g, 4326)
+      cen <- sf::st_coordinates(suppressWarnings(
+        sf::st_centroid(sf::st_union(sf::st_geometry(g4)))))
+      lon <- cen[1, 1]; lat <- cen[1, 2]
+      bb  <- sf::st_bbox(g4)
+      ancho <- bb[["xmax"]] - bb[["xmin"]]
+      if (ancho <= 6 && abs(lat) <= 80) {
+        zona <- min(60L, floor((lon + 180) / 6) + 1L)
+        return(as.integer((if (lat >= 0) 32600L else 32700L) + zona))
+      }
+      sprintf("+proj=laea +lat_0=%.4f +lon_0=%.4f +datum=WGS84 +units=m +no_defs",
+              lat, lon)
+    })
+    crs_analisis <- reactive(crs_proyecto() %||% crs_auto())
+    crs_trabajo  <- crs_analisis   # nombre usado en extracción y PA
+
+    a_analisis <- function(x) sf::st_transform(x, crs_analisis())
+    a_modelo   <- function(x) sf::st_transform(x, crs_ajuste() %||% crs_analisis())
+
+    es_proyectado_m <- function(crs) {
+      crs <- sf::st_crs(crs)
+      !is.na(crs) && !isTRUE(sf::st_is_longlat(crs)) &&
+        identical(crs$units_gdal, "metre") && !is.null(crs$epsg) && !is.na(crs$epsg)
+    }
+
+    # Cambio manual del CRS del proyecto (como en las propiedades del
+    # proyecto de QGIS). Se acepta aunque distorsione, con aviso.
+    observeEvent(input$aplicar_crs_manual, {
+      epsg <- input$crs_manual
+      crs  <- tryCatch(sf::st_crs(as.integer(epsg)), error = function(e) NA)
+      if (is.null(epsg) || is.na(epsg) || is.na(crs)) {
+        showNotification("C\u00f3digo EPSG no v\u00e1lido.", type = "error"); return()
+      }
+      if (!es_proyectado_m(crs)) {
         showNotification(
-          paste0("CRS de trabajo: EPSG:", input$crs_custom, " (", tipo, "). ",
-                 "La grilla se transformar\u00e1 a este CRS al extraer variables ",
-                 "y al generar el dataset PA. ",
-                 "Aseg\u00farate de que tus rasters est\u00e9n en la misma proyecci\u00f3n."),
-          type = "message", duration = 10)
-      }, error = function(e) {
-        showNotification(paste("EPSG no v\u00e1lido:", .msg_error(e)),
-                         type = "error")
-      })
+          paste0(.desc_crs(crs), " no es un CRS proyectado en metros; ",
+                 "el an\u00e1lisis necesita distancias en metros."),
+          type = "error", duration = 8); return()
+      }
+      crs_proyecto(as.integer(epsg))
+      g <- aoi_sf() %||% grilla_sf()
+      dist <- if (is.null(g)) 0 else
+        tryCatch(.distorsion_crs(crs, g), error = function(e) 0)
+      msg <- paste0("CRS del proyecto: ", .desc_crs(crs), ".")
+      if (dist > 0.01)
+        msg <- paste0(msg, " Distorsiona las distancias un ",
+                      round(100 * min(dist, 9.99), 1), "% en el \u00e1rea de estudio.")
+      if (!is.null(modelo_ajustado()))
+        msg <- paste0(msg, " Vuelve a ajustar el modelo para usarlo; ",
+                      "hasta entonces las predicciones siguen con el CRS del ajuste.")
+      showNotification(msg, type = if (dist > 0.01) "warning" else "message",
+                       duration = 12)
     })
 
-    # Cellsize dinámico según CRS del dataset PA
+    observeEvent(input$crs_automatico, {
+      crs_proyecto(NULL)
+      showNotification(
+        paste0("CRS del proyecto: ", .desc_crs(crs_analisis()),
+               " (autom\u00e1tico). Al cargar un raster proyectado adecuado, se usar\u00e1 el suyo."),
+        type = "message", duration = 8)
+    })
+
+    # Al cargar un raster: si el proyecto aún no tiene CRS, toma el suyo
+    revisar_crs_raster <- function(r) {
+      if (!is.null(crs_proyecto())) return(invisible(NULL))
+      crs_r <- sf::st_crs(terra::crs(r))
+      if (!es_proyectado_m(crs_r)) return(invisible(NULL))
+      g <- aoi_sf() %||% grilla_sf()
+      dist <- tryCatch(.distorsion_crs(crs_r, g), error = function(e) Inf)
+      # Aceptable: ≤ 1 %, o no peor que el CRS automático (áreas continentales)
+      tope <- max(0.01, tryCatch(.distorsion_crs(crs_auto(), g),
+                                 error = function(e) 0.01))
+      if (dist <= tope) {
+        crs_proyecto(as.integer(crs_r$epsg))
+        showNotification(
+          paste0("CRS del proyecto: ", .desc_crs(crs_r),
+                 " (del primer raster proyectado)."),
+          type = "message", duration = 8)
+      } else {
+        showNotification(
+          paste0("El raster est\u00e1 en ", .desc_crs(crs_r), ", que distorsiona ",
+                 "las distancias un ", round(100 * min(dist, 9.99), 1),
+                 "% en el \u00e1rea de estudio. El an\u00e1lisis usar\u00e1 ",
+                 .desc_crs(crs_auto()), ". El raster se usa igual."),
+          type = "warning", duration = 12)
+      }
+      invisible(NULL)
+    }
+
+    # Tamaño del bloque en km; se convierte a las unidades del CRS al ajustar
     output$cellsize_ui <- renderUI({
       tagList(
         numericInput(ns("block_size"),
-                     label = tagList("Tama\u00f1o del bloque (grados)",
-                                     tags$small(class = "text-muted ms-1",
-                                                "0.5\u00b0 \u2248 55 km")),
-                     value = 0.5, min = 0.01, step = 0.1)
+                     label = "Tama\u00f1o del bloque (km):",
+                     value = 50, min = 1, step = 5)
       )
     })
 
@@ -1948,8 +2196,9 @@ mod_h3sdm_server <- function(id) {
               type = "warning", duration = 10)
           }
 
-          p <- h3sdm::h3sdm_predict(m, pred_futuro)
+          p <- h3sdm::h3sdm_predict(m, a_modelo(pred_futuro))
           pred_futuro_sf(p)
+          cambio_sf(NULL)
 
           # Visualizar
           p_vis <- suppressWarnings(sf::st_cast(p, "POLYGON")) |> sf::st_transform(4326)
@@ -2022,7 +2271,7 @@ mod_h3sdm_server <- function(id) {
       filename = function() paste0("prediccion_futura_continua_", Sys.Date(), ".gpkg"),
       content  = function(file) {
         req(pred_futuro_sf())
-        sf::st_write(pred_futuro_sf(), file, delete_dsn = TRUE, quiet = TRUE)
+        sf::st_write(sf::st_transform(pred_futuro_sf(), 4326), file, delete_dsn = TRUE, quiet = TRUE)
       }
     )
 
@@ -2035,7 +2284,310 @@ mod_h3sdm_server <- function(id) {
         etiquetas <- c("Muy bajo","Bajo","Medio","Alto","Muy alto")
         p$categoria <- cut(p$prediction, breaks = breaks,
                            labels = etiquetas, include.lowest = TRUE)
-        sf::st_write(p, file, delete_dsn = TRUE, quiet = TRUE)
+        sf::st_write(sf::st_transform(p, 4326), file, delete_dsn = TRUE, quiet = TRUE)
+      }
+    )
+
+    # ── Cambio presente vs futuro ─────────────────────────
+    niveles_cambio <- c("Estable", "Pérdida", "Ganancia",
+                        "No idóneo", "Fuera del AOA")
+    colores_cambio <- c("#1a9850", "#d73027", "#4575b4", "#f0f0f0", "#bdbdbd")
+
+    cambio_sf   <- reactiveVal(NULL)  # sf: un hexágono por fila
+    cambio_info <- reactiveVal(NULL)  # umbral, método, uso del AOA
+
+    output$mapa_cambio_delta <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    output$mapa_cambio_cat <- leaflet::renderLeaflet({
+      leaflet::leaflet() |>
+        leaflet::addProviderTiles(leaflet::providers$OpenStreetMap) |>
+        leaflet::setView(lng = 0, lat = 20, zoom = 2)
+    })
+
+    # Umbral que maximiza TSS = sensibilidad + especificidad - 1
+    umbral_max_tss <- function(obs, pred) {
+      ok   <- !is.na(obs) & !is.na(pred)
+      obs  <- obs[ok]; pred <- pred[ok]
+      cand <- sort(unique(round(pred, 3)))
+      tss  <- vapply(cand, function(u) {
+        mean(pred[obs == 1] >= u) + mean(pred[obs == 0] < u) - 1
+      }, numeric(1))
+      cand[which.max(tss)]
+    }
+
+    observeEvent(input$calcular_cambio, {
+      req(modelo_ajustado(), grilla_con_vars())
+      pf <- pred_futuro_sf()
+      if (is.null(pf)) {
+        showNotification("Genera primero la predicción futura.",
+                         type = "warning", duration = 5)
+        return()
+      }
+
+      withProgress(message = "Calculando cambio presente vs futuro…", {
+        tryCatch({
+          # Predicción del presente con el modelo ajustado
+          pp <- prediccion_sf()
+          if (is.null(pp)) {
+            gc <- grilla_con_vars()
+            gc_dedup <- gc[!duplicated(gc$h3_address), ]
+            pp <- h3sdm::h3sdm_predict(modelo_ajustado(),
+                                       a_modelo(h3sdm::h3sdm_predictors(gc_dedup)))
+          }
+          pres <- sf::st_drop_geometry(pp)[, c("h3_address", "prediction")]
+          pres <- pres[!duplicated(pres$h3_address), ]
+          names(pres)[2] <- "idon_presente"
+
+          fut <- pf[!duplicated(pf$h3_address), c("h3_address", "prediction")]
+          fut <- dplyr::rename(fut, idon_futura = prediction)
+
+          cmb <- dplyr::inner_join(fut, pres, by = "h3_address")
+          cmb$delta <- cmb$idon_futura - cmb$idon_presente
+
+          # Umbral
+          if (identical(input$metodo_umbral, "tss")) {
+            dat <- dat_rv()
+            if (is.null(dat)) stop("No hay datos de entrenamiento; ajusta el modelo.")
+            ent <- sf::st_drop_geometry(dat)[, c("h3_address", "presence")]
+            ent <- merge(ent, pres, by = "h3_address")
+            obs <- as.integer(as.character(ent$presence) == "1")
+            if (length(unique(obs)) < 2)
+              stop("Se necesitan presencias y ausencias para el umbral de máximo TSS.")
+            umbral <- umbral_max_tss(obs, ent$idon_presente)
+            metodo <- "Máximo TSS"
+          } else {
+            umbral <- input$umbral_fijo
+            metodo <- "Valor fijo"
+          }
+          if (!is.numeric(umbral) || !is.finite(umbral) || umbral <= 0 || umbral >= 1)
+            stop("El umbral debe estar entre 0 y 1.")
+
+          # Categorías de cambio
+          bin_p <- cmb$idon_presente >= umbral
+          bin_f <- cmb$idon_futura   >= umbral
+          cat_c <- dplyr::case_when(
+            is.na(bin_p) | is.na(bin_f) ~ NA_character_,
+            bin_p &  bin_f ~ "Estable",
+            bin_p & !bin_f ~ "Pérdida",
+            !bin_p & bin_f ~ "Ganancia",
+            TRUE           ~ "No idóneo"
+          )
+
+          # Restringir al AOA futuro
+          usar_aoa <- isTRUE(input$cambio_solo_aoa) && !is.null(aoa_futuro_sf())
+          if (isTRUE(input$cambio_solo_aoa) && is.null(aoa_futuro_sf())) {
+            showNotification(
+              paste0("No se ha calculado el AOA futuro: se usan todos los ",
+                     "hexágonos."),
+              type = "warning", duration = 8)
+          }
+          if (usar_aoa) {
+            aoa   <- sf::st_drop_geometry(aoa_futuro_sf())[, c("h3_address", "AOA")]
+            fuera <- cmb$h3_address %in% aoa$h3_address[aoa$AOA == 0L]
+            cat_c[fuera]     <- "Fuera del AOA"
+            cmb$delta[fuera] <- NA_real_
+          }
+          cmb$cambio   <- factor(cat_c, levels = niveles_cambio)
+          cmb$area_km2 <- as.numeric(sf::st_area(cmb)) / 1e6
+
+          cambio_sf(cmb)
+          cambio_info(list(umbral = umbral, metodo = metodo, aoa = usar_aoa))
+
+          # ── Mapas ───────────────────────────────────────
+          c_vis <- suppressWarnings(sf::st_cast(cmb, "POLYGON")) |>
+            sf::st_transform(4326)
+          c_vis <- c_vis[, c("h3_address", "delta", "cambio")]
+          bbox  <- sf::st_bbox(c_vis)
+
+          lim <- max(abs(c_vis$delta), na.rm = TRUE)
+          if (!is.finite(lim) || lim == 0) lim <- 0.01
+          pal_delta <- leaflet::colorNumeric("RdBu", domain = c(-lim, lim),
+                                             na.color = "#bdbdbd")
+          leaflet::leafletProxy(ns("mapa_cambio_delta")) |>
+            leaflet::clearShapes() |> leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data = c_vis, fillColor = ~pal_delta(delta),
+              fillOpacity = 0.85, color = "transparent", weight = 0) |>
+            # Leyenda con los valores positivos arriba: paleta invertida +
+            # etiquetas en orden decreciente (addLegend no tiene 'decreasing')
+            leaflet::addLegend(position = "bottomright",
+                               pal = leaflet::colorNumeric("RdBu", domain = c(-lim, lim),
+                                                           reverse = TRUE),
+                               values = c(-lim, lim),
+                               labFormat = leaflet::labelFormat(
+                                 transform = function(x) sort(x, decreasing = TRUE)),
+                               title = "Δ idoneidad", opacity = 0.8)
+
+          niv_vis <- niveles_cambio[niveles_cambio %in% unique(as.character(c_vis$cambio))]
+          col_vis <- colores_cambio[match(niv_vis, niveles_cambio)]
+          pal_cambio <- leaflet::colorFactor(palette = colores_cambio,
+                                             levels = niveles_cambio,
+                                             na.color = "#bdbdbd")
+          leaflet::leafletProxy(ns("mapa_cambio_cat")) |>
+            leaflet::clearShapes() |> leaflet::clearControls() |>
+            leafgl::addGlPolygons(
+              data = c_vis, fillColor = ~pal_cambio(cambio),
+              fillOpacity = 0.85, color = "transparent", weight = 0) |>
+            leaflet::addLegend(position = "bottomright",
+                               colors = col_vis, labels = niv_vis,
+                               title = "Cambio", opacity = 0.8)
+
+          shinyjs::delay(400, {
+            for (id_mapa in c("mapa_cambio_delta", "mapa_cambio_cat")) {
+              leaflet::leafletProxy(ns(id_mapa)) |>
+                leaflet::fitBounds(bbox[["xmin"]], bbox[["ymin"]],
+                                   bbox[["xmax"]], bbox[["ymax"]])
+            }
+          })
+
+          showNotification("Cambio presente vs futuro calculado.",
+                           type = "message", duration = 4)
+        }, error = function(e) {
+          showNotification(paste("Error:", .msg_error(e)),
+                           type = "error", duration = 8)
+        })
+      })
+    })
+
+    # Tabla por categoría
+    tabla_cambio_cat_df <- reactive({
+      cmb <- cambio_sf(); req(cmb)
+      df  <- sf::st_drop_geometry(cmb)
+      df  <- df[!is.na(df$cambio), ]
+      res <- do.call(rbind, lapply(niveles_cambio, function(k) {
+        sel <- df$cambio == k
+        data.frame(Categoria  = k,
+                   Hexagonos  = sum(sel),
+                   Area_km2   = sum(df$area_km2[sel]))
+      }))
+      res <- res[res$Hexagonos > 0, ]
+      res$Porcentaje <- 100 * res$Area_km2 / sum(res$Area_km2)
+      res
+    })
+
+    # Indicadores de cambio
+    tabla_cambio_metricas_df <- reactive({
+      cmb  <- cambio_sf(); req(cmb)
+      info <- cambio_info(); req(info)
+      df   <- sf::st_drop_geometry(cmb)
+      area <- function(k) sum(df$area_km2[df$cambio %in% k])
+      a_est <- area("Estable");  a_per <- area("Pérdida")
+      a_gan <- area("Ganancia")
+      a_pre <- a_est + a_per
+      pct   <- function(x) if (a_pre > 0) 100 * x / a_pre else NA_real_
+      data.frame(
+        Indicador = c(
+          paste0("Umbral de idoneidad (", info$metodo, ")"),
+          "Área idónea presente (km²)",
+          "Área idónea futura, dispersión ilimitada (km²)",
+          "Área idónea futura, sin dispersión (km²)",
+          "Pérdida (% del área idónea presente)",
+          "Ganancia (% del área idónea presente)",
+          "Cambio neto, dispersión ilimitada (%)",
+          "Cambio neto, sin dispersión (%)",
+          "Cambio medio de idoneidad (Δ)"
+        ),
+        Valor = c(
+          info$umbral, a_pre, a_est + a_gan, a_est,
+          pct(a_per), pct(a_gan), pct(a_gan - a_per), pct(-a_per),
+          mean(df$delta, na.rm = TRUE)
+        )
+      )
+    })
+
+    output$tabla_cambio_cat <- DT::renderDT({
+      df <- tabla_cambio_cat_df()
+      names(df) <- c("Categoría", "Hexágonos", "Área (km²)", "% del área")
+      dt <- DT::datatable(df, rownames = FALSE, class = "table-sm",
+                          options = list(dom = "t", ordering = FALSE))
+      redondear_dt(dt, df)
+    })
+
+    output$tabla_cambio_metricas <- DT::renderDT({
+      df <- tabla_cambio_metricas_df()
+      dt <- DT::datatable(df, rownames = FALSE, class = "table-sm",
+                          options = list(dom = "t", ordering = FALSE))
+      redondear_dt(dt, df)
+    })
+
+    # Lectura breve de los resultados, con las cifras del cálculo
+    output$texto_cambio <- renderUI({
+      cmb  <- cambio_sf(); req(cmb)
+      info <- cambio_info(); req(info)
+      df   <- sf::st_drop_geometry(cmb)
+      area <- function(k) sum(df$area_km2[df$cambio %in% k])
+      a_est <- area("Estable"); a_per <- area("P\u00e9rdida"); a_gan <- area("Ganancia")
+      a_pre <- a_est + a_per
+      req(a_pre > 0)
+      km  <- function(x) format(round(x), big.mark = " ", scientific = FALSE)
+      pct <- function(x) paste0(if (x > 0) "+" else "", round(100 * x / a_pre, 1), " %")
+      div(class = "small mt-3",
+        p(class = "mb-2",
+          tags$strong("En resumen: "),
+          "con el umbral de ", round(info$umbral, 3), ", el \u00e1rea id\u00f3nea actual es de ",
+          km(a_pre), " km\u00b2. En el escenario futuro se pierden ", km(a_per),
+          " km\u00b2 (", pct(-a_per), ") y aparecen ", km(a_gan), " km\u00b2 nuevos (",
+          pct(a_gan), "). Si la especie no llega a las \u00e1reas nuevas, el \u00e1rea id\u00f3nea ",
+          if (a_per > 0) "baja" else "queda", " a ", km(a_est), " km\u00b2 (", pct(-a_per),
+          "); si llega a todas, ", if (a_gan >= a_per) "sube" else "baja", " a ",
+          km(a_est + a_gan), " km\u00b2 (", pct(a_gan - a_per), ")."),
+        tags$ul(class = "text-muted mb-0 ps-3",
+          tags$li(tags$strong("\u00c1rea id\u00f3nea:"), " hex\u00e1gonos con idoneidad igual o mayor que el umbral. ",
+                  "Es h\u00e1bitat potencial seg\u00fan el modelo, no el \u00e1rea ocupada."),
+          tags$li(tags$strong("Dispersi\u00f3n ilimitada:"), " la especie llega a todas las \u00e1reas nuevas ",
+                  "(escenario optimista). ", tags$strong("Sin dispersi\u00f3n:"),
+                  " solo conserva las actuales que siguen siendo id\u00f3neas (pesimista). ",
+                  "Lo real suele estar entre ambos."),
+          tags$li(tags$strong("Porcentajes:"), " relativos al \u00e1rea id\u00f3nea actual."),
+          tags$li(tags$strong("\u0394 idoneidad:"), " diferencia futura \u2212 presente por hex\u00e1gono; ",
+                  "muestra cu\u00e1nto cambia sin depender del umbral."),
+          tags$li("Las variables que no vienen en los rasters futuros se mantienen constantes: ",
+                  "el cambio refleja solo las variables futuras cargadas.",
+                  if (!info$aoa) " Activa la exclusi\u00f3n fuera del AOA para no interpretar extrapolaciones.")
+        )
+      )
+    })
+
+    output$resumen_cambio <- renderUI({
+      cmb <- cambio_sf(); info <- cambio_info()
+      if (is.null(cmb) || is.null(info)) return(NULL)
+      div(class = "alert alert-info small py-2 px-3 mt-2 mb-0",
+          bsicons::bs_icon("check-circle-fill", class = "me-1"),
+          "Umbral: ", strong(round(info$umbral, 3)), paste0(" (", info$metodo, ")"),
+          tags$br(),
+          strong(sum(!is.na(cmb$cambio))), " hexágonos comparados",
+          if (info$aoa) tagList(tags$br(), "Fuera del AOA futuro excluidos"))
+    })
+
+    output$dl_cambio_gpkg <- downloadHandler(
+      filename = function() paste0("cambio_presente_futuro_", Sys.Date(), ".gpkg"),
+      content  = function(file) {
+        req(cambio_sf())
+        out <- cambio_sf()
+        out$cambio <- as.character(out$cambio)
+        sf::st_write(sf::st_transform(out, 4326), file, delete_dsn = TRUE, quiet = TRUE)
+      }
+    )
+
+    output$dl_cambio_csv <- downloadHandler(
+      filename = function() paste0("cambio_presente_futuro_", Sys.Date(), ".csv"),
+      content  = function(file) {
+        cat_df <- tabla_cambio_cat_df()
+        met_df <- tabla_cambio_metricas_df()
+        largo  <- rbind(
+          data.frame(Tabla = "Indicadores", Indicador = met_df$Indicador,
+                     Valor = met_df$Valor),
+          data.frame(Tabla = "Categorías",
+                     Indicador = paste0(rep(cat_df$Categoria, each = 3), " - ",
+                                        c("hexágonos", "área (km2)", "% del área")),
+                     Valor = as.vector(t(as.matrix(
+                       cat_df[, c("Hexagonos", "Area_km2", "Porcentaje")]))))
+        )
+        utils::write.csv(largo, file, row.names = FALSE, fileEncoding = "UTF-8")
       }
     )
 
@@ -2116,7 +2668,7 @@ mod_h3sdm_server <- function(id) {
       filename = function() paste0("prediccion_continua_", Sys.Date(), ".gpkg"),
       content  = function(file) {
         req(prediccion_sf())
-        sf::st_write(prediccion_sf(), file, delete_dsn = TRUE, quiet = TRUE)
+        sf::st_write(sf::st_transform(prediccion_sf(), 4326), file, delete_dsn = TRUE, quiet = TRUE)
       }
     )
 
@@ -2130,7 +2682,7 @@ mod_h3sdm_server <- function(id) {
         etiquetas <- c("Muy bajo", "Bajo", "Medio", "Alto", "Muy alto")
         p$categoria <- cut(p$prediction, breaks = breaks,
                            labels = etiquetas, include.lowest = TRUE)
-        sf::st_write(p, file, delete_dsn = TRUE, quiet = TRUE)
+        sf::st_write(sf::st_transform(p, 4326), file, delete_dsn = TRUE, quiet = TRUE)
       }
     )
 
@@ -2222,9 +2774,13 @@ mod_h3sdm_server <- function(id) {
                "  v       = ", isolate(input$cv_folds), ",\n",
                "  repeats = ", isolate(input$cv_repeats),
                if (isolate(input$cv_method) == "block")
-                 paste0(",\n  cellsize = ", isolate(input$block_size),
-                        ",\n  square   = ",
-                        tolower(isolate(input$block_shape) == "square"))
+                 paste0(",\n  cellsize = ",
+                        signif(.bloque_unidades_crs(isolate(input$block_size),
+                                                    crs_trabajo()), 4),
+                        ",  # ", isolate(input$block_size),
+                        " km en unidades del CRS",
+                        "\n  square   = ",
+                        toupper(isolate(input$block_shape) == "square"))
                else "",
                "\n)\n\n"),
 
@@ -2339,7 +2895,7 @@ mod_h3sdm_server <- function(id) {
           pred_sf  <- h3sdm::h3sdm_predictors(gc_dedup)
 
           # Predecir
-          p <- h3sdm::h3sdm_predict(m, pred_sf)
+          p <- h3sdm::h3sdm_predict(m, a_modelo(pred_sf))
           prediccion_sf(p)
 
           # Transformar a WGS84 para leaflet
@@ -2659,7 +3215,7 @@ mod_h3sdm_server <- function(id) {
       filename = function() paste0("aoa_presente_", Sys.Date(), ".gpkg"),
       content  = function(file) {
         req(aoa_sf())
-        sf::st_write(aoa_sf(), file, delete_dsn = TRUE, quiet = TRUE)
+        sf::st_write(sf::st_transform(aoa_sf(), 4326), file, delete_dsn = TRUE, quiet = TRUE)
       }
     )
 
@@ -2881,7 +3437,7 @@ mod_h3sdm_server <- function(id) {
       filename = function() paste0("aoa_futuro_", Sys.Date(), ".gpkg"),
       content  = function(file) {
         req(aoa_futuro_sf())
-        sf::st_write(aoa_futuro_sf(), file, delete_dsn = TRUE, quiet = TRUE)
+        sf::st_write(sf::st_transform(aoa_futuro_sf(), 4326), file, delete_dsn = TRUE, quiet = TRUE)
       }
     )
 
@@ -2900,7 +3456,8 @@ mod_h3sdm_server <- function(id) {
 
           pa  <- dataset_pa(); req(pa)
           gc  <- grilla_con_vars(); req(gc)
-          pa_base  <- pa[!duplicated(pa$h3_address), c("h3_address", "presence")]
+          pa_base  <- a_modelo(
+            pa[!duplicated(pa$h3_address), c("h3_address", "presence")])
           gc_dedup <- gc[!duplicated(gc$h3_address), ]
           pred_sf  <- h3sdm::h3sdm_predictors(gc_dedup)
           dat      <- h3sdm::h3sdm_data(pa_base, pred_sf)
@@ -3100,7 +3657,8 @@ mod_h3sdm_server <- function(id) {
 
           # Seguir vignette: h3sdm_data agrega x e y
           gc       <- grilla_con_vars(); req(gc)
-          pa_base  <- pa[!duplicated(pa$h3_address), c("h3_address", "presence")]
+          pa_base  <- a_analisis(
+            pa[!duplicated(pa$h3_address), c("h3_address", "presence")])
           gc_dedup <- gc[!duplicated(gc$h3_address), ]
           pred_sf  <- h3sdm::h3sdm_predictors(gc_dedup)
           dat      <- h3sdm::h3sdm_data(pa_base, pred_sf)
@@ -3123,6 +3681,7 @@ mod_h3sdm_server <- function(id) {
               type = "warning", duration = 8)
           }
           dat_rv(dat)
+          crs_ajuste(crs_analisis())
 
           # 3. Presence data para evaluación
           presence_data <- dat |>
@@ -3198,7 +3757,7 @@ mod_h3sdm_server <- function(id) {
           )
           if (input$cv_method == "block") {
             cv_args$square   <- input$block_shape == "square"
-            cv_args$cellsize <- input$block_size
+            cv_args$cellsize <- .bloque_unidades_crs(input$block_size, pa_valid)
           }
           cv_split <- do.call(h3sdm::h3sdm_spatial_cv, cv_args)
           cv_split_rv(cv_split)
@@ -3627,6 +4186,7 @@ mod_h3sdm_server <- function(id) {
             nombres <- make.unique(nombres, sep = "_")
             names(stack) <- nombres
           }
+          revisar_crs_raster(stack)
           # Transformar grilla al CRS de trabajo elegido por el usuario
           grilla  <- sf::st_transform(grilla_sf(), crs_trabajo())
           result  <- h3sdm::h3sdm_extract_num(stack, grilla)
@@ -3665,6 +4225,7 @@ mod_h3sdm_server <- function(id) {
             !grepl("\\.aux\\.xml$", input$raster_cat$name,
                    ignore.case = TRUE)][1]
           rcat <- terra::rast(rcat_path)
+          revisar_crs_raster(rcat)
 
           # Transformar grilla al CRS de trabajo y desduplicar h3_address
           grilla_base <- grilla_con_vars() %||% grilla_sf()
@@ -3709,6 +4270,7 @@ mod_h3sdm_server <- function(id) {
                    ignore.case = TRUE)][1]
           req(rit_path)
           rcat   <- terra::rast(rit_path)
+          revisar_crs_raster(rcat)
           grilla <- grilla_con_vars() %||% grilla_sf()
           grilla <- sf::st_transform(grilla, crs_trabajo())
           grilla <- grilla[!duplicated(grilla$h3_address), ]
@@ -3933,6 +4495,7 @@ mod_h3sdm_server <- function(id) {
           grilla <- grilla[, "h3_address"]
           n_hex  <- nrow(grilla)  # conteo real antes del cast
           grilla_sf(grilla)       # guardar MULTIPOLYGON original
+          crs_proyecto(NULL)
           n_hex_real(n_hex)
           grilla_vis <- suppressWarnings(sf::st_cast(grilla, "POLYGON")) |>
             sf::st_transform(4326)
