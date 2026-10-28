@@ -4,6 +4,10 @@
 # StatH3sdm · StatSuite · Manuel Spínola · ICOMVIS · UNA
 # ============================================================
 
+# Mensaje de error sin códigos de color ANSI (cli/rlang los agregan
+# y showNotification los muestra como texto: [38;5;232m…)
+.msg_error <- function(e) gsub("\033\\[[0-9;]*m", "", conditionMessage(e))
+
 mod_h3sdm_ui <- function(id) {
   ns <- NS(id)
   tagList(
@@ -1817,7 +1821,7 @@ mod_h3sdm_server <- function(id) {
                  "Aseg\u00farate de que tus rasters est\u00e9n en la misma proyecci\u00f3n."),
           type = "message", duration = 10)
       }, error = function(e) {
-        showNotification(paste("EPSG no v\u00e1lido:", conditionMessage(e)),
+        showNotification(paste("EPSG no v\u00e1lido:", .msg_error(e)),
                          type = "error")
       })
     })
@@ -1994,7 +1998,7 @@ mod_h3sdm_server <- function(id) {
                            type = "message", duration = 4)
 
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 8)
         })
       })
@@ -2417,7 +2421,7 @@ mod_h3sdm_server <- function(id) {
                            type = "message", duration = 4)
 
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 8)
         })
       })
@@ -2628,7 +2632,7 @@ mod_h3sdm_server <- function(id) {
           )
 
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 8)
         })
       })
@@ -2850,7 +2854,7 @@ mod_h3sdm_server <- function(id) {
             type = "message", duration = 4
           )
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 8)
         })
       })
@@ -2915,7 +2919,7 @@ mod_h3sdm_server <- function(id) {
           importancia_df(imp)
           showNotification("Importancia calculada.", type = "message", duration = 3)
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 8)
         })
       })
@@ -2982,7 +2986,7 @@ mod_h3sdm_server <- function(id) {
       }, error = function(e) {
         ggplot2::ggplot() +
           ggplot2::annotate("text", x = 0.5, y = 0.5,
-                            label = paste("Error:", conditionMessage(e)),
+                            label = paste("Error:", .msg_error(e)),
                             color = colores$peligro, size = 4) +
           ggplot2::theme_void()
       })
@@ -3021,7 +3025,7 @@ mod_h3sdm_server <- function(id) {
               ggplot2::theme(legend.position = "none")
           })
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 8)
         })
       })
@@ -3211,7 +3215,7 @@ mod_h3sdm_server <- function(id) {
                            type = "message", duration = 4)
 
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 10)
         })
       })
@@ -3427,7 +3431,7 @@ mod_h3sdm_server <- function(id) {
             type = "message", duration = 5)
 
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 8)
         })
       })
@@ -3646,7 +3650,7 @@ mod_h3sdm_server <- function(id) {
             paste(terra::nlyr(stack), "variable(s) num\u00e9rica(s) extra\u00eddas."),
             type = "message", duration = 4)
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 8)
         })
       })
@@ -3689,7 +3693,7 @@ mod_h3sdm_server <- function(id) {
               type = "warning", duration = 6)
           }
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 8)
         })
       })
@@ -3742,7 +3746,7 @@ mod_h3sdm_server <- function(id) {
             type = if (n_fuera > 0) "warning" else "message",
             duration = 6)
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 8)
         })
       })
@@ -3924,6 +3928,9 @@ mod_h3sdm_server <- function(id) {
             aoi_sf(),
             res = as.integer(input$resolucion_h3)
           )
+          # Solo identificador y geometría: cualquier otra columna entraría
+          # al modelo como predictor
+          grilla <- grilla[, "h3_address"]
           n_hex  <- nrow(grilla)  # conteo real antes del cast
           grilla_sf(grilla)       # guardar MULTIPOLYGON original
           n_hex_real(n_hex)
@@ -3954,7 +3961,7 @@ mod_h3sdm_server <- function(id) {
           showNotification(paste(nrow(grilla), "hex\u00e1gonos generados."),
                            type = "message", duration = 4)
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 8)
         })
       })
@@ -4044,7 +4051,7 @@ mod_h3sdm_server <- function(id) {
             showNotification("No se encontraron registros.", type = "warning")
           }
         }, error = function(e) {
-          showNotification(paste("Error:", conditionMessage(e)),
+          showNotification(paste("Error:", .msg_error(e)),
                            type = "error", duration = 8)
         })
       })
@@ -4079,7 +4086,7 @@ mod_h3sdm_server <- function(id) {
         showNotification(paste(nrow(recs), "registros cargados."),
                          type = "message", duration = 4)
       }, error = function(e) {
-        showNotification(paste("Error al cargar:", conditionMessage(e)),
+        showNotification(paste("Error al cargar:", .msg_error(e)),
                          type = "error")
       })
     })
@@ -4197,8 +4204,7 @@ mod_h3sdm_server <- function(id) {
         coords <- feat$geometry$coordinates[[1]]
         mat    <- do.call(rbind, lapply(coords, function(p) c(p[[1]], p[[2]])))
         poly   <- sf::st_polygon(list(mat))
-        sf_obj <- sf::st_sf(geometry = sf::st_sfc(poly, crs = 4326),
-                            nombre = "AOI dibujado")
+        sf_obj <- sf::st_sf(geometry = sf::st_sfc(poly, crs = 4326))
         aoi_sf(sf_obj)
         showNotification("AOI dibujado guardado.", type = "message", duration = 3)
       }, error = function(e) {
@@ -4235,6 +4241,9 @@ mod_h3sdm_server <- function(id) {
 
         sf_obj <- sf::st_transform(sf_obj, 4326)
         sf_obj <- sf_obj[1, ]  # solo primer feature
+        # Solo la geometría: los atributos del archivo (id, name…) pasarían
+        # a la grilla H3 y de ahí al modelo como predictores
+        sf_obj <- sf::st_sf(geometry = sf::st_geometry(sf_obj))
         aoi_sf(sf_obj)
 
         # Centrar mapa en el AOI
@@ -4256,7 +4265,7 @@ mod_h3sdm_server <- function(id) {
 
         showNotification("AOI cargado correctamente.", type = "message", duration = 3)
       }, error = function(e) {
-        showNotification(paste("Error:", conditionMessage(e)), type = "error")
+        showNotification(paste("Error:", .msg_error(e)), type = "error")
       })
     })
 
